@@ -2,392 +2,415 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worship Chart - Perfect Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Worship Editor - Estilo Haz Llover</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-app: #121212;
-            --panel-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            
-            /* Paleta de Colores Oficial */
-            --c-header: #083D56; 
-            --c-green: #0E4421;  
-            --c-purple: #46184A; 
-            --c-brown: #783f14;
-            --c-red: #8b1818;
-            --c-blue: #154c79;
+            --bg-app: #121212; --panel-bg: #1e1e1e; --text-color: #f0f0f0;
+            --s-sep: #ff79c6; --s-str: #f1fa8c; --s-sla: #8be9fd;
+            --c-header: #083D56; --c-green: #0E4421; --c-purple: #46184A; 
+            --c-brown: #783f14; --c-red: #8b1818; --c-blue: #154c79;
         }
+
+        * { box-sizing: border-box; }
 
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
-            background-color: var(--bg-app);
-            color: var(--text-color);
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
+            margin: 0; font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-app); color: var(--text-color);
+            height: 100vh; display: flex; overflow: hidden;
+            -webkit-text-size-adjust: 100%;
         }
 
-        /* --- IZQUIERDA: EDITOR --- */
+        .main-container { display: flex; width: 100%; height: 100%; }
+
+        /* --- EDITOR PANE --- */
         .editor-pane {
-            width: 400px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            z-index: 10;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            width: 400px; background-color: var(--panel-bg);
+            border-right: 1px solid #444;
+            display: flex; flex-direction: column; z-index: 10;
         }
 
         .editor-header {
-            padding: 15px;
-            background: #252525;
-            border-bottom: 1px solid #333;
+            padding: 10px; background: #252525; border-bottom: 1px solid #333;
+            display: flex; gap: 10px; flex-shrink: 0;
         }
-
-        .input-row { display: flex; gap: 10px; }
-        
-        input {
+        .editor-header input {
             background: #333; border: 1px solid #444; color: white;
-            padding: 8px; border-radius: 4px; font-size: 0.9rem;
-            flex: 1;
+            padding: 8px; border-radius: 4px; font-size: 14px; height: 36px;
         }
-        #inKey { flex: 0 0 60px; text-align: center; font-weight: bold; }
+        #inTitle { flex: 1; min-width: 0; } 
+        #inKey { width: 60px; flex: none; text-align: center; font-weight: bold; }
 
-        textarea {
-            flex: 1;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border: none;
-            padding: 15px;
-            font-family: 'Consolas', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            white-space: pre;
-            overflow-x: auto;
+        /* --- CODE EDITOR --- */
+        .code-wrapper { position: relative; flex: 1; background-color: #1e1e1e; overflow: hidden; }
+        .mono-layer {
+            font-family: Consolas, "Courier New", monospace; 
+            font-size: 16px; line-height: 24px; letter-spacing: 0px; font-weight: normal;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            margin: 0; border: 0; padding: 15px; box-sizing: border-box;
+            overflow: auto; white-space: pre; word-wrap: normal;
         }
+        .code-highlight { z-index: 1; color: #ccc; pointer-events: none; background-color: #1e1e1e; }
+        .code-editor { z-index: 2; color: transparent; background: transparent; caret-color: #fff; outline: none; resize: none; }
+        
+        .hlSep { color: var(--s-sep); font-weight: bold; }
+        .hlStr { color: var(--s-str); font-weight: bold; }
+        .hlSla { color: var(--s-sla); }
 
-        /* --- DERECHA: PREVIEW --- */
+        /* --- PREVIEW PANE --- */
         .preview-pane {
-            flex: 1;
-            padding: 40px;
-            overflow: auto;
-            background-color: #121212;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex: 1; background-color: #121212;
+            overflow: auto; display: flex; padding: 20px; position: relative;
+        }
+
+        .scalable-wrapper {
+            transform-origin: top left; transition: transform 0.1s ease-out;
+            margin: auto; flex-shrink: 0; 
         }
 
         .chart-container {
-            width: 100%;
-            max-width: 1100px;
-            /* Sombra suave para destacar del fondo */
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            width: 720px; /* Ancho base */
+            background: transparent; /* Transparente para que se vea el fondo negro en los huecos */
+            display: inline-block; 
         }
 
-        /* 1. BARRA SUPERIOR (Separada para no romper la tabla) */
-        .top-bar {
-            background-color: var(--c-header);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-            border: 1px solid rgba(255,255,255,0.25);
-            border-bottom: none;
+        /* --- HEADER AL ESTILO "HAZ LLOVER" --- */
+        .header-bar {
+            background-color: var(--c-header); 
+            min-height: 60px;
+            display: flex; align-items: stretch;
+            border: 1px solid #555; border-bottom: none; 
+            /* EL ANCHO SE CALCULA EN JS */
+            width: 100%; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2; /* Para que quede por encima visualmente */
         }
-
-        .top-title {
-            flex: 1;
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
-            padding-left: 80px; /* Truco para centrar visualmente */
-            white-space: nowrap;
+        
+        .header-title-box {
+            flex: 1; 
+            display: flex; align-items: center;
+            padding: 0 15px;
             overflow: hidden;
-            text-overflow: ellipsis;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .header-title {
+            font-size: 20px; font-weight: 900; color: white;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
         }
 
-        .top-key-box {
-            width: 80px;
-            height: 100%;
-            border-left: 1px solid rgba(255,255,255,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .key-card-wrapper {
+            /* Ancho calculado en JS */
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.2); 
         }
-
-        .key-badge {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
+        
+        .key-text { font-size: 28px; font-weight: 900; color: white; }
+        
+        /* --- TABLA --- */
+        .chart-table { 
+            width: 100%; 
+            border-collapse: separate; /* Permite sombras separadas */
+            border-spacing: 0;
+            table-layout: fixed; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra a la tabla completa */
         }
-
-        /* 2. TABLA PRINCIPAL */
-        .chart-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed; /* OBLIGATORIO para columnas iguales */
+        .chart-table td { 
+            border: 1px solid #555; 
+            color: white; vertical-align: middle; padding: 0; 
         }
-
-        .chart-table td {
-            border: 1px solid rgba(255,255,255,0.25);
-            color: white;
-            vertical-align: middle;
-            padding: 0; /* Sin padding global, lo manejamos dentro */
-        }
-
-        /* ANCHOS DE COLUMNA */
-        .col-lyrics { width: 20%; } /* Letra ocupa el 20% */
-        /* El resto de columnas se reparten el 80% restante automáticamente */
-
-        /* ESTILOS DE LETRA (La solución al problema) */
-        .lyrics-cell {
-            height: 100%;
-        }
-
-        /* Contenedor FLEX dentro de la celda para centrado perfecto */
+        .td-transparent { border: none !important; background: transparent !important; }
+        
+        .lyrics-cell { height: 100%; }
         .lyrics-inner {
-            display: flex;
-            flex-direction: column; /* Apila líneas verticalmente */
-            justify-content: center; /* Centra verticalmente */
-            align-items: center;     /* Centra horizontalmente */
-            width: 100%;
-            height: 100%;
-            min-height: 60px; /* Altura mínima */
-            padding: 10px;
-            box-sizing: border-box;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.3;
-            white-space: pre-wrap; /* Respeta los Enters del usuario */
+            display: flex; align-items: center; justify-content: center;
+            padding: 8px 12px; text-align: center; font-size: 16px; font-weight: 500;
+            white-space: pre-wrap; line-height: 1.3;
         }
-
-        /* ESTILOS DE ACORDES */
-        .chord-cell {
-            height: 60px; /* Altura fija por fila */
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-
+        .chord-cell { height: 50px; }
         .chord-inner {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 100%;
-            text-align: center;
+            display: flex; justify-content: center; align-items: center;
+            height: 100%; width: 100%; font-size: 20px; font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
         }
-
-        /* SPLIT (La Coma) */
-        .split-box {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-        }
+        .split-box { display: flex; flex-direction: column; height: 100%; }
         .split-top, .split-bottom {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            font-size: 0.85em;
+            flex: 1; display: flex; justify-content: center; align-items: center;
+            font-size: 18px; font-weight: 700;
         }
-        .split-top { border-bottom: 1px solid rgba(255,255,255,0.2); }
-
-        /* Colores de Fondo */
-        .bg-green { background-color: var(--c-green); }
-        .bg-purple { background-color: var(--c-purple); }
-        .bg-brown { background-color: var(--c-brown); }
-        .bg-red { background-color: var(--c-red); }
+        .split-top { border-bottom: 1px solid #555; }
+        
+        /* Colores Sólidos (Estilo Haz Llover) */
+        .bg-green { background-color: var(--c-green); } .bg-purple { background-color: var(--c-purple); }
+        .bg-brown { background-color: var(--c-brown); } .bg-red { background-color: var(--c-red); }
         .bg-blue { background-color: var(--c-blue); }
 
-        /* IMPRESIÓN */
-        @media print {
-            .editor-pane { display: none; }
-            .preview-pane { padding: 0; background: white; display: block; }
-            .chart-container { box-shadow: none; width: 100%; max-width: 100%; }
-            body { height: auto; overflow: visible; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        /* Controles */
+        .floating-controls {
+            position: fixed; top: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 100;
         }
+        .ctrl-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+            color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; backdrop-filter: blur(4px);
+            font-size: 18px; font-weight: bold; user-select: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .ctrl-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
+        .btn-fullscreen { background: var(--c-blue); border: none; }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column-reverse; }
+            .editor-pane { width: 100%; flex: 1; border-top: 2px solid #333; }
+            .preview-pane { flex: 0 0 50%; padding: 10px; }
+            .floating-controls { top: 10px; right: 10px; gap: 5px; }
+            .ctrl-btn { width: 35px; height: 35px; font-size: 16px; }
+            .mono-layer { padding: 10px; }
+        }
+
+        :fullscreen .preview-pane { padding: 0; background: black; }
+        :fullscreen .floating-controls { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="editor-pane">
-        <div class="editor-header">
-            <div class="input-row">
-                <input type="text" id="inTitle" value="Dame De Beber - Marco Barrientos">
+    <div class="main-container">
+        <div class="editor-pane">
+            <div class="editor-header">
+                <input type="text" id="inTitle" value="Dame de Beber - Marco Barrientos">
                 <input type="text" id="inKey" value="D">
             </div>
-        </div>
-        <textarea id="inCode" spellcheck="false">
+            
+            <div class="code-wrapper">
+                <pre id="highlighting" class="code-highlight mono-layer" aria-hidden="true"><code id="highlighting-content"></code></pre>
+                <textarea id="inCode" class="code-editor mono-layer" spellcheck="false" placeholder="Escribe aquí tu tabla...">
 Quiero estar en tu presencia
 G/E | G/D ; Asus4|A ; D > A/C# ; D/B | D/A
-G/E | G/D ; Asus4|A ; D ; D | D/B , C/D - D/F#
+G/E | G/D ; Asus4|A ; D ; D | D/B , C/D - D/F# ; EXTRA
 
 Dame de beber
 G ; A/G ; A/F# ; D/B | D/A
-G/E | G/D ; Asus4|A ; D ; C/D - D/F#, D | D/B
-G ; A/G ; A/F# ; D/B | D/A
-
-Tu amor
-G ; A/G ; A/F# ; D/B | D/A
-G/E | G/D ; Asus4|A ; D ; C/D - D/F#
+G/E | G/D ; Asus4|A ; D ; C/D - D/F#, D | D/B ; EXTRA
 G ; A/G ; A/F# ; D/B | D/A</textarea>
-    </div>
+            </div>
+        </div>
 
-    <div class="preview-pane">
-        <div class="chart-container">
-            <div class="top-bar">
-                <div class="top-title" id="outTitle">Título</div>
-                <div class="top-key-box">
-                    <div class="key-badge" id="outKey">C</div>
-                </div>
+        <div class="preview-pane" id="previewPane">
+            <div class="floating-controls">
+                <div class="ctrl-btn btn-fullscreen" onclick="toggleFullScreen()">⛶</div>
+                <div class="ctrl-btn" onclick="adjustZoom(0.05)">+</div>
+                <div class="ctrl-btn" onclick="adjustZoom(-0.05)">-</div>
+                <div class="ctrl-btn" onclick="resetZoom()" style="font-size:12px">1:1</div>
             </div>
 
-            <table class="chart-table">
-                <colgroup id="tableColGroup">
-                    </colgroup>
-                <tbody id="chartBody">
-                    </tbody>
-            </table>
+            <div class="scalable-wrapper" id="scalableWrapper">
+                <div class="chart-container" id="chartContainer">
+                    <div class="header-bar" id="headerBar">
+                        <div class="header-title-box">
+                            <div class="header-title" id="outTitle">Título</div>
+                        </div>
+                        <div class="key-card-wrapper" id="keyWrapper">
+                            <div class="key-text" id="outKey">C</div>
+                        </div>
+                    </div>
+                    <table class="chart-table">
+                        <colgroup id="tableColGroup"></colgroup>
+                        <tbody id="chartBody"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         const inCode = document.getElementById('inCode');
+        const highlightingContent = document.getElementById('highlighting-content');
+        const highlighting = document.getElementById('highlighting');
         const inTitle = document.getElementById('inTitle');
         const inKey = document.getElementById('inKey');
-        
         const outTitle = document.getElementById('outTitle');
         const outKey = document.getElementById('outKey');
         const chartBody = document.getElementById('chartBody');
         const tableColGroup = document.getElementById('tableColGroup');
+        const chartContainer = document.getElementById('chartContainer');
+        const headerBar = document.getElementById('headerBar');
+        const keyWrapper = document.getElementById('keyWrapper');
+        const scalableWrapper = document.getElementById('scalableWrapper');
+        const previewPane = document.getElementById('previewPane');
 
-        // Secuencia de colores
         const colorCycle = ['bg-green', 'bg-purple', 'bg-green', 'bg-purple', 'bg-brown', 'bg-red'];
+
+        // --- ZOOM ---
+        let currentScale = 0.8;
+        if (window.innerWidth < 768) currentScale = 0.5;
+
+        function applyZoom() {
+            scalableWrapper.style.transform = `scale(${currentScale})`;
+            const baseWidth = 720; 
+            const baseHeight = chartContainer.offsetHeight;
+            scalableWrapper.style.width = `${baseWidth * currentScale}px`;
+            scalableWrapper.style.height = `${baseHeight * currentScale}px`;
+        }
+
+        function adjustZoom(delta) {
+            currentScale += delta;
+            if (currentScale < 0.2) currentScale = 0.2;
+            if (currentScale > 3.0) currentScale = 3.0;
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentScale = window.innerWidth < 768 ? 0.5 : 1.0;
+            applyZoom();
+        }
+
+        // --- RENDER ---
+        function updateHighlighting() {
+            let text = inCode.value;
+            text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            text = text.replace(/(&gt;|[|;\/\-])/g, function(match) {
+                if (match === '&gt;' || match === '-') return '<span class="hlStr">' + match + '</span>';
+                if (match === '/') return '<span class="hlSla">' + match + '</span>';
+                return '<span class="hlSep">' + match + '</span>';
+            });
+            if (text.endsWith('\n')) text += '&nbsp;';
+            highlightingContent.innerHTML = text;
+        }
+
+        function syncScroll() {
+            highlighting.scrollTop = inCode.scrollTop;
+            highlighting.scrollLeft = inCode.scrollLeft;
+        }
 
         function render() {
             outTitle.textContent = inTitle.value;
             outKey.textContent = inKey.value;
+            updateHighlighting();
 
             const text = inCode.value;
             const lines = text.split('\n');
-            
             let sections = [];
             let currentSection = { lyrics: '', rows: [] };
             let maxCols = 0;
 
-            // 1. ANÁLISIS DEL TEXTO
             lines.forEach(line => {
-                const cleanLine = line.trim();
-                if(!cleanLine) return;
-
-                if (cleanLine.includes(';')) {
-                    // Es una línea de acordes
-                    const cols = cleanLine.split(';');
-                    if (cols.length > maxCols) maxCols = cols.length;
-                    currentSection.rows.push(cleanLine);
+                const clean = line.trim();
+                if(!clean) return;
+                if(clean.includes(';') || clean.includes('|')) {
+                    const cols = clean.split(';');
+                    if(cols.length > maxCols) maxCols = cols.length;
+                    currentSection.rows.push(clean);
                 } else {
-                    // Es una línea de letra o título de sección
-                    if (currentSection.rows.length > 0) {
+                    if(currentSection.rows.length > 0) {
                         sections.push(currentSection);
                         currentSection = { lyrics: '', rows: [] };
                     }
-                    currentSection.lyrics += (currentSection.lyrics ? '\n' : '') + cleanLine;
+                    currentSection.lyrics += (currentSection.lyrics ? '\n' : '') + clean;
                 }
             });
-            // Añadir el último bloque
-            if (currentSection.rows.length > 0 || currentSection.lyrics) {
-                sections.push(currentSection);
-            }
-            if (maxCols === 0) maxCols = 1;
+            if(currentSection.rows.length > 0 || currentSection.lyrics) sections.push(currentSection);
 
-            // 2. DEFINIR ANCHOS DE COLUMNA
-            // Columna 1 = Letra (class="col-lyrics")
-            // Columnas siguientes = Acordes (automáticas)
-            let colHtml = `<col class="col-lyrics">`;
-            for(let i=0; i<maxCols; i++) {
-                colHtml += `<col>`;
-            }
+            // AUNQUE haya 10 columnas, el header siempre cubrirá Lyrics + 4 Acordes
+            if (maxCols < 4) maxCols = 4; // Mínimo 4 columnas para que no se vea feo
+            
+            // --- CÁLCULO DE ANCHOS (MATEMÁTICA PURA) ---
+            const lyricsPercent = 28; // 28% para la letra
+            const chordAreaPercent = 100 - lyricsPercent; // 72% para acordes
+            const singleChordPercent = chordAreaPercent / maxCols; // Cuánto mide 1 columna de acorde
+
+            // Definimos ColGroup
+            let colHtml = `<col style="width: ${lyricsPercent}%">`; 
+            for(let i=0; i<maxCols; i++) colHtml += `<col>`;
             tableColGroup.innerHTML = colHtml;
 
+            // --- LÓGICA DE HEADER RECORTADO ---
+            // Queremos cubrir: Lyrics + (hasta 4 columnas de acordes)
+            const chordsToCover = Math.min(maxCols, 4); 
+            
+            // Ancho Total Header = 28% + (Ancho1Col * 4)
+            const headerTotalWidthPercent = lyricsPercent + (singleChordPercent * chordsToCover);
+            
+            // Aplicamos ancho al Header (Barra Azul)
+            headerBar.style.width = `${headerTotalWidthPercent}%`;
 
-            // 3. CONSTRUIR HTML
+            // --- LÓGICA DE KEY WRAPPER ---
+            // El KeyWrapper está DENTRO del Header. Su ancho es relativo al Header.
+            // Necesitamos saber qué porcentaje del Header representa UNA columna de acorde.
+            // Formula: (Ancho1Columna / AnchoTotalHeader) * 100
+            const keyWidthRelative = (singleChordPercent / headerTotalWidthPercent) * 100;
+            keyWrapper.style.width = `${keyWidthRelative}%`;
+
             let html = '';
             let colorIdx = 0;
-
-            sections.forEach((sect, sIdx) => {
+            sections.forEach(sect => {
                 if(sect.rows.length === 0) return;
-
                 const currColor = colorCycle[colorIdx % colorCycle.length];
                 const nextColor = colorCycle[(colorIdx + 1) % colorCycle.length];
                 const rowSpan = sect.rows.length;
 
-                sect.rows.forEach((rowString, rIdx) => {
+                sect.rows.forEach((rowStr, rIdx) => {
                     html += `<tr>`;
-
-                    // --- CELDA DE LETRA (Solo en la primera fila de la sección) ---
-                    if (rIdx === 0) {
-                        // Usamos un div interno "lyrics-inner" para centrar con Flexbox
+                    if(rIdx === 0) {
                         html += `<td class="lyrics-cell ${currColor}" rowspan="${rowSpan}">
-                                    <div class="lyrics-inner">
-                                        ${sect.lyrics}
-                                    </div>
+                                    <div class="lyrics-inner">${sect.lyrics}</div>
                                  </td>`;
                     }
-
-                    // --- CELDAS DE ACORDES ---
-                    const cells = rowString.split(';');
-                    cells.forEach(cellStr => {
-                        cellStr = cellStr.trim();
-                        
-                        // Detectar Coma (Split Vertical)
-                        if (cellStr.includes(',')) {
-                            const parts = cellStr.split(',');
-                            html += `<td class="chord-cell" style="padding:0; border:0">
+                    const cells = rowStr.split(';');
+                    cells.forEach(cell => {
+                        cell = cell.trim();
+                        if(cell.includes(',')) {
+                            const p = cell.split(',');
+                            html += `<td class="chord-cell" style="padding:0;">
                                         <div class="split-box">
-                                            <div class="split-top ${currColor}">${parts[0].trim()}</div>
-                                            <div class="split-bottom ${nextColor}">${parts[1] ? parts[1].trim() : ''}</div>
+                                            <div class="split-top ${currColor}">${p[0].trim()}</div>
+                                            <div class="split-bottom ${nextColor}">${p[1] ? p[1].trim() : ''}</div>
                                         </div>
                                      </td>`;
                         } else {
-                            // Celda normal
                             html += `<td class="chord-cell ${currColor}">
-                                        <div class="chord-inner">${cellStr}</div>
+                                        <div class="chord-inner">${cell}</div>
                                      </td>`;
                         }
                     });
-
-                    // --- RELLENO DE CELDAS VACÍAS (Padding) ---
-                    const missingCols = maxCols - cells.length;
-                    if (missingCols > 0) {
-                        for(let i=0; i<missingCols; i++) {
-                            html += `<td class="chord-cell ${currColor}">&nbsp;</td>`;
-                        }
-                    }
-
+                    const missing = maxCols - cells.length;
+                    for(let i=0; i<missing; i++) html += `<td class="chord-cell td-transparent">&nbsp;</td>`;
                     html += `</tr>`;
                 });
                 colorIdx++;
             });
-
             chartBody.innerHTML = html;
+
+            setTimeout(applyZoom, 0); 
         }
 
-        // Event Listeners
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                if (previewPane.requestFullscreen) previewPane.requestFullscreen();
+                else if (previewPane.webkitRequestFullscreen) previewPane.webkitRequestFullscreen();
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(e=>{});
+                }
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
         inCode.addEventListener('input', render);
+        inCode.addEventListener('scroll', syncScroll);
+        inCode.addEventListener('keydown', syncScroll);
         inTitle.addEventListener('input', render);
         inKey.addEventListener('input', render);
-
-        // Render inicial
+        
+        setInterval(syncScroll, 50);
         render();
-
+        setTimeout(applyZoom, 100);
+        window.addEventListener('resize', () => setTimeout(applyZoom, 100));
     </script>
 </body>
 </html>
