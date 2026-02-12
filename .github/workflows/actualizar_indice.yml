@@ -1,0 +1,34 @@
+name: Actualizar Indice de Herramientas
+
+# Se activa cuando haces push a la rama 'main' (o 'master')
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chequear el código
+        uses: actions/checkout@v3
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Ejecutar script generador
+        run: python scripts/generar_indice.py
+
+      - name: Guardar cambios (Commit & Push)
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add index.html
+          # Solo hace commit si hubo cambios
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Actualizar índice automáticamente" && git push)
