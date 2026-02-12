@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Clases de Piano</title>
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-border: rgba(255,255,255,0.08);
+
+            /* Acentos */
+            --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --gold: #fbbf24;
+
+            /* MODO EXAMEN */
+            --exam-bg: #111; 
+            --exam-text: #fff;
+            
+            /* Piano */
+            --key-white: linear-gradient(180deg, #fff 0%, #e2e8f0 100%);
+            --key-black: linear-gradient(180deg, #334155 0%, #0f172a 100%);
+            --radius: 20px;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #eef2f6; 
+            --surface-color: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --card-border: rgba(0,0,0,0.06);
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            
+            /* Examen Light */
+            --exam-bg: #fff7ed; 
+            --exam-text: #451a03; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+        
+        html { height: 100%; }
+        
+        body {
+            background-color: var(--bg-color); color: var(--text-primary);
+            height: 100%; /* Fix Scroll */
+            display: flex; flex-direction: column; overflow: hidden; /* Solo scroll en Main */
+            transition: background 0.3s ease;
+        }
+
+        /* CLASES GLOBALES */
+        .hidden { display: none !important; }
+        
+        /* HEADER */
+        header { padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
+        h1 { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.5px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .theme-btn { background: var(--surface-color); border: 1px solid var(--card-border); width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); color: var(--text-primary); }
+
+        /* MAIN (SCROLL FIX APLICADO) */
+        main { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 10px 20px 40px 20px; /* Padding extra abajo para scroll cómodo */
+            max-width: 500px; 
+            width: 100%; 
+            margin: 0 auto; 
+            overflow-y: auto; /* Scroll Vertical Activado */
+            -webkit-overflow-scrolling: touch; /* Scroll suave iOS */
+            position: relative; 
+            min-height: 0; /* Truco Flexbox para permitir scroll */
+        }
+
+        /* --- DEVOCIONAL --- */
+        #devotionalBox {
+            background: var(--surface-color); padding: 16px; border-radius: 16px;
+            border-left: 4px solid var(--gold); margin-bottom: 20px;
+            animation: fadeIn 0.5s; display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow); border: 1px solid var(--card-border);
+            flex-shrink: 0; /* Evita que se aplaste */
+        }
+        .devo-text { font-size: 0.95rem; font-style: italic; color: var(--text-primary); line-height: 1.5; }
+        .devo-ref { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-align: right; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- REDES SOCIALES --- */
+        .social-section {
+            margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border);
+            text-align: center; flex-shrink: 0;
+        }
+        .social-title { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 15px; letter-spacing: 1px; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; }
+        .social-btn {
+            width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: var(--surface-color); border: 1px solid var(--card-border);
+        }
+        .social-btn:active { transform: scale(0.9); }
+        .soc-ig { color: #E1306C; } .soc-yt { color: #FF0000; } .soc-tt { color: var(--text-primary); }
+
+        /* --- ESTILOS EXAMEN --- */
+        body.exam-mode { background: var(--exam-bg) !important; color: var(--exam-text) !important; }
+        body.exam-mode h1 { -webkit-text-fill-color: var(--exam-text); }
+        body.exam-mode .theme-btn { display: none; }
+        
+        .exam-hud {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(128,128,128,0.1); padding: 10px 20px; 
+            border-radius: 50px; margin-bottom: 20px;
+            border: 1px solid rgba(128,128,128,0.2); backdrop-filter: blur(5px);
+            flex-shrink: 0;
+        }
+        .hud-item { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.9rem; }
+        .hud-ok { color: var(--correct); } 
+        .hud-bad { color: var(--wrong); }
+        .hud-time { font-variant-numeric: tabular-nums; }
+
+        /* --- TARJETAS MENU --- */
+        .menu-list { display: flex; flex-direction: column; gap: 16px; width: 100%; animation: slideUp 0.4s; flex-shrink: 0;}
+        .card {
+            background: var(--surface-color); border-radius: var(--radius); padding: 18px; 
+            box-shadow: var(--shadow); cursor: pointer; position: relative; overflow: hidden;
+            border: 1px solid var(--card-border); transition: transform 0.2s;
+        }
+        .card:active { transform: scale(0.98); }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .card-title { font-size: 1.1rem; font-weight: 700; }
+        .card-badge { font-size: 0.75rem; font-weight: 800; background: var(--gold); color: #000; padding: 2px 8px; border-radius: 8px; }
+        .card-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; }
+        
+        .card-stats { display: flex; gap: 10px; padding-top: 10px; border-top: 1px solid var(--card-border); }
+        .stat-pill-mini { 
+            font-size: 0.75rem; background: rgba(128,128,128,0.1); 
+            padding: 4px 8px; border-radius: 6px; color: var(--text-secondary); display: flex; gap: 5px; align-items: center;
+        }
+        .stat-pill-mini strong { color: var(--text-primary); }
+
+        .progress-track { height: 4px; width: 100%; background: rgba(128,128,128,0.2); border-radius: 10px; position: absolute; bottom: 0; left: 0; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-gradient); border-radius: 10px; }
+
+        /* --- JUEGO (SCROLL FIX) --- */
+        .game-view { 
+            display: flex; flex-direction: column; 
+            min-height: 100%; /* Permite crecer si es necesario */
+            animation: fadeIn 0.3s; 
+        }
+        .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
+        .back-pill { background: rgba(128,128,128,0.1); color: var(--text-secondary); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+
+        .play-area { 
+            flex: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            min-height: 150px; /* Altura mínima para la nota */
+            padding: 20px 0;
+        }
+        .big-note { 
+            font-size: clamp(5rem, 18vh, 8rem); font-weight: 900; 
+            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.3)); 
+            line-height: 1; margin-bottom: 20px;
+        }
+        body.exam-mode .big-note { background: var(--exam-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none; }
+
+        .feedback { height: 20px; font-weight: 700; opacity: 0; transition: opacity 0.2s; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; font-size: 0.8rem; }
+        .feedback.show { opacity: 1; }
+
+        /* BOTONES TEORIA */
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; flex-shrink: 0; }
+        .btn-opt { 
+            background: var(--surface-color); border: 1px solid var(--card-border); padding: 25px; 
+            border-radius: 18px; font-size: 1.3rem; font-weight: 700; color: var(--text-primary); 
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2); transition: all 0.1s;
+        }
+        .btn-opt:active { transform: translateY(4px); box-shadow: none; }
+        .btn-opt.ok { background: var(--correct); border-color: var(--correct); color: white; }
+        .btn-opt.bad { background: var(--wrong); border-color: var(--wrong); color: white; }
+
+        /* PIANO */
+        .piano-box { 
+            width: 100%; height: 32vh; min-height: 180px; max-height: 280px; 
+            display: flex; margin-bottom: 10px; border-radius: 0 0 20px 20px; 
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); position: relative; z-index: 0;
+            flex-shrink: 0; /* Evita que se aplaste al hacer scroll */
+        }
+        .k-white { flex: 1; background: var(--key-white); border: 1px solid rgba(0,0,0,0.1); border-radius: 0 0 10px 10px; position: relative; z-index: 1; transition: background 0.1s; }
+        .k-white:active { background: #cbd5e1; transform: perspective(500px) rotateX(5deg); transform-origin: top; }
+        .k-black { position: absolute; top: 0; width: 10%; height: 60%; background: var(--key-black); border-radius: 0 0 6px 6px; z-index: 50; box-shadow: 2px 5px 10px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); }
+        .k-black:active { background: #000; transform: perspective(500px) rotateX(5deg); transform-origin: top; }
+        
+        .k-white.ok-k, .k-white.bad-k { z-index: 2; }
+        .k-black.ok-k, .k-black.bad-k { z-index: 51; }
+        .ok-k { background: var(--correct) !important; box-shadow: 0 0 20px var(--correct); }
+        .bad-k { background: var(--wrong) !important; }
+        .kb-1 { left: 9.5%; } .kb-3 { left: 24%; } .kb-6 { left: 52.5%; } .kb-8 { left: 67%; } .kb-10 { left: 81.5%; }
+
+        /* --- RESULT CARD --- */
+        #viewResult { justify-content: center; align-items: center; padding: 20px 0; }
+        .result-card {
+            background: var(--surface-color); width: 100%; border-radius: 30px;
+            padding: 25px; text-align: center; border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 15px;
+        }
+        
+        .grade-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto; }
+        .grade-circle {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 6px solid var(--gold);
+            display: grid; place-items: center;
+            font-size: 3.5rem; font-weight: 900; color: var(--gold);
+            padding: 0; margin: 0; line-height: 0;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-row { display: flex; justify-content: space-between; gap: 10px; }
+        .stat-pill { background: rgba(128,128,128,0.1); padding: 10px; border-radius: 12px; flex: 1; }
+        .stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; display: block; }
+        .stat-val { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
+
+        .analysis-box {
+            background: rgba(128,128,128,0.05); border-radius: 12px; padding: 15px;
+            text-align: left; border: 1px solid var(--card-border);
+        }
+        .analysis-text { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
+        .analysis-tag { 
+            font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,0,0,0.1); padding: 6px 12px; border-radius: 8px; color: var(--text-secondary);
+        }
+        
+        .btn-whatsapp { background: #25D366; color: white; padding: 16px; border-radius: 50px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width:100%; transition: transform 0.2s;}
+        .btn-whatsapp:active { transform: scale(0.96); }
+        .btn-home { background: transparent; border: none; color: var(--text-secondary); padding: 10px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+
+        /* SELECTOR MODAL */
+        #modeSelector { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; display: flex; align-items: flex-end; }
+        .sheet { background: var(--surface-color); width: 100%; padding: 30px 20px; border-radius: 25px 25px 0 0; display: flex; flex-direction: column; gap: 12px; animation: slideUp 0.3s; }
+        .sheet-title { text-align: center; font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; }
+        .btn-act { padding: 18px; border-radius: 16px; border: none; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-p { background: var(--surface-color); border: 1px solid rgba(128,128,128,0.2); color: var(--text-primary); }
+        .btn-e { background: var(--gold); color: #000; box-shadow: 0 5px 20px rgba(251, 191, 36, 0.3); }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body data-theme="dark">
+
+<header>
+    <h1>Clases de Piano</h1>
+    <button class="theme-btn" id="themeToggle">☀️</button>
+</header>
+
+<main>
+    <div id="devotionalBox" class="hidden">
+        <p class="devo-text" id="devoText"></p>
+        <span class="devo-ref" id="devoRef"></span>
+    </div>
+
+    <div id="menuMain" class="menu-list">
+        <h2 style="color:var(--text-secondary); margin-bottom:5px;">TU PROGRESO</h2>
+        <div class="card" onclick="toSubMenu('theory')">
+            <div class="card-header"><span class="card-title">🧠 Nombres</span><span id="main-badge-theory" class="card-badge">?</span></div>
+            <p style="color:var(--text-secondary); font-size:0.9rem;">Entrenamiento Mental</p>
+            <div class="progress-track"><div id="bar-theory" class="progress-fill"></div></div>
+        </div>
+        <div class="card" onclick="toSubMenu('piano')">
+            <div class="card-header"><span class="card-title">🎹 Ubicación</span><span id="main-badge-piano" class="card-badge">?</span></div>
+            <p style="color:var(--text-secondary); font-size:0.9rem;">Entrenamiento Visual</p>
+            <div class="progress-track"><div id="bar-piano" class="progress-fill"></div></div>
+        </div>
+        <div style="text-align:center; padding:5px;"><span onclick="resetAll()" style="color:var(--text-secondary); font-size:0.8rem; text-decoration:underline; cursor:pointer;">Reiniciar Todo</span></div>
+
+        <div class="social-section">
+            <div class="social-title">SÍGUENOS IGLESIA YHWH</div>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/iglesiayhwh/" target="_blank" class="social-btn soc-ig">📷</a>
+                <a href="https://www.youtube.com/@iglesiayhwh" target="_blank" class="social-btn soc-yt">▶️</a>
+                <a href="https://www.tiktok.com/@iglesia.yhwh" target="_blank" class="social-btn soc-tt">🎵</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="menuLevel" class="menu-list hidden">
+        <div class="top-nav"><button class="back-pill" onclick="toHome()">← Volver</button></div>
+        <h2 id="levelTitle" style="color:var(--text-secondary); margin-bottom:5px;">SELECCIONA NIVEL</h2>
+        
+        <div class="card" onclick="openSelector('white')">
+            <div class="card-header"><span class="card-title">Solo Blancas</span><span id="badge-white" class="card-badge">-</span></div>
+            <p class="card-desc">Notas naturales (Do, Re...)</p>
+            <div class="card-stats">
+                <div class="stat-pill-mini">📊 <strong id="exams-white">0</strong></div>
+                <div class="stat-pill-mini">🏆 <strong id="last-white">-</strong></div>
+            </div>
+            <div class="progress-track"><div id="bar-white" class="progress-fill"></div></div>
+        </div>
+
+        <div class="card" onclick="openSelector('black')">
+            <div class="card-header"><span class="card-title">Solo Negras</span><span id="badge-black" class="card-badge">-</span></div>
+            <p class="card-desc">Sostenidos y Bemoles</p>
+            <div class="card-stats">
+                <div class="stat-pill-mini">📊 <strong id="exams-black">0</strong></div>
+                <div class="stat-pill-mini">🏆 <strong id="last-black">-</strong></div>
+            </div>
+            <div class="progress-track"><div id="bar-black" class="progress-fill"></div></div>
+        </div>
+
+        <div class="card" onclick="openSelector('mixed')">
+            <div class="card-header"><span class="card-title">Todas las Teclas</span><span id="badge-mixed" class="card-badge">-</span></div>
+            <p class="card-desc">Nivel Maestro</p>
+            <div class="card-stats">
+                <div class="stat-pill-mini">📊 <strong id="exams-mixed">0</strong></div>
+                <div class="stat-pill-mini">🏆 <strong id="last-mixed">-</strong></div>
+            </div>
+            <div class="progress-track"><div id="bar-mixed" class="progress-fill"></div></div>
+        </div>
+    </div>
+
+    <div id="modeSelector" class="hidden" onclick="if(event.target===this) this.classList.add('hidden')">
+        <div class="sheet">
+            <div class="sheet-title">Modo de Juego</div>
+            <button class="btn-act btn-p" onclick="startPractice()">🌱 Práctica Libre</button>
+            <button class="btn-act btn-e" onclick="startExam()">🔥 Examen Oficial</button>
+            <button class="btn-act" style="background:transparent; color:var(--text-secondary);" onclick="document.getElementById('modeSelector').classList.add('hidden')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="examHud" class="exam-hud hidden">
+        <div class="hud-item hud-ok">✅ <span id="hudOk">0</span></div>
+        <div class="hud-item hud-bad">❌ <span id="hudBad">0</span></div>
+        <div class="hud-item hud-time">⏱️ <span id="hudTime">0s</span></div>
+    </div>
+
+    <div id="viewTheory" class="game-view hidden">
+        <div class="top-nav"><button class="back-pill" onclick="exitGame()">Salir</button></div>
+        <div class="play-area">
+            <div id="txtQuest" class="big-note">?</div>
+            <div id="txtFeedT" class="feedback">Correcto</div>
+        </div>
+        <div id="gridOpt" class="grid-options"></div>
+    </div>
+
+    <div id="viewPiano" class="game-view hidden">
+        <div class="top-nav"><button class="back-pill" onclick="exitGame()">Salir</button></div>
+        <div class="play-area">
+            <div id="txtNoteP" class="big-note">?</div>
+            <div id="txtFeedP" class="feedback">Bien hecho</div>
+        </div>
+        <div class="piano-box">
+            <div class="k-white" data-n="0"></div>
+            <div class="k-white" data-n="2"></div>
+            <div class="k-white" data-n="4"></div>
+            <div class="k-white" data-n="5"></div>
+            <div class="k-white" data-n="7"></div>
+            <div class="k-white" data-n="9"></div>
+            <div class="k-white" data-n="11"></div>
+            <div class="k-black kb-1" data-n="1"></div>
+            <div class="k-black kb-3" data-n="3"></div>
+            <div class="k-black kb-6" data-n="6"></div>
+            <div class="k-black kb-8" data-n="8"></div>
+            <div class="k-black kb-10" data-n="10"></div>
+        </div>
+    </div>
+
+    <div id="viewResult" class="game-view hidden">
+        <div class="result-card">
+            <h2 style="color:var(--text-secondary);">RESULTADO FINAL</h2>
+            
+            <div class="grade-wrapper">
+                <div class="grade-circle" id="resGrade">A</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-pill"><span class="stat-lbl">Precisión</span><span class="stat-val" id="resAcc">0%</span></div>
+                <div class="stat-pill"><span class="stat-lbl">Velocidad</span><span class="stat-val" id="resAvg">0s</span></div>
+            </div>
+
+            <div class="analysis-box">
+                <div class="analysis-text" id="resText">Cargando...</div>
+                <div class="analysis-tag" id="resWeaknessTag">
+                    <span id="resWeakIcon">⚠️</span> <span id="resWeakText">Analizando...</span>
+                </div>
+            </div>
+
+            <button class="btn-whatsapp" onclick="shareResult()">
+                <span>📤 Enviar al Pastor</span>
+            </button>
+            <button class="btn-home" onclick="exitGame()">Volver al Inicio</button>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    /* --- DATA & QUOTES (BIBLIA) --- */
+    const NOTES = [
+        {id:0, anglo:["C"], latin:["Do"], t:"white"}, {id:1, anglo:["C#","Db"], latin:["Do#","Reb"], t:"black"},
+        {id:2, anglo:["D"], latin:["Re"], t:"white"}, {id:3, anglo:["D#","Eb"], latin:["Re#","Mib"], t:"black"},
+        {id:4, anglo:["E"], latin:["Mi"], t:"white"}, {id:5, anglo:["F"], latin:["Fa"], t:"white"},
+        {id:6, anglo:["F#","Gb"], latin:["Fa#","Solb"], t:"black"}, {id:7, anglo:["G"], latin:["Sol"], t:"white"},
+        {id:8, anglo:["G#","Ab"], latin:["Sol#","Lab"], t:"black"}, {id:9, anglo:["A"], latin:["La"], t:"white"},
+        {id:10, anglo:["A#","Bb"], latin:["La#","Sib"], t:"black"}, {id:11, anglo:["B"], latin:["Si"], t:"white"}
+    ];
+    
+    const QUOTES = [
+        {t:"Todo lo que hacéis, hacedlo de corazón, como para el Señor y no para los hombres.", r:"Colosenses 3:23"},
+        {t:"Cantadlé cántico nuevo; hacedlo bien, tañendo con júbilo.", r:"Salmos 33:3"},
+        {t:"Y todo lo que hacéis, sea de palabra o de hecho, hacedlo todo en el nombre del Señor Jesús.", r:"Colosenses 3:17"},
+        {t:"Alabaré a Jehová con todo mi corazón; contaré todas tus maravillas.", r:"Salmos 9:1"},
+        {t:"Procura con diligencia presentarte a Dios aprobado, como obrero que no tiene de qué avergonzarse.", r:"2 Timoteo 2:15"},
+        {t:"Aclamad a Dios con alegría, toda la tierra. Cantad la gloria de su nombre.", r:"Salmos 66:1-2"}
+    ];
+
+    let app = { mode: '', sub: '', bag: [], q: null, lock: false, isExam: false, examData: {correct:0, bad:0, startTime:0, qs:[]}, timer: null, qStart:0, share:{} };
+    let db = {}; try { db = JSON.parse(localStorage.getItem('pianoV13')) || {}; } catch(e){}
+
+    /* --- INIT --- */
+    function showDailyDevotional() {
+        let q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+        document.getElementById('devoText').innerText = `"${q.t}"`;
+        document.getElementById('devoRef').innerText = q.r;
+        document.getElementById('devotionalBox').classList.remove('hidden');
+    }
+    
+    /* --- CORE LOGIC --- */
+    function savePractice(ok) {
+        let k = app.mode+'_'+app.sub; let v = db[k]?.score||0;
+        if(ok) { let g = Math.ceil((100-v)*0.15); v+=Math.max(1,g); } else { let l=Math.ceil(v*0.15); v-=Math.max(5,l); }
+        if(!db[k]) db[k]={score:0, exams:0, lastGrade:'-'};
+        db[k].score = Math.min(100, Math.max(0, Math.round(v)));
+        localStorage.setItem('pianoV13', JSON.stringify(db));
+    }
+    
+    function saveExamResult(grade) {
+        let k = app.mode+'_'+app.sub;
+        if(!db[k]) db[k]={score:0, exams:0, lastGrade:'-'};
+        db[k].exams++;
+        db[k].lastGrade = grade;
+        localStorage.setItem('pianoV13', JSON.stringify(db));
+    }
+
+    function resetAll() { if(confirm("¿Borrar todo?")) { localStorage.removeItem('pianoV13'); location.reload(); } }
+
+    /* --- NAV --- */
+    const els = ['menuMain','menuLevel','viewTheory','viewPiano','viewResult'];
+    function show(id) { els.forEach(e=>document.getElementById(e).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+    
+    function forceClearExam() {
+        document.body.classList.remove('exam-mode');
+        document.getElementById('examHud').classList.add('hidden');
+        if(app.timer) clearInterval(app.timer);
+    }
+
+    function toHome() {
+        forceClearExam(); show('menuMain'); showDailyDevotional();
+        ['theory','piano'].forEach(m => {
+            let s1 = db[m+'_white']?.score||0; let s2 = db[m+'_black']?.score||0; let s3 = db[m+'_mixed']?.score||0;
+            let avg = Math.floor((s1+s2+s3)/3);
+            document.getElementById('bar-'+m).style.width = avg+'%';
+            document.getElementById('main-badge-'+m).innerText = avg+'%';
+        });
+    }
+
+    function toSubMenu(m) {
+        forceClearExam(); app.mode = m; show('menuLevel'); document.getElementById('devotionalBox').classList.add('hidden');
+        ['white','black','mixed'].forEach(t => {
+            let data = db[m+'_'+t] || {score:0, exams:0, lastGrade:'-'};
+            document.getElementById('bar-'+t).style.width = data.score+'%';
+            document.getElementById('badge-'+t).innerText = data.score+'%';
+            document.getElementById('exams-'+t).innerText = data.exams;
+            document.getElementById('last-'+t).innerText = data.lastGrade;
+        });
+    }
+
+    /* --- EXAM --- */
+    let tSub=''; function openSelector(s){ tSub=s; document.getElementById('modeSelector').classList.remove('hidden'); }
+    
+    function startPractice() {
+        document.getElementById('modeSelector').classList.add('hidden');
+        app.isExam=false; app.sub=tSub; app.bag=[]; 
+        forceClearExam();
+        runGame();
+    }
+
+    function startExam() {
+        document.getElementById('modeSelector').classList.add('hidden');
+        app.isExam=true; app.sub=tSub; app.bag=[];
+        app.examData={correct:0, bad:0, startTime:Date.now(), qs:[]};
+        
+        document.body.classList.add('exam-mode'); 
+        document.getElementById('examHud').classList.remove('hidden');
+        
+        if(app.timer) clearInterval(app.timer);
+        app.timer = setInterval(updateHud, 1000); updateHud();
+        runGame();
+    }
+
+    function updateHud() {
+        if(!app.isExam) return;
+        let t = Math.floor((Date.now()-app.examData.startTime)/1000);
+        document.getElementById('hudOk').innerText = app.examData.correct;
+        document.getElementById('hudBad').innerText = app.examData.bad;
+        document.getElementById('hudTime').innerText = t+'s';
+    }
+
+    function runGame() { if(app.mode==='theory') { show('viewTheory'); loopT(); } else { show('viewPiano'); loopP(); } }
+    function exitGame() { forceClearExam(); app.isExam=false; toSubMenu(app.mode); }
+
+    /* --- LOGIC --- */
+    function getBag() { if(!app.bag.length) { let p=NOTES.filter(n=>app.sub==='mixed'||n.t===app.sub); app.bag=p.sort(()=>Math.random()-.5); } return app.bag.pop(); }
+    function txt(n,s,i) { return (!n||!n[s])?"?":(n.t==='white'?n[s][0]:n[s][i]); }
+    function msg(id,t,c) { let e=document.getElementById(id); e.innerText=t; e.style.color=c?'var(--correct)':'var(--wrong)'; if(!app.isExam){ e.classList.add('show'); if(!t) e.classList.remove('show'); } else e.innerText=""; }
+
+    function handle(ok, n) {
+        if(app.isExam) {
+            let tm = (Date.now()-app.qStart)/1000;
+            app.examData.qs.push({ok, tm, nid:n.id});
+            if(ok) app.examData.correct++; else app.examData.bad++;
+            updateHud();
+            if((app.examData.correct+app.examData.bad)>=20) { setTimeout(finishExam, 500); return true; }
+        } else savePractice(ok);
+        return false;
+    }
+
+    /* LOOPS */
+    function loopT() {
+        app.lock=false; let n=getBag(); let acc=Math.random()>.5?1:0; let dir=Math.random()>.5?0:1;
+        app.q={n,acc}; app.qStart=Date.now();
+        document.getElementById('txtQuest').innerText = txt(n,dir?'anglo':'latin',acc);
+        msg('txtFeedT','');
+        let opts=[n]; while(opts.length<4){ let r=NOTES[Math.floor(Math.random()*12)]; if(!opts.includes(r)) opts.push(r); }
+        let g=document.getElementById('gridOpt'); g.innerHTML='';
+        opts.sort(()=>Math.random()-.5).forEach(o=>{
+            let b=document.createElement('button'); b.className='btn-opt';
+            b.innerText=txt(o,dir?'latin':'anglo',acc);
+            b.onclick=()=>{
+                if(app.lock)return; app.lock=true;
+                let ok=(o.id===n.id); let end=handle(ok,n);
+                if(!app.isExam) { b.classList.add(ok?'ok':'bad'); msg('txtFeedT',ok?'Correcto':'Mal',ok); }
+                if(!end) setTimeout(loopT, app.isExam?200:(ok?500:900));
+            }; g.appendChild(b);
+        });
+    }
+
+    function loopP() {
+        app.lock=false; let n=getBag(); let acc=Math.random()>.5?1:0; let sys=Math.random()>.5?'anglo':'latin';
+        app.q={n}; app.qStart=Date.now();
+        document.getElementById('txtNoteP').innerText=txt(n,sys,acc);
+        msg('txtFeedP','');
+        document.querySelectorAll('.piano-box div').forEach(k=>k.className=k.className.replace(/ (ok-k|bad-k)/g,''));
+    }
+
+    document.querySelectorAll('.piano-box div').forEach(k=>{
+        k.addEventListener('click',function(e){
+            if(document.getElementById('viewPiano').classList.contains('hidden'))return;
+            if(app.lock)return; e.stopPropagation(); app.lock=true;
+            let ok=(parseInt(this.getAttribute('data-n'))===app.q.n.id); let end=handle(ok,app.q.n);
+            this.classList.add(ok?'ok-k':'bad-k');
+            if(!app.isExam) { msg('txtFeedP',ok?'Bien':'Mal',ok); if(!ok){ let r=document.querySelector(`.piano-box div[data-n="${app.q.n.id}"]`); if(r)r.classList.add('ok-k'); }}
+            if(!end) setTimeout(loopP, app.isExam?250:(ok?400:1000));
+        });
+    });
+
+    /* RESULTS */
+    function finishExam() {
+        forceClearExam(); 
+        show('viewResult');
+        let d=app.examData;
+        let acc=Math.round((d.correct/20)*100);
+        let time=Math.floor((Date.now()-d.startTime)/1000);
+        let avg=(time/20).toFixed(2);
+        
+        let slow=0, hes=0, errs={}, slowNs={};
+        d.qs.forEach(q=>{
+            if(q.tm>3) slow++; if(q.ok && q.tm>1.5) hes++;
+            if(!q.ok) errs[q.nid]=(errs[q.nid]||0)+1;
+            if(q.tm>2) slowNs[q.nid]=(slowNs[q.nid]||0)+1;
+        });
+
+        let nem=-1, max=-1;
+        for(let id in errs) if(errs[id]>max){max=errs[id]; nem=id;}
+
+        let gr='F', col='#ef4444';
+        if(acc>=95 && avg<1.5 && slow===0) { gr='A'; col='#10b981'; }
+        else if(acc>=85 && avg<2.5 && slow<=2) { gr='B'; col='#3b82f6'; }
+        else if(acc>=75 && avg<3.5) { gr='C'; col='#f59e0b'; }
+        else if(acc>=60) { gr='D'; col='#f97316'; }
+
+        saveExamResult(gr);
+
+        let txt="", weak="Ninguna";
+        if(gr==='A') {
+            txt="¡Excelente trabajo! Has alcanzado la <b>automatización</b>. Tu lectura es fluida y precisa.";
+            weak = "Ninguna";
+        } else if(acc<70) { 
+            txt="Faltan fundamentos. Estás adivinando en lugar de leer."; 
+            weak="Base Teórica"; 
+        } else if(slow>4) { 
+            txt="Conoces las notas, pero te falta velocidad. Necesitas practicar más para no dudar."; 
+            weak="Velocidad"; 
+        } else { 
+            txt="Buen desempeño. Pule esos pequeños detalles para llegar a la excelencia.";
+            weak="Consistencia";
+        }
+
+        if(nem!=-1) { let n=NOTES.find(x=>x.id==nem); weak=`Nota difícil: ${n.anglo[0]}`; }
+
+        let elG=document.getElementById('resGrade'); elG.innerText=gr; elG.style.borderColor=col; elG.style.color=col;
+        document.getElementById('resAcc').innerText=acc+'%';
+        document.getElementById('resAvg').innerText=avg+'s';
+        document.getElementById('resText').innerHTML=txt;
+        
+        let wIcon = document.getElementById('resWeakIcon');
+        let wText = document.getElementById('resWeakText');
+        
+        if(gr === 'A') {
+            wIcon.innerText = "🌟"; wText.innerText = "Diagnóstico: Impecable";
+            document.getElementById('resWeaknessTag').style.color = "var(--correct)";
+        } else {
+            wIcon.innerText = "⚠️"; wText.innerText = "Enfocarse en: " + weak;
+            document.getElementById('resWeaknessTag').style.color = "var(--text-secondary)";
+        }
+
+        app.share={gr,acc,avg,weak,mod:app.mode==='theory'?'Teoría':'Piano'};
+    }
+
+    function shareResult() {
+        let s=app.share;
+        let msg=`🎹 *Reporte Clases Piano* 🎹%0A🏆 Nota: ${s.gr}%0A🎯 Precisión: ${s.acc}%25%0A⚡ Velocidad: ${s.avg}s%0A📝 Diagnóstico: ${s.weak}`;
+        window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    let dk=true; 
+    document.getElementById('themeToggle').onclick=()=>{ dk=!dk; document.body.setAttribute('data-theme',dk?'dark':'light'); document.getElementById('themeToggle').innerText=dk?'☀️':'🌙'; };
+    
+    toHome();
+</script>
+</body>
+</html>

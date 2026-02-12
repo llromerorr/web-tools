@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worship Chart - Perfect Center</title>
+    <style>
+        :root {
+            --bg-app: #121212;
+            --panel-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            
+            /* Paleta de Colores Oficial */
+            --c-header: #083D56; 
+            --c-green: #0E4421;  
+            --c-purple: #46184A; 
+            --c-brown: #783f14;
+            --c-red: #8b1818;
+            --c-blue: #154c79;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- IZQUIERDA: EDITOR --- */
+        .editor-pane {
+            width: 400px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+        }
+
+        .editor-header {
+            padding: 15px;
+            background: #252525;
+            border-bottom: 1px solid #333;
+        }
+
+        .input-row { display: flex; gap: 10px; }
+        
+        input {
+            background: #333; border: 1px solid #444; color: white;
+            padding: 8px; border-radius: 4px; font-size: 0.9rem;
+            flex: 1;
+        }
+        #inKey { flex: 0 0 60px; text-align: center; font-weight: bold; }
+
+        textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* --- DERECHA: PREVIEW --- */
+        .preview-pane {
+            flex: 1;
+            padding: 40px;
+            overflow: auto;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 1100px;
+            /* Sombra suave para destacar del fondo */
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        /* 1. BARRA SUPERIOR (Separada para no romper la tabla) */
+        .top-bar {
+            background-color: var(--c-header);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-bottom: none;
+        }
+
+        .top-title {
+            flex: 1;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            padding-left: 80px; /* Truco para centrar visualmente */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-key-box {
+            width: 80px;
+            height: 100%;
+            border-left: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .key-badge {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* 2. TABLA PRINCIPAL */
+        .chart-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* OBLIGATORIO para columnas iguales */
+        }
+
+        .chart-table td {
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            vertical-align: middle;
+            padding: 0; /* Sin padding global, lo manejamos dentro */
+        }
+
+        /* ANCHOS DE COLUMNA */
+        .col-lyrics { width: 20%; } /* Letra ocupa el 20% */
+        /* El resto de columnas se reparten el 80% restante automáticamente */
+
+        /* ESTILOS DE LETRA (La solución al problema) */
+        .lyrics-cell {
+            height: 100%;
+        }
+
+        /* Contenedor FLEX dentro de la celda para centrado perfecto */
+        .lyrics-inner {
+            display: flex;
+            flex-direction: column; /* Apila líneas verticalmente */
+            justify-content: center; /* Centra verticalmente */
+            align-items: center;     /* Centra horizontalmente */
+            width: 100%;
+            height: 100%;
+            min-height: 60px; /* Altura mínima */
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.3;
+            white-space: pre-wrap; /* Respeta los Enters del usuario */
+        }
+
+        /* ESTILOS DE ACORDES */
+        .chord-cell {
+            height: 60px; /* Altura fija por fila */
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .chord-inner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* SPLIT (La Coma) */
+        .split-box {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .split-top, .split-bottom {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-size: 0.85em;
+        }
+        .split-top { border-bottom: 1px solid rgba(255,255,255,0.2); }
+
+        /* Colores de Fondo */
+        .bg-green { background-color: var(--c-green); }
+        .bg-purple { background-color: var(--c-purple); }
+        .bg-brown { background-color: var(--c-brown); }
+        .bg-red { background-color: var(--c-red); }
+        .bg-blue { background-color: var(--c-blue); }
+
+        /* IMPRESIÓN */
+        @media print {
+            .editor-pane { display: none; }
+            .preview-pane { padding: 0; background: white; display: block; }
+            .chart-container { box-shadow: none; width: 100%; max-width: 100%; }
+            body { height: auto; overflow: visible; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="editor-pane">
+        <div class="editor-header">
+            <div class="input-row">
+                <input type="text" id="inTitle" value="Dame De Beber - Marco Barrientos">
+                <input type="text" id="inKey" value="D">
+            </div>
+        </div>
+        <textarea id="inCode" spellcheck="false">
+Quiero estar en tu presencia
+G/E | G/D ; Asus4|A ; D > A/C# ; D/B | D/A
+G/E | G/D ; Asus4|A ; D ; D | D/B , C/D - D/F#
+
+Dame de beber
+G ; A/G ; A/F# ; D/B | D/A
+G/E | G/D ; Asus4|A ; D ; C/D - D/F#, D | D/B
+G ; A/G ; A/F# ; D/B | D/A
+
+Tu amor
+G ; A/G ; A/F# ; D/B | D/A
+G/E | G/D ; Asus4|A ; D ; C/D - D/F#
+G ; A/G ; A/F# ; D/B | D/A</textarea>
+    </div>
+
+    <div class="preview-pane">
+        <div class="chart-container">
+            <div class="top-bar">
+                <div class="top-title" id="outTitle">Título</div>
+                <div class="top-key-box">
+                    <div class="key-badge" id="outKey">C</div>
+                </div>
+            </div>
+
+            <table class="chart-table">
+                <colgroup id="tableColGroup">
+                    </colgroup>
+                <tbody id="chartBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const inCode = document.getElementById('inCode');
+        const inTitle = document.getElementById('inTitle');
+        const inKey = document.getElementById('inKey');
+        
+        const outTitle = document.getElementById('outTitle');
+        const outKey = document.getElementById('outKey');
+        const chartBody = document.getElementById('chartBody');
+        const tableColGroup = document.getElementById('tableColGroup');
+
+        // Secuencia de colores
+        const colorCycle = ['bg-green', 'bg-purple', 'bg-green', 'bg-purple', 'bg-brown', 'bg-red'];
+
+        function render() {
+            outTitle.textContent = inTitle.value;
+            outKey.textContent = inKey.value;
+
+            const text = inCode.value;
+            const lines = text.split('\n');
+            
+            let sections = [];
+            let currentSection = { lyrics: '', rows: [] };
+            let maxCols = 0;
+
+            // 1. ANÁLISIS DEL TEXTO
+            lines.forEach(line => {
+                const cleanLine = line.trim();
+                if(!cleanLine) return;
+
+                if (cleanLine.includes(';')) {
+                    // Es una línea de acordes
+                    const cols = cleanLine.split(';');
+                    if (cols.length > maxCols) maxCols = cols.length;
+                    currentSection.rows.push(cleanLine);
+                } else {
+                    // Es una línea de letra o título de sección
+                    if (currentSection.rows.length > 0) {
+                        sections.push(currentSection);
+                        currentSection = { lyrics: '', rows: [] };
+                    }
+                    currentSection.lyrics += (currentSection.lyrics ? '\n' : '') + cleanLine;
+                }
+            });
+            // Añadir el último bloque
+            if (currentSection.rows.length > 0 || currentSection.lyrics) {
+                sections.push(currentSection);
+            }
+            if (maxCols === 0) maxCols = 1;
+
+            // 2. DEFINIR ANCHOS DE COLUMNA
+            // Columna 1 = Letra (class="col-lyrics")
+            // Columnas siguientes = Acordes (automáticas)
+            let colHtml = `<col class="col-lyrics">`;
+            for(let i=0; i<maxCols; i++) {
+                colHtml += `<col>`;
+            }
+            tableColGroup.innerHTML = colHtml;
+
+
+            // 3. CONSTRUIR HTML
+            let html = '';
+            let colorIdx = 0;
+
+            sections.forEach((sect, sIdx) => {
+                if(sect.rows.length === 0) return;
+
+                const currColor = colorCycle[colorIdx % colorCycle.length];
+                const nextColor = colorCycle[(colorIdx + 1) % colorCycle.length];
+                const rowSpan = sect.rows.length;
+
+                sect.rows.forEach((rowString, rIdx) => {
+                    html += `<tr>`;
+
+                    // --- CELDA DE LETRA (Solo en la primera fila de la sección) ---
+                    if (rIdx === 0) {
+                        // Usamos un div interno "lyrics-inner" para centrar con Flexbox
+                        html += `<td class="lyrics-cell ${currColor}" rowspan="${rowSpan}">
+                                    <div class="lyrics-inner">
+                                        ${sect.lyrics}
+                                    </div>
+                                 </td>`;
+                    }
+
+                    // --- CELDAS DE ACORDES ---
+                    const cells = rowString.split(';');
+                    cells.forEach(cellStr => {
+                        cellStr = cellStr.trim();
+                        
+                        // Detectar Coma (Split Vertical)
+                        if (cellStr.includes(',')) {
+                            const parts = cellStr.split(',');
+                            html += `<td class="chord-cell" style="padding:0; border:0">
+                                        <div class="split-box">
+                                            <div class="split-top ${currColor}">${parts[0].trim()}</div>
+                                            <div class="split-bottom ${nextColor}">${parts[1] ? parts[1].trim() : ''}</div>
+                                        </div>
+                                     </td>`;
+                        } else {
+                            // Celda normal
+                            html += `<td class="chord-cell ${currColor}">
+                                        <div class="chord-inner">${cellStr}</div>
+                                     </td>`;
+                        }
+                    });
+
+                    // --- RELLENO DE CELDAS VACÍAS (Padding) ---
+                    const missingCols = maxCols - cells.length;
+                    if (missingCols > 0) {
+                        for(let i=0; i<missingCols; i++) {
+                            html += `<td class="chord-cell ${currColor}">&nbsp;</td>`;
+                        }
+                    }
+
+                    html += `</tr>`;
+                });
+                colorIdx++;
+            });
+
+            chartBody.innerHTML = html;
+        }
+
+        // Event Listeners
+        inCode.addEventListener('input', render);
+        inTitle.addEventListener('input', render);
+        inKey.addEventListener('input', render);
+
+        // Render inicial
+        render();
+
+    </script>
+</body>
+</html>
