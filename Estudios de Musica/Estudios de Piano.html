@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Clases de Piano</title>
+    <style>
+        /* =========================================
+           1. VARIABLES GLOBALES (TRUE BLACK)
+           ========================================= */
+        :root {
+            --bg-color: #000000;
+            --surface-color: #000000;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #27272a;
+
+            /* Acentos */
+            --accent-piano: #60a5fa;
+            --accent-circle: #fbbf24;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --gold: #fbbf24;
+
+            /* MODO EXAMEN OSCURO */
+            --exam-bg-dark: radial-gradient(circle at center, #1a1608 0%, #000000 100%);
+            --exam-text: #fff;
+            
+            /* Círculo SVG */
+            --key-white: #ffffff;
+            --key-black: #111827;
+            --ring-maj: #111827;
+            --ring-min: #000000;
+            --ring-dim: #111827;
+            --slice-stroke: #27272a;
+            
+            --radius: 20px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f9fafb; 
+            --surface-color: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            
+            --accent-piano: #3b82f6;
+            --accent-circle: #d97706;
+            
+            /* Examen Light */
+            --exam-bg-light: #fffbeb; 
+            --exam-text-light: #78350f; 
+
+            /* Círculo SVG Light */
+            --ring-maj: #ffffff;
+            --ring-min: #f3f4f6;
+            --ring-dim: #ffffff;
+            --slice-stroke: #e5e7eb;
+        }
+
+        /* TIPOGRAFÍA Y RESET */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+        
+        html { height: 100%; }
+        
+        body {
+            background-color: var(--bg-color); color: var(--text-primary);
+            height: 100%; display: flex; flex-direction: column; overflow: hidden; 
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .hidden { display: none !important; }
+        
+        /* =========================================
+           2. ICONOS SVG GLOBALES
+           ========================================= */
+        .icon { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; }
+        .icon-sm { width: 14px; height: 14px; }
+        .icon-lg { width: 24px; height: 24px; }
+
+        /* =========================================
+           3. COMPONENTES PRINCIPALES
+           ========================================= */
+        header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; border-bottom: 1px solid var(--border-color); }
+        h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+        .theme-btn { background: transparent; border: 1px solid var(--border-color); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: transform 0.2s; cursor: pointer;}
+        .theme-btn:active { transform: scale(0.9); }
+
+        /* MAIN SCROLL */
+        main { 
+            flex: 1; display: flex; flex-direction: column; 
+            padding: 10px 24px 40px 24px; max-width: 500px; width: 100%; margin: 0 auto; 
+            overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; min-height: 0; 
+        }
+
+        /* Devocional */
+        #devotionalBox {
+            background: transparent; padding: 20px; border-radius: 16px;
+            border-left: 4px solid var(--gold); margin-bottom: 24px; margin-top: 10px;
+            animation: fadeIn 0.5s; display: flex; flex-direction: column; gap: 8px;
+            border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .devo-text { font-size: 0.95rem; font-style: italic; color: var(--text-primary); line-height: 1.6; }
+        .devo-ref { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-align: right; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .section-title { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-secondary); margin: 20px 0 12px 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+
+        /* Redes Sociales */
+        .social-section { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--border-color); text-align: center; flex-shrink: 0; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; margin-top: 16px;}
+        .social-btn {
+            width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--text-primary); text-decoration: none; transition: transform 0.2s, background 0.2s;
+            background: transparent; border: 1px solid var(--border-color);
+        }
+        .social-btn:active { transform: scale(0.9); background: rgba(128,128,128,0.1); }
+
+        /* =========================================
+           4. ESTILOS EXAMEN
+           ========================================= */
+        body.exam-mode { background: var(--exam-bg-dark) !important; color: var(--exam-text) !important; }
+        body.exam-mode h1 { color: #ffd700 !important; }
+        body.exam-mode .theme-btn { display: none; }
+        body[data-theme="light"].exam-mode { background: var(--exam-bg-light) !important; color: var(--exam-text-light) !important; }
+        body[data-theme="light"].exam-mode h1 { color: #92400e !important; }
+
+        .exam-hud {
+            display: flex; justify-content: space-between; align-items: center;
+            background: transparent; padding: 14px 24px; 
+            border-radius: 50px; margin-bottom: 24px;
+            border: 1px solid var(--border-color); flex-shrink: 0;
+        }
+        body[data-theme="light"].exam-mode .exam-hud { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
+        
+        .hud-item { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.95rem; }
+        .hud-ok { color: var(--correct); } 
+        .hud-bad { color: var(--wrong); }
+        .hud-time { font-variant-numeric: tabular-nums; }
+
+        /* =========================================
+           5. TARJETAS DE MENÚ
+           ========================================= */
+        .menu-list { display: flex; flex-direction: column; gap: 16px; width: 100%; animation: slideUp 0.4s; flex-shrink: 0;}
+        #levelsContainer { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+
+        .card {
+            background: transparent; border-radius: var(--radius); padding: 22px; 
+            cursor: pointer; position: relative; overflow: hidden; margin: 0;
+            border: 1px solid var(--border-color); transition: background 0.2s;
+        }
+        .card:active { background: rgba(128,128,128,0.05); }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;}
+        .card-badge { font-size: 0.8rem; font-weight: 800; color: var(--text-secondary); }
+        .card-desc { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.4; }
+        
+        .card-stats { display: flex; gap: 12px; padding-top: 14px; border-top: 1px solid var(--border-color); }
+        .stat-pill-mini { 
+            font-size: 0.75rem; background: transparent; border: 1px solid var(--border-color);
+            padding: 6px 10px; border-radius: 8px; color: var(--text-secondary); display: flex; gap: 6px; align-items: center;
+        }
+        .stat-pill-mini strong { color: var(--text-primary); }
+
+        .progress-track { height: 4px; width: 100%; background: rgba(128,128,128,0.1); border-radius: 10px; position: absolute; bottom: 0; left: 0; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-piano); border-radius: 10px; }
+        .theme-circle .progress-fill { background: var(--accent-circle); }
+
+        /* =========================================
+           6. VISTAS DE JUEGO
+           ========================================= */
+        .game-view { display: flex; flex-direction: column; min-height: 100%; animation: fadeIn 0.3s; }
+        .top-nav { display: flex; justify-content: space-between; margin-bottom: 16px; flex-shrink: 0; }
+        .back-pill { display: flex; align-items: center; gap: 6px; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 24px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.2s;}
+        .back-pill:active { background: rgba(128,128,128,0.1); }
+
+        /* FIX: justify-content flex-start evita el overlap hacia arriba */
+        .play-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 150px; padding: 0 0 20px 0; }
+        
+        .q-context { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; margin-top: 10px; text-align: center;}
+        
+        .big-note { font-size: clamp(5rem, 16vh, 7rem); font-weight: 900; line-height: 1; margin-bottom: 10px; text-align: center; letter-spacing: -2px; }
+        .color-piano { color: var(--accent-piano); filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.2)); }
+        .color-circle { color: var(--accent-circle); filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.2)); }
+        body.exam-mode .big-note { color: var(--exam-text); filter: none; }
+        body[data-theme="light"].exam-mode .big-note { color: #78350f; }
+
+        /* FIX: Mantiene el espacio reservado para evitar brincos en la pantalla */
+        .feedback { 
+            min-height: 24px; font-weight: 700; visibility: hidden; opacity: 0; transition: opacity 0.2s ease; 
+            color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; 
+            margin-bottom: 20px; display: flex; justify-content: center; align-items: center;
+        }
+        .feedback.show { visibility: visible; opacity: 1; }
+
+        /* Botones Teoría */
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; flex-shrink: 0; width: 100%;}
+        .btn-opt { background: transparent; border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; font-size: 1.2rem; font-weight: 700; color: var(--text-primary); transition: transform 0.1s, background 0.2s; cursor: pointer; }
+        .btn-opt:active { transform: scale(0.96); }
+        .btn-opt.ok { background: var(--correct); border-color: var(--correct); color: #000; }
+        .btn-opt.bad { background: var(--wrong); border-color: var(--wrong); color: #000; }
+
+        /* Piano Físico */
+        .piano-box { 
+            width: 100%; height: 32vh; min-height: 180px; max-height: 280px; 
+            display: flex; margin-bottom: 20px; border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border-color); position: relative; z-index: 0; flex-shrink: 0; margin-top: auto; 
+        }
+        .k-white { flex: 1; background: var(--key-white); border-right: 1px solid var(--border-color); position: relative; z-index: 1; transition: filter 0.1s; }
+        .k-white:last-child { border-right: none; }
+        .k-white:active { filter: brightness(0.9); }
+        .k-black { position: absolute; top: 0; width: 10%; height: 60%; background: var(--key-black); border-radius: 0 0 6px 6px; z-index: 50; border: 1px solid var(--border-color); border-top: none; }
+        .k-black:active { filter: brightness(1.5); }
+        .k-white.ok-k, .k-white.bad-k { z-index: 2; }
+        .k-black.ok-k, .k-black.bad-k { z-index: 51; }
+        .ok-k { background: var(--correct) !important; }
+        .bad-k { background: var(--wrong) !important; }
+        .kb-1 { left: 9.5%; } .kb-3 { left: 24%; } .kb-6 { left: 52.5%; } .kb-8 { left: 67%; } .kb-10 { left: 81.5%; }
+
+        /* Círculo SVG */
+        .circle-container { width: 100%; max-width: 320px; aspect-ratio: 1/1; margin: 10px auto 20px; position: relative; flex-shrink: 0; }
+        svg { width: 100%; height: 100%; overflow: visible; }
+        .slice { cursor: pointer; transition: fill 0.1s; stroke: var(--slice-stroke); stroke-width: 1.5; }
+        .ring-maj { fill: var(--ring-maj); } .ring-min { fill: var(--ring-min); } .ring-dim { fill: var(--ring-dim); }
+        .slice:active { filter: brightness(1.2); }
+        .slice.is-root { fill: var(--text-secondary); }
+        .slice.is-correct { fill: var(--correct); }
+        .slice.is-wrong { fill: var(--wrong); }
+        .slice-text { font-size: 14px; font-weight: 700; fill: var(--text-primary); text-anchor: middle; dominant-baseline: middle; pointer-events: none; opacity: 0; }
+        .slice-text.visible { opacity: 1; }
+        .slice.is-root + .slice-text { fill: var(--bg-color); opacity: 1; } 
+        .center-hole { fill: var(--bg-color); stroke: var(--slice-stroke); stroke-width: 1.5; }
+        body.exam-mode .center-hole { fill: var(--exam-bg); }
+
+        /* =========================================
+           7. MODALES Y RESULTADOS
+           ========================================= */
+        #viewResult { justify-content: center; align-items: center; padding: 20px 0; }
+        .result-card { background: transparent; width: 100%; border-radius: 24px; padding: 32px 24px; text-align: center; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 20px; }
+        
+        .grade-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto; }
+        .grade-circle { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--text-primary); display: flex; justify-content: center; align-items: center; font-size: 3.5rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-pill { background: transparent; padding: 12px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; display: block; margin-bottom: 4px; }
+        .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--text-primary); }
+
+        .analysis-box { background: rgba(128,128,128,0.05); border-radius: 16px; padding: 16px; text-align: left; border: 1px solid var(--border-color); }
+        .analysis-text { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 10px; line-height: 1.5; }
+        .analysis-tag { font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; background: transparent; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-secondary); }
+        
+        .btn-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--correct); color: #000; padding: 18px; border-radius: 50px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; width:100%; transition: transform 0.2s;}
+        .btn-whatsapp:active { transform: scale(0.96); }
+        .btn-home { background: transparent; border: none; color: var(--text-secondary); padding: 12px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+
+        /* Modal Selección */
+        #modeSelector { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; display: flex; align-items: flex-end; }
+        .sheet { background: var(--bg-color); width: 100%; padding: 32px 24px; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; gap: 12px; animation: slideUp 0.3s; border-top: 1px solid var(--border-color); }
+        .sheet-title { text-align: center; font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; }
+        .btn-act { padding: 18px; border-radius: 16px; border: 1px solid var(--border-color); font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: transparent; color: var(--text-primary);}
+        .btn-e { background: var(--text-primary); color: var(--bg-color); border: none; }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body data-theme="dark">
+
+<header>
+    <h1>Clases de Piano</h1>
+    <button class="theme-btn" id="themeToggle">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+</header>
+
+<main id="mainContainer">
+    <div id="devotionalBox" class="hidden">
+        <p class="devo-text" id="devoText"></p>
+        <span class="devo-ref" id="devoRef"></span>
+    </div>
+
+    <div id="viewMain" class="menu-list">
+        <h2 class="section-title" style="margin-top: 0;">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" ry="2"/><line x1="7" y1="4" x2="7" y2="12"/><line x1="11" y1="4" x2="11" y2="12"/><line x1="15" y1="4" x2="15" y2="12"/><line x1="19" y1="4" x2="19" y2="12"/></svg>
+            Teclas y Notas
+        </h2>
+        
+        <div class="card" onclick="toSubMenu('theory')">
+            <div class="card-header">
+                <span class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Nombres
+                </span>
+                <span id="main-badge-theory" class="card-badge">?</span>
+            </div>
+            <p class="card-desc">Entrenamiento Mental: Traduce nomenclaturas.</p>
+            <div class="progress-track"><div id="bar-theory" class="progress-fill"></div></div>
+        </div>
+        
+        <div class="card" onclick="toSubMenu('piano')">
+            <div class="card-header">
+                <span class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Ubicación
+                </span>
+                <span id="main-badge-piano" class="card-badge">?</span>
+            </div>
+            <p class="card-desc">Entrenamiento Visual: Encuentra la tecla física.</p>
+            <div class="progress-track"><div id="bar-piano" class="progress-fill"></div></div>
+        </div>
+
+        <h2 class="section-title">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Círculo de Quintas
+        </h2>
+        
+        <div class="card theme-circle" onclick="toSubMenu('circle')">
+            <div class="card-header">
+                <span class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Estudio de Grados
+                </span>
+                <span id="main-badge-circle" class="card-badge">?</span>
+            </div>
+            <p class="card-desc">Geometría armónica. Dominio de escalas mayores, menores y acordes disminuidos.</p>
+            <div class="progress-track"><div id="bar-circle" class="progress-fill"></div></div>
+        </div>
+
+        <div style="text-align:center; padding:15px;"><span onclick="resetAll()" style="color:var(--text-secondary); font-size:0.8rem; text-decoration:underline; cursor:pointer;">Borrar Todo el Progreso</span></div>
+
+        <div class="social-section">
+            <div class="section-title" style="margin-top: 0; justify-content: center;">SÍGUENOS IGLESIA YHWH</div>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/iglesiayhwh/" target="_blank" class="social-btn soc-ig">
+                    <svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="https://www.youtube.com/@iglesiayhwh" target="_blank" class="social-btn soc-yt">
+                    <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2C5.12 19.5 12 19.5 12 19.5s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                </a>
+                <a href="https://www.tiktok.com/@iglesia.yhwh" target="_blank" class="social-btn soc-tt">
+                    <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path><path d="M15 11.5c.8-.8 2-1.5 3-1.5v-4c-1.5 0-3 1-4 2.5V4h-4v10a4 4 0 1 1-4-4"></path></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewLevels" class="menu-list hidden">
+        <div class="top-nav"><button class="back-pill" onclick="toHome()"><svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Volver</button></div>
+        <h2 id="levelTitle" class="section-title" style="margin-top: 0;">SELECCIONA NIVEL</h2>
+        
+        <div id="levelsContainer">
+            </div>
+    </div>
+
+    <div id="modeSelector" class="modal-overlay hidden" onclick="if(event.target===this) this.classList.add('hidden')">
+        <div class="sheet">
+            <div class="sheet-title">Modo de Entrenamiento</div>
+            <button class="btn-act" onclick="startPractice()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Modo de Estudio
+            </button>
+            <button class="btn-act btn-e" onclick="startExam()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Modo Evaluación
+            </button>
+            <button class="btn-act" style="border:none; color:var(--text-secondary);" onclick="document.getElementById('modeSelector').classList.add('hidden')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="examHud" class="exam-hud hidden">
+        <div class="hud-item hud-ok"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> <span id="hudOk">0</span></div>
+        <div class="hud-item hud-bad"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg> <span id="hudBad">0</span></div>
+        <div class="hud-item hud-time"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> <span id="hudTime">0s</span></div>
+    </div>
+
+    <div id="viewTheory" class="game-view hidden">
+        <div class="top-nav"><button class="back-pill" onclick="exitGame()"><svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Salir</button></div>
+        <div class="play-area">
+            <div class="q-context color-piano" id="txtTheoryContext">Traducción</div>
+            <div id="txtQuest" class="big-note color-piano">?</div>
+            <div id="txtFeedT" class="feedback"></div>
+        </div>
+        <div id="gridOpt" class="grid-options"></div>
+    </div>
+
+    <div id="viewPiano" class="game-view hidden">
+        <div class="top-nav"><button class="back-pill" onclick="exitGame()"><svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Salir</button></div>
+        <div class="play-area">
+            <div class="q-context color-piano">Encuentra la Tecla</div>
+            <div id="txtNoteP" class="big-note color-piano">?</div>
+            <div id="txtFeedP" class="feedback"></div>
+        </div>
+        <div class="piano-box">
+            <div class="k-white" data-n="0"></div><div class="k-white" data-n="2"></div><div class="k-white" data-n="4"></div>
+            <div class="k-white" data-n="5"></div><div class="k-white" data-n="7"></div><div class="k-white" data-n="9"></div><div class="k-white" data-n="11"></div>
+            <div class="k-black kb-1" data-n="1"></div><div class="k-black kb-3" data-n="3"></div><div class="k-black kb-6" data-n="6"></div>
+            <div class="k-black kb-8" data-n="8"></div><div class="k-black kb-10" data-n="10"></div>
+        </div>
+    </div>
+
+    <div id="viewCircle" class="game-view hidden">
+        <div class="top-nav"><button class="back-pill" onclick="exitGame()"><svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Salir</button></div>
+        <div class="play-area">
+            <div class="q-context" id="txtContextC">Tonalidad</div>
+            <div id="txtTargetC" class="big-note color-circle">V</div>
+            <div id="txtFeedC" class="feedback"></div>
+            <div class="circle-container" id="circleContainer"></div>
+        </div>
+    </div>
+
+    <div id="viewResult" class="game-view hidden">
+        <div class="result-card">
+            <h2 style="font-size:0.9rem; color:var(--text-secondary); letter-spacing:1px; margin-bottom: 0;">RESULTADO FINAL</h2>
+            
+            <div class="grade-wrapper">
+                <div class="grade-circle" id="resGrade">A</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-pill"><span class="stat-lbl">Precisión</span><span class="stat-val" id="resAcc">0%</span></div>
+                <div class="stat-pill"><span class="stat-lbl">Velocidad</span><span class="stat-val" id="resAvg">0s</span></div>
+            </div>
+
+            <div class="analysis-box">
+                <div class="analysis-text" id="resText">Cargando...</div>
+                <div class="analysis-tag" id="resWeaknessTag">
+                    <svg class="icon icon-sm" id="resWeakIcon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg>
+                    <span id="resWeakText">Analizando...</span>
+                </div>
+            </div>
+
+            <button class="btn-whatsapp" onclick="shareResult()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                <span>Enviar al Pastor</span>
+            </button>
+            <button class="btn-home" onclick="exitGame()">Volver al Inicio</button>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    /* ==========================================
+       DATOS & LÓGICA
+       ========================================== */
+    const NOTES = [
+        {id:0, anglo:["C"], latin:["Do"], t:"white"}, {id:1, anglo:["C#","Db"], latin:["Do#","Reb"], t:"black"},
+        {id:2, anglo:["D"], latin:["Re"], t:"white"}, {id:3, anglo:["D#","Eb"], latin:["Re#","Mib"], t:"black"},
+        {id:4, anglo:["E"], latin:["Mi"], t:"white"}, {id:5, anglo:["F"], latin:["Fa"], t:"white"},
+        {id:6, anglo:["F#","Gb"], latin:["Fa#","Solb"], t:"black"}, {id:7, anglo:["G"], latin:["Sol"], t:"white"},
+        {id:8, anglo:["G#","Ab"], latin:["Sol#","Lab"], t:"black"}, {id:9, anglo:["A"], latin:["La"], t:"white"},
+        {id:10, anglo:["A#","Bb"], latin:["La#","Sib"], t:"black"}, {id:11, anglo:["B"], latin:["Si"], t:"white"}
+    ];
+    
+    // Anillo 0: Mayor | Anillo 1: Menor | Anillo 2: Disminuido
+    // Corrección: El offset del disminuido respecto a la raíz es 0 (misma rebanada)
+    const DEGREES_MAJ = [
+        { name: "Quinta", roman: "V",   ring: 0, offset: 1 },
+        { name: "Cuarta", roman: "IV",  ring: 0, offset: -1 },
+        { name: "Relativa Menor", roman: "vi",  ring: 1, offset: 0 },
+        { name: "Segunda Menor",roman: "ii",  ring: 1, offset: -1 },
+        { name: "Tercera Menor",roman: "iii", ring: 1, offset: 1 },
+        { name: "Séptima Dism.",roman: "vii°", ring: 2, offset: 0 } 
+    ];
+
+    const DEGREES_MIN = [
+        { name: "Quinta Menor", roman: "v",   ring: 1, offset: 1 },
+        { name: "Cuarta Menor", roman: "iv",  ring: 1, offset: -1 },
+        { name: "Relativa Mayor", roman: "III", ring: 0, offset: 0 },
+        { name: "Sexta Mayor",  roman: "VI",  ring: 0, offset: -1 },
+        { name: "Séptima Mayor",roman: "VII", ring: 0, offset: 1 },
+        { name: "Segunda Dism.",roman: "ii°", ring: 2, offset: 0 } 
+    ];
+
+    const QUOTES = [
+        {t:"Todo lo que hacéis, hacedlo de corazón, como para el Señor.", r:"Colosenses 3:23"},
+        {t:"Cantadlé cántico nuevo; hacedlo bien, tañendo con júbilo.", r:"Salmos 33:3"},
+        {t:"Y todo lo que hacéis, hacedlo todo en el nombre del Señor Jesús.", r:"Colosenses 3:17"},
+        {t:"Procura con diligencia presentarte a Dios aprobado.", r:"2 Timoteo 2:15"},
+        {t:"El que adquiere cordura a sí mismo se ama.", r:"Proverbios 19:8"}
+    ];
+
+    let app = { mode: '', sub: '', bag: [], q: null, lock: false, isExam: false, examData: {correct:0, bad:0, startTime:0, qs:[]}, timer: null, qStart:0, share:{} };
+    let db = {}; try { db = JSON.parse(localStorage.getItem('pianoV13')) || {}; } catch(e){}
+
+    /* --- INIT --- */
+    function showDailyDevotional() {
+        let q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+        document.getElementById('devoText').innerText = `"${q.t}"`;
+        document.getElementById('devoRef').innerText = q.r;
+        document.getElementById('devotionalBox').classList.remove('hidden');
+    }
+    
+    /* --- CORE LOGIC --- */
+    function savePractice(ok) {
+        let k = app.mode+'_'+app.sub; let v = db[k]?.score||0;
+        if(ok) { let g = Math.ceil((100-v)*0.15); v+=Math.max(1,g); } else { let l=Math.ceil(v*0.15); v-=Math.max(5,l); }
+        if(!db[k]) db[k]={score:0, exams:0, lastGrade:'-'};
+        db[k].score = Math.min(100, Math.max(0, Math.round(v)));
+        localStorage.setItem('pianoV13', JSON.stringify(db));
+    }
+    
+    function saveExamResult(grade) {
+        let k = app.mode+'_'+app.sub;
+        if(!db[k]) db[k]={score:0, exams:0, lastGrade:'-'};
+        db[k].exams++;
+        db[k].lastGrade = grade;
+        localStorage.setItem('pianoV13', JSON.stringify(db));
+    }
+
+    function resetAll() { if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('pianoV13'); location.reload(); } }
+
+    const views = ['viewMain','viewLevels','viewTheory','viewPiano','viewCircle','viewResult'];
+    function show(id) { 
+        views.forEach(v => document.getElementById(v).classList.add('hidden')); 
+        document.getElementById(id).classList.remove('hidden'); 
+        // SCROLL FIX EN NAVEGACION
+        document.getElementById('mainContainer').scrollTop = 0;
+    }
+    
+    function forceClearExam() {
+        document.body.classList.remove('exam-mode');
+        document.getElementById('examHud').classList.add('hidden');
+        if(app.timer) clearInterval(app.timer);
+    }
+
+    function toHome() {
+        forceClearExam(); show('viewMain'); showDailyDevotional();
+        // Stats Piano
+        ['theory','piano'].forEach(m => {
+            let s1 = db[m+'_white']?.score||0; let s2 = db[m+'_black']?.score||0; let s3 = db[m+'_mixed']?.score||0;
+            let avg = Math.floor((s1+s2+s3)/3);
+            document.getElementById('bar-'+m).style.width = avg+'%';
+            document.getElementById('main-badge-'+m).innerText = avg+'%';
+        });
+        // Stats Circle
+        let c1 = db['circle_maj']?.score||0; let c2 = db['circle_min']?.score||0; let c3 = db['circle_mixed']?.score||0;
+        let avgC = Math.floor((c1+c2+c3)/3);
+        document.getElementById('bar-circle').style.width = avgC+'%';
+        document.getElementById('main-badge-circle').innerText = avgC+'%';
+    }
+
+    function toSubMenu(m) {
+        forceClearExam(); app.mode = m; show('viewLevels'); document.getElementById('devotionalBox').classList.add('hidden');
+        
+        let cont = document.getElementById('levelsContainer'); cont.innerHTML = '';
+        let levels = [];
+        
+        if(m === 'theory' || m === 'piano') {
+            document.getElementById('levelTitle').innerHTML = m === 'theory' ? '<svg class="icon" viewBox="0 0 24 24" style="margin-right:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Nombres: Niveles' : '<svg class="icon" viewBox="0 0 24 24" style="margin-right:8px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ubicación: Niveles';
+            levels = [
+                {id:'white', t:'Solo Blancas', d:'Notas naturales (Do, Re...)'},
+                {id:'black', t:'Solo Negras', d:'Sostenidos y Bemoles'},
+                {id:'mixed', t:'Todas las Teclas', d:'Nivel Maestro'}
+            ];
+        } else {
+            document.getElementById('levelTitle').innerHTML = '<svg class="icon" viewBox="0 0 24 24" style="margin-right:8px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Estudio de Grados';
+            levels = [
+                {id:'maj', t:'Tonalidad Mayor', d:'Dado el grado I, halla sus relativos (V, vi, vii°...).'},
+                {id:'min', t:'Tonalidad Menor', d:'Dado el grado i, halla sus relativos (v, III, ii°...).'},
+                {id:'mixed', t:'Modo Mixto', d:'Alterna entre tonalidades mayores y menores al azar.'}
+            ];
+        }
+
+        levels.forEach(lv => {
+            let data = db[m+'_'+lv.id] || {score:0, exams:0, lastGrade:'-'};
+            let isCircle = m === 'circle' ? 'theme-circle' : '';
+            cont.innerHTML += `
+                <div class="card ${isCircle}" onclick="openSelector('${lv.id}')">
+                    <div class="card-header"><span class="card-title">${lv.t}</span><span class="card-badge">${data.score}%</span></div>
+                    <p class="card-desc">${lv.d}</p>
+                    <div class="card-stats">
+                        <div class="stat-pill-mini"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg> <strong>${data.exams}</strong></div>
+                        <div class="stat-pill-mini"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10M6 4v6a6 6 0 0 0 12 0V4M2 4h4M18 4h4"/></svg> <strong>${data.lastGrade}</strong></div>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:${data.score}%"></div></div>
+                </div>
+            `;
+        });
+    }
+
+    /* --- EXAM --- */
+    let tSub=''; function openSelector(s){ tSub=s; document.getElementById('modeSelector').classList.remove('hidden'); }
+    
+    function startPractice() {
+        document.getElementById('modeSelector').classList.add('hidden');
+        app.isExam=false; app.sub=tSub; app.bag=[]; 
+        forceClearExam();
+        if(app.mode === 'circle') renderCircle();
+        runGame();
+    }
+
+    function startExam() {
+        document.getElementById('modeSelector').classList.add('hidden');
+        app.isExam=true; app.sub=tSub; app.bag=[];
+        app.examData={correct:0, bad:0, startTime:Date.now(), qs:[]};
+        
+        document.body.classList.add('exam-mode'); 
+        document.getElementById('examHud').classList.remove('hidden');
+        
+        if(app.timer) clearInterval(app.timer);
+        app.timer = setInterval(updateHud, 1000); updateHud();
+        
+        if(app.mode === 'circle') renderCircle();
+        runGame();
+    }
+
+    function updateHud() {
+        if(!app.isExam) return;
+        let t = Math.floor((Date.now()-app.examData.startTime)/1000);
+        document.getElementById('hudOk').innerText = app.examData.correct;
+        document.getElementById('hudBad').innerText = app.examData.bad;
+        document.getElementById('hudTime').innerText = t+'s';
+    }
+
+    function runGame() { 
+        if(app.mode==='theory') { show('viewTheory'); loopT(); } 
+        else if(app.mode==='piano') { show('viewPiano'); loopP(); }
+        else { show('viewCircle'); loopC(); }
+    }
+    
+    function exitGame() { forceClearExam(); app.isExam=false; toSubMenu(app.mode); }
+
+    /* --- LOGIC --- */
+    function getBag(pool) { if(!app.bag.length) { app.bag=[...pool].sort(()=>Math.random()-.5); } return app.bag.pop(); }
+    function txt(n,s,i) { return (!n||!n[s])?"?":(n.t==='white'?n[s][0]:n[s][i]); }
+    
+    // FIX FEEDBACK: No limpiar el texto para que no colapse
+    function msg(id, t, c) { 
+        let e = document.getElementById(id); 
+        if(t) e.innerText = t; 
+        e.style.color = c ? 'var(--correct)' : 'var(--wrong)'; 
+        
+        if(!app.isExam){ 
+            e.classList.add('show'); 
+            if(!t) e.classList.remove('show'); 
+        } 
+    }
+
+    function handle(ok, infoId) {
+        if(app.isExam) {
+            let tm = (Date.now()-app.qStart)/1000;
+            app.examData.qs.push({ok, tm, nid:infoId});
+            if(ok) app.examData.correct++; else app.examData.bad++;
+            updateHud();
+            if((app.examData.correct+app.examData.bad)>=20) { setTimeout(finishExam, 500); return true; }
+        } else savePractice(ok);
+        return false;
+    }
+
+    /* LOOPS PIANO */
+    function loopT() {
+        app.lock=false; 
+        let pool = NOTES.filter(n=>app.sub==='mixed'||n.t===app.sub);
+        let n=getBag(pool); let acc=Math.random()>.5?1:0; let dir=Math.random()>.5?0:1;
+        app.q={n,acc}; app.qStart=Date.now();
+        document.getElementById('txtQuest').innerText = txt(n,dir?'anglo':'latin',acc);
+        msg('txtFeedT','');
+        let opts=[n]; while(opts.length<4){ let r=NOTES[Math.floor(Math.random()*12)]; if(!opts.includes(r)) opts.push(r); }
+        let g=document.getElementById('gridOpt'); g.innerHTML='';
+        opts.sort(()=>Math.random()-.5).forEach(o=>{
+            let b=document.createElement('button'); b.className='btn-opt';
+            b.innerText=txt(o,dir?'latin':'anglo',acc);
+            b.onclick=()=>{
+                if(app.lock)return; app.lock=true;
+                let ok=(o.id===n.id); let end=handle(ok,n.id);
+                if(!app.isExam) { b.classList.add(ok?'ok':'bad'); msg('txtFeedT',ok?'¡BIEN!':'ERROR',ok); }
+                if(!end) setTimeout(loopT, app.isExam?200:(ok?500:900));
+            }; g.appendChild(b);
+        });
+    }
+
+    function loopP() {
+        app.lock=false; 
+        let pool = NOTES.filter(n=>app.sub==='mixed'||n.t===app.sub);
+        let n=getBag(pool); let acc=Math.random()>.5?1:0; let sys=Math.random()>.5?'anglo':'latin';
+        app.q={n}; app.qStart=Date.now();
+        document.getElementById('txtNoteP').innerText=txt(n,sys,acc);
+        msg('txtFeedP','');
+        document.querySelectorAll('.piano-box div').forEach(k=>k.className=k.className.replace(/ (ok-k|bad-k)/g,''));
+    }
+
+    document.querySelectorAll('.piano-box div').forEach(k=>{
+        k.addEventListener('click',function(e){
+            if(document.getElementById('viewPiano').classList.contains('hidden'))return;
+            if(app.lock)return; e.stopPropagation(); app.lock=true;
+            let ok=(parseInt(this.getAttribute('data-n'))===app.q.n.id); let end=handle(ok,app.q.n.id);
+            this.classList.add(ok?'ok-k':'bad-k');
+            if(!app.isExam) { msg('txtFeedP',ok?'¡BIEN!':'ERROR',ok); if(!ok){ let r=document.querySelector(`.piano-box div[data-n="${app.q.n.id}"]`); if(r)r.classList.add('ok-k'); }}
+            if(!end) setTimeout(loopP, app.isExam?250:(ok?400:1000));
+        });
+    });
+
+    /* LOOPS CIRCULO */
+    function getCircleBag() {
+        if (!app.bag.length) {
+            let pool = [];
+            let roots = [0,1,2,3,4,5,6,7,8,9,10,11];
+            roots.forEach(r => {
+                if(app.sub === 'maj' || app.sub === 'mixed') DEGREES_MAJ.forEach(d => pool.push({rootId: r, rootRing: 0, deg: d}));
+                if(app.sub === 'min' || app.sub === 'mixed') DEGREES_MIN.forEach(d => pool.push({rootId: r, rootRing: 1, deg: d}));
+            });
+            app.bag = pool.sort(() => Math.random() - 0.5);
+        }
+        return app.bag.pop();
+    }
+
+    function loopC() {
+        app.lock = false;
+        let qItem = getCircleBag();
+        
+        app.qStart = Date.now();
+        app.q = { 
+            rootId: qItem.rootId, rootRing: qItem.rootRing,
+            targetId: (qItem.rootId + qItem.deg.offset + 12) % 12, targetRing: qItem.deg.ring, 
+            deg: qItem.deg 
+        };
+
+        document.getElementById('txtContextC').innerText = qItem.rootRing === 0 ? "Tonalidad Mayor" : "Tonalidad Menor";
+        document.getElementById('txtTargetC').innerText = qItem.deg.roman;
+        msg('txtFeedC', '');
+
+        // Limpiar UI SVG
+        document.querySelectorAll('.slice').forEach(s => s.classList.remove('is-root', 'is-correct', 'is-wrong'));
+        document.querySelectorAll('.slice-text').forEach(t => t.classList.remove('visible'));
+
+        // Iluminar Raíz
+        let rootSlice = document.querySelector(`.slice[data-id="${qItem.rootId}"][data-ring="${qItem.rootRing}"]`);
+        if(rootSlice) rootSlice.classList.add('is-root');
+
+        // Mostrar I o i
+        let rootType = qItem.rootRing === 0 ? 'maj' : 'min';
+        let rootText = document.querySelector(`.txt-${rootType}-${qItem.rootId}`);
+        if(rootText) { 
+            rootText.textContent = qItem.rootRing === 0 ? 'I' : 'i'; 
+            rootText.classList.add('visible'); 
+        }
+    }
+
+    /* GENERADOR SVG (3 ANILLOS) */
+    function polarToCartesian(cx, cy, r, angle) {
+        var a = (angle - 90) * Math.PI / 180.0;
+        return { x: cx + (r * Math.cos(a)), y: cy + (r * Math.sin(a)) };
+    }
+    function describeArc(x, y, rIn, rOut, start, end) {
+        var p1 = polarToCartesian(x, y, rOut, end), p2 = polarToCartesian(x, y, rOut, start);
+        var p3 = polarToCartesian(x, y, rIn, end),  p4 = polarToCartesian(x, y, rIn, start);
+        var large = end - start <= 180 ? "0" : "1";
+        return ["M", p1.x, p1.y, "A", rOut, rOut, 0, large, 0, p2.x, p2.y, "L", p4.x, p4.y, "A", rIn, rIn, 0, large, 1, p3.x, p3.y, "Z"].join(" ");
+    }
+    function getCenter(x, y, rIn, rOut, start, end) {
+        return polarToCartesian(x, y, rIn + (rOut - rIn)/2, start + (end - start)/2);
+    }
+    
+    function renderCircle() {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 200 200");
+        
+        // Ajuste de radios para 3 anillos
+        const cx = 100, cy = 100;
+        const rMajOut = 98, rMajIn = 74;
+        const rMinOut = 74, rMinIn = 50;
+        const rDimOut = 50, rDimIn = 26;
+        
+        const C_MAP = [0,7,2,9,4,11,6,1,8,3,10,5]; // Mayores
+        const MIN_MAP = [9,4,11,6,1,8,3,10,5,0,7,2]; // Relativos Menores
+        const DIM_STRINGS = ["B°", "F#°", "C#°", "G#°", "D#°", "A#°", "F°", "C°", "G°", "D°", "A°", "E°"]; // Disminuidos alineados
+
+        for (let i = 0; i < 12; i++) {
+            let start = (i * 30) - 15; let end = start + 30;
+            
+            // Mayor (Anillo 0)
+            let pMaj = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pMaj.setAttribute("d", describeArc(cx, cy, rMajIn, rMajOut, start, end));
+            pMaj.setAttribute("class", "slice ring-maj");
+            pMaj.setAttribute("data-id", i); pMaj.setAttribute("data-ring", 0);
+            let tpMaj = getCenter(cx, cy, rMajIn, rMajOut, start, end);
+            let tMaj = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            tMaj.setAttribute("x", tpMaj.x); tMaj.setAttribute("y", tpMaj.y + 2);
+            tMaj.setAttribute("class", "slice-text txt-maj-" + i);
+            tMaj.textContent = NOTES[C_MAP[i]].anglo[0];
+            
+            // Menor (Anillo 1)
+            let pMin = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pMin.setAttribute("d", describeArc(cx, cy, rMinIn, rMinOut, start, end));
+            pMin.setAttribute("class", "slice ring-min");
+            pMin.setAttribute("data-id", i); pMin.setAttribute("data-ring", 1);
+            let tpMin = getCenter(cx, cy, rMinIn, rMinOut, start, end);
+            let tMin = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            tMin.setAttribute("x", tpMin.x); tMin.setAttribute("y", tpMin.y + 2);
+            tMin.setAttribute("class", "slice-text txt-min-" + i);
+            tMin.setAttribute("style", "font-size: 11px;"); 
+            tMin.textContent = NOTES[MIN_MAP[i]].anglo[0] + "m";
+
+            // Disminuido (Anillo 2)
+            let pDim = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pDim.setAttribute("d", describeArc(cx, cy, rDimIn, rDimOut, start, end));
+            pDim.setAttribute("class", "slice ring-dim");
+            pDim.setAttribute("data-id", i); pDim.setAttribute("data-ring", 2);
+            let tpDim = getCenter(cx, cy, rDimIn, rDimOut, start, end);
+            let tDim = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            tDim.setAttribute("x", tpDim.x); tDim.setAttribute("y", tpDim.y + 1);
+            tDim.setAttribute("class", "slice-text txt-dim-" + i);
+            tDim.setAttribute("style", "font-size: 9px;"); 
+            tDim.textContent = DIM_STRINGS[i];
+
+            pMaj.addEventListener("click", function(e) { handleSliceClick(e, i, 0, this, tMaj); });
+            pMin.addEventListener("click", function(e) { handleSliceClick(e, i, 1, this, tMin); });
+            pDim.addEventListener("click", function(e) { handleSliceClick(e, i, 2, this, tDim); });
+
+            svg.appendChild(pMaj); svg.appendChild(tMaj);
+            svg.appendChild(pMin); svg.appendChild(tMin);
+            svg.appendChild(pDim); svg.appendChild(tDim);
+        }
+
+        let hole = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        hole.setAttribute("cx", cx); hole.setAttribute("cy", cy); hole.setAttribute("r", rDimIn);
+        hole.setAttribute("class", "center-hole");
+        svg.appendChild(hole);
+        
+        document.getElementById("circleContainer").innerHTML = '';
+        document.getElementById("circleContainer").appendChild(svg);
+    }
+
+    function handleSliceClick(e, cId, cRing, pEl, tEl) {
+        if(document.getElementById('viewCircle').classList.contains('hidden')) return;
+        if(app.lock) return; e.stopPropagation();
+        if(cId === app.q.rootId && cRing === app.q.rootRing) return; 
+
+        app.lock = true;
+        let ok = (cId === app.q.targetId && cRing === app.q.targetRing);
+        let end = handle(ok, app.q.deg.roman); 
+
+        pEl.classList.add(ok ? 'is-correct' : 'is-wrong');
+
+        let targetType = app.q.targetRing === 0 ? 'maj' : (app.q.targetRing === 1 ? 'min' : 'dim');
+        let targetT = document.querySelector(`.txt-${targetType}-${app.q.targetId}`);
+        if(targetT) {
+            targetT.textContent = app.q.deg.roman; 
+            targetT.classList.add('visible');
+        }
+
+        if(!app.isExam) {
+            msg('txtFeedC', ok?'¡BIEN!':'ERROR', ok);
+            if(!ok) { 
+                let cr = document.querySelector(`.slice[data-id="${app.q.targetId}"][data-ring="${app.q.targetRing}"]`); 
+                if(cr) cr.classList.add('is-correct'); 
+            }
+        }
+
+        if(!end) setTimeout(loopC, app.isExam ? 300 : (ok ? 600 : 1200));
+    }
+
+
+    /* ==========================================
+       RESULTADOS 
+       ========================================== */
+    function finishExam() {
+        forceClearExam(); 
+        show('viewResult');
+        let d=app.examData;
+        let acc=Math.round((d.correct/20)*100);
+        let time=Math.floor((Date.now()-d.startTime)/1000);
+        let avg=(time/20).toFixed(2);
+        
+        let slow=0, errs={};
+        d.qs.forEach(q=>{
+            if(q.tm>3) slow++; 
+            if(!q.ok) errs[q.nid]=(errs[q.nid]||0)+1;
+        });
+
+        let nem=-1, max=-1;
+        for(let id in errs) if(errs[id]>max){max=errs[id]; nem=id;}
+
+        let gr='F', col='var(--wrong)';
+        if(acc>=95 && avg<1.5 && slow===0) { gr='A'; col='var(--correct)'; }
+        else if(acc>=85 && avg<2.5 && slow<=2) { gr='B'; col='var(--accent-piano)'; }
+        else if(acc>=75 && avg<3.5) { gr='C'; col='var(--accent-circle)'; }
+        else if(acc>=60) { gr='D'; col='#f97316'; }
+
+        saveExamResult(gr);
+
+        let txt="", weak="Ninguna";
+        if(gr==='A') {
+            txt="¡Excelente trabajo! Has alcanzado la automatización. Tu respuesta es fluida y precisa.";
+            weak = "Ninguna";
+        } else if(acc<70) { 
+            txt="Faltan fundamentos. Estás adivinando en lugar de leer la estructura."; 
+            weak="Base Teórica"; 
+        } else if(slow>4) { 
+            txt="Conoces las posiciones, pero te falta velocidad. Necesitas practicar más para no dudar."; 
+            weak="Velocidad"; 
+        } else { 
+            txt="Buen desempeño. Pule esos pequeños detalles para llegar a la excelencia.";
+            weak="Consistencia";
+        }
+
+        if(nem!=-1) {
+            if(app.mode === 'piano' || app.mode === 'theory') {
+                let n=NOTES.find(x=>x.id==nem);
+                if(n) weak=`Nota difícil: ${n.anglo[0]}`;
+            } else {
+                weak=`Grado difícil: ${nem}`;
+            }
+        }
+
+        let elG=document.getElementById('resGrade'); elG.innerText=gr; elG.style.borderColor=col; elG.style.color=col;
+        document.getElementById('resAcc').innerText=acc+'%';
+        document.getElementById('resAvg').innerText=avg+'s';
+        document.getElementById('resText').innerHTML=txt;
+        
+        let wIcon = document.getElementById('resWeakIcon');
+        let wText = document.getElementById('resWeakText');
+        let wTag = document.getElementById('resWeaknessTag');
+        
+        if(gr === 'A') {
+            wIcon.innerHTML = `<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>`;
+            wText.innerText = "Diagnóstico: Impecable";
+            wTag.style.borderColor = "var(--correct)"; wTag.style.color = "var(--correct)";
+        } else {
+            wIcon.innerHTML = `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/>`;
+            wText.innerText = "Enfocarse en: " + weak;
+            wTag.style.borderColor = "var(--border-color)"; wTag.style.color = "var(--text-secondary)";
+        }
+
+        app.share={gr,acc,avg,weak,mod:app.mode};
+    }
+
+    function shareResult() {
+        let s=app.share;
+        let pName = s.mod === 'circle' ? 'Círculo de Quintas' : 'Teclas y Notas';
+        let msg=`🎹 *Reporte ${pName}* 🎹%0A🏆 Nota: ${s.gr}%0A🎯 Precisión: ${s.acc}%25%0A⚡ Velocidad: ${s.avg}s%0A📝 Diagnóstico: ${s.weak}`;
+        window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    /* MODO OSCURO */
+    let dk=true; 
+    document.getElementById('themeToggle').onclick=function(){ 
+        dk=!dk; 
+        document.body.setAttribute('data-theme',dk?'dark':'light'); 
+        this.innerHTML = dk 
+            ? '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' 
+            : '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    };
+    
+    // Iniciar app
+    document.getElementById('themeToggle').innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    toHome();
+</script>
+</body>
+</html>
