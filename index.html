@@ -1,21 +1,664 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Herramientas</title>
+    <title>Herramientas — Iglesia YHWH</title>
+    <meta name="description" content="Portal interactivo de herramientas y utilidades para la Iglesia YHWH.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f4f4f9; }
-        h1 { text-align: center; color: #333; }
-        .categoria { background: white; margin-bottom: 20px; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; border-bottom: 2px solid #0366d6; color: #0366d6; padding-bottom: 5px; text-transform: capitalize;}
-        ul { list-style: none; padding: 0; }
-        li { margin: 8px 0; }
-        a { text-decoration: none; color: #333; font-size: 1.1em; display: block; padding: 5px; border-radius: 4px; }
-        a:hover { background-color: #eef; color: #0366d6; }
+        :root {
+            /* Colores inspirados directamente en el logo YHWH (Carmesí, Celeste, Verde y Azul noche) */
+            --bg-gradient: linear-gradient(135deg, #090c15 0%, #0d1222 50%, #22030a 100%);
+            --card-bg: rgba(15, 23, 42, 0.55);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-carmesi: #e11d48; /* El fuego principal del logo */
+            --accent-celeste: #38bdf8;  /* El fuego celeste del logo */
+            --accent-green: #22c55e;    /* El fuego verde y el árbol del logo */
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 14px; /* Padding reducido para evitar desbordes en pantallas extra pequeñas */
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* Elimina destello gris táctil en Safari */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInDown 0.8s ease-out;
+            width: 100%;
+        }
+
+        .logo {
+            max-width: 90px;
+            height: auto;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.15));
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.03em;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 400;
+            max-width: 90%;
+            line-height: 1.4;
+        }
+
+        /* Buscador - Estilo Barra de Navegación de App */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 24px auto;
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2px 14px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            animation: fadeInDown 0.9s ease-out;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: rgba(225, 29, 72, 0.4);
+            box-shadow: 0 0 15px rgba(225, 29, 72, 0.2);
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .search-icon {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-right: 8px;
+        }
+
+        #search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            padding: 10px 0;
+            outline: none;
+        }
+
+        #search-input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .clear-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+            display: none; /* Se muestra con JS */
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            transition: background 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        main {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Tarjeta Categoría con look de Módulo de App */
+        .categoria-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .categoria-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            gap: 10px;
+        }
+
+        .categoria-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .categoria-icon {
+            font-size: 1.3rem;
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            text-transform: capitalize;
+        }
+
+        /* Flecha indicadora de colapsado */
+        .arrow-icon {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .categoria-card.collapsed .arrow-icon {
+            transform: rotate(-90deg);
+        }
+
+        /* Contenedor del listado (Acordeón) */
+        .categoria-body {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease, padding-top 0.3s ease;
+            opacity: 1;
+            margin-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+        }
+
+        .categoria-card.collapsed .categoria-body {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: 1px solid transparent;
+            pointer-events: none;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        li {
+            position: relative;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 500;
+            font-size: 0.95rem;
+            min-height: 48px; /* Recomendado para tap targets */
+            word-break: break-word; /* Evita que nombres largos desborden */
+        }
+
+        /* Comportamiento táctil en móviles */
+        a:active {
+            background: rgba(225, 29, 72, 0.1);
+            color: var(--text-primary);
+            transform: scale(0.98);
+        }
+
+        /* Hover de Escritorio */
+        @media (hover: hover) {
+            .logo:hover {
+                transform: scale(1.05) rotate(1deg);
+                filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.25));
+            }
+            .categoria-card:hover {
+                border-color: rgba(225, 29, 72, 0.2);
+            }
+            a:hover {
+                color: var(--text-primary);
+                background: rgba(225, 29, 72, 0.05);
+                border-color: rgba(225, 29, 72, 0.15);
+                transform: translateX(4px);
+            }
+            .categoria-header:hover h2 {
+                color: var(--text-primary);
+            }
+        }
+
+        .tool-bullet {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-color: var(--accent-carmesi);
+            box-shadow: 0 0 8px var(--accent-carmesi);
+        }
+
+        .categoria-card:nth-child(2n) .tool-bullet {
+            background-color: var(--accent-celeste);
+            box-shadow: 0 0 8px var(--accent-celeste);
+        }
+
+        /* --- SOPORTE DISPOSITIVOS SUPER PEQUEÑOS (ej. iPhone SE de 320px) --- */
+        @media (max-width: 350px) {
+            body {
+                padding: 16px 8px;
+            }
+            header {
+                margin-bottom: 18px;
+            }
+            .logo {
+                max-width: 75px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            p.subtitle {
+                font-size: 0.8rem;
+            }
+            .search-wrapper {
+                margin-bottom: 16px;
+                border-radius: 12px;
+                padding: 0 10px;
+            }
+            #search-input {
+                font-size: 0.85rem;
+            }
+            .categoria-card {
+                padding: 14px 12px;
+                border-radius: 16px;
+            }
+            h2 {
+                font-size: 1rem;
+            }
+            a {
+                padding: 10px 10px;
+                font-size: 0.85rem;
+                gap: 8px;
+                min-height: 44px;
+            }
+        }
+
+        /* --- ADAPTABILIDAD PANTALLAS GRANDES --- */
+        @media (min-width: 640px) {
+            body {
+                padding: 40px 24px;
+            }
+            header {
+                margin-bottom: 35px;
+            }
+            .logo {
+                max-width: 120px;
+                margin-bottom: 18px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            p.subtitle {
+                font-size: 1.1rem;
+            }
+            main {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            .categoria-card {
+                padding: 24px 26px;
+                border-radius: 24px;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Footer & Redes Sociales */
+        footer {
+            margin-top: auto;
+            padding-top: 40px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .social-link:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (hover: hover) {
+            .social-link:hover {
+                color: var(--text-primary);
+                transform: translateY(-3px) scale(1.06);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            }
+            .social-link.instagram:hover {
+                background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+                border-color: transparent;
+                box-shadow: 0 6px 15px rgba(214, 36, 159, 0.25);
+            }
+            .social-link.youtube:hover {
+                background: #ff0000;
+                border-color: transparent;
+                box-shadow: 0 6px 15px rgba(255, 0, 0, 0.25);
+            }
+            .social-link.tiktok:hover {
+                background: #010101;
+                border-color: transparent;
+                box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        footer p {
+            color: rgba(148, 163, 184, 0.25);
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>🧰 Mis Herramientas Web</h1>
-<div class='categoria'><h2>📂 Adoradores</h2><ul><li><a href="Adoradores/Crear tablas de acordes.html">🛠️ Crear Tablas De Acordes</a></li></ul></div><div class='categoria'><h2>📂 Estudios de Musica</h2><ul><li><a href="Estudios de Musica/Estudios de Piano.html">🛠️ Estudios De Piano</a></li></ul></div></body></html>
+    <header>
+        <img src="/logo-dark.png" alt="Logo de la Iglesia YHWH" class="logo">
+        <h1>Iglesia YHWH</h1>
+        <p class="subtitle">Portal de Herramientas de la Iglesia</p>
+    </header>
+
+    <!-- Buscador en tiempo real estilo aplicación nativa -->
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Buscar herramienta..." aria-label="Buscar herramienta">
+        <button id="clear-search" class="clear-btn" aria-label="Limpiar búsqueda">✕</button>
+    </div>
+
+    <main id="categorias-container">
+        <!-- Las categorías y herramientas se inyectarán dinámicamente aquí -->
+        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">
+            Cargando herramientas...
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-container">
+            <a href="https://www.instagram.com/iglesiayhwh/" target="_blank" class="social-link instagram" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="https://www.youtube.com/@iglesiayhwh" target="_blank" class="social-link youtube" aria-label="YouTube">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+            </a>
+            <a href="https://www.tiktok.com/@iglesia.yhwh" target="_blank" class="social-link tiktok" aria-label="TikTok">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+            </a>
+        </div>
+        <p>© 2026 Iglesia YHWH. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Script de inicialización dinámica de Vite -->
+    <script type="module">
+        // Escanear todos los archivos .html en cualquier carpeta, omitiendo node_modules, public y dist
+        const modules = import.meta.glob([
+            './**/*.html',
+            '!./dist/**',
+            '!./node_modules/**',
+            '!./public/**'
+        ]);
+        const container = document.getElementById('categorias-container');
+        
+        // Iconos sugeridos para las categorías basadas en palabras clave
+        const categoryIcons = {
+            'adoradores': '🎵',
+            'estudios de musica': '🎹',
+            'general': '📄'
+        };
+
+        function formatName(name) {
+            let cleanName = name.replace('.html', '');
+            
+            // 1. Elimina números secuenciales del inicio (ej. "1. Notas y Teclas" -> "Notas y Teclas")
+            cleanName = cleanName.replace(/^\d+[\.\s\-\_]+/, '');
+            
+            // 2. Separa CamelCase / PascalCase agregando espacio entre mayúsculas y minúsculas (ej: CrearTablas -> Crear Tablas)
+            cleanName = cleanName.replace(/([a-z])([A-Z])/g, '$1 $2');
+            
+            // 3. Reemplaza guiones y guiones bajos por espacios
+            cleanName = cleanName.replace(/[-_]/g, ' ');
+            
+            // 4. Capitalizar correctamente cada palabra
+            cleanName = cleanName.replace(/\b\w/g, c => c.toUpperCase());
+            
+            // 5. Normaliza múltiples espacios consecutivos
+            cleanName = cleanName.replace(/\s+/g, ' ');
+            
+            return cleanName.trim();
+        }
+
+        function buildIndex() {
+            const files = Object.keys(modules);
+            // Filtrar el index.html principal y cualquier otro archivo en la raíz que no sea una sub-herramienta
+            const tools = files.filter(file => file !== './index.html' && file.includes('/'));
+            
+            if (tools.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border);">
+                        <p class="empty-message">No se encontraron herramientas. ¡Agrega un archivo HTML en una subcarpeta para comenzar!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const categories = {};
+
+            tools.forEach(filePath => {
+                const parts = filePath.split('/'); // ej: [".", "Adoradores", "Crear tablas.html"]
+                if (parts.length >= 3) {
+                    const category = parts[1]; // "Adoradores"
+                    const fileName = parts.slice(2).join('/'); // "Crear tablas.html"
+                    
+                    if (!categories[category]) {
+                        categories[category] = [];
+                    }
+                    
+                    categories[category].push({
+                        url: filePath,
+                        name: formatName(fileName)
+                    });
+                }
+            });
+
+            // Limpiar contenedor
+            container.innerHTML = '';
+
+            // Renderizar categorías y herramientas
+            Object.keys(categories).sort().forEach(categoryKey => {
+                const categoryClean = categoryKey.replace(/[-_]/g, ' ');
+                const icon = categoryIcons[categoryKey.toLowerCase()] || '📂';
+                
+                const card = document.createElement('section');
+                card.className = 'categoria-card';
+                
+                const header = document.createElement('div');
+                header.className = 'categoria-header';
+                
+                const headerLeft = document.createElement('div');
+                headerLeft.className = 'categoria-header-left';
+                headerLeft.innerHTML = `<span class="categoria-icon">${icon}</span><h2>${categoryClean}</h2>`;
+                header.appendChild(headerLeft);
+
+                // Añadir flecha indicadora
+                const arrow = document.createElement('span');
+                arrow.className = 'arrow-icon';
+                arrow.textContent = '▼';
+                header.appendChild(arrow);
+                
+                card.appendChild(header);
+
+                const body = document.createElement('div');
+                body.className = 'categoria-body';
+
+                const list = document.createElement('ul');
+                categories[categoryKey].sort((a,b) => a.name.localeCompare(b.name)).forEach(tool => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = encodeURI(tool.url);
+                    link.innerHTML = `<div class="tool-bullet"></div><span>${tool.name}</span>`;
+                    listItem.appendChild(link);
+                    list.appendChild(listItem);
+                });
+
+                body.appendChild(list);
+                card.appendChild(body);
+                container.appendChild(card);
+
+                // Lógica de colapsado interactivo (acordeón)
+                header.addEventListener('click', () => {
+                    // Si el usuario está buscando, desactivamos el colapsado para que no se oculte nada
+                    if (document.getElementById('search-input').value.trim() !== '') return;
+                    card.classList.toggle('collapsed');
+                });
+            });
+            
+            // Inicializar la lógica de búsqueda en tiempo real
+            initSearch();
+        }
+
+        // Lógica del buscador reactivo
+        function initSearch() {
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('clear-search');
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                
+                // Mostrar/ocultar botón de limpiar búsqueda
+                clearBtn.style.display = term.length > 0 ? 'flex' : 'none';
+                
+                const cards = document.querySelectorAll('.categoria-card');
+                
+                cards.forEach(card => {
+                    const links = card.querySelectorAll('ul li');
+                    let matchCount = 0;
+                    
+                    links.forEach(li => {
+                        const text = li.textContent.toLowerCase();
+                        if (text.includes(term)) {
+                            li.style.display = 'block';
+                            matchCount++;
+                        } else {
+                            li.style.display = 'none';
+                        }
+                    });
+                    
+                    // Mostrar/ocultar tarjetas enteras y expandirlas al buscar
+                    if (matchCount > 0 || term === '') {
+                        card.style.display = 'block';
+                        if (term !== '') {
+                            card.classList.remove('collapsed'); // Expandir si hay búsqueda activa
+                        }
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.focus();
+            });
+        }
+
+        // Ejecutar la construcción del índice
+        buildIndex();
+    </script>
+</body>
+</html>

@@ -3,522 +3,2624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Worship Editor - Estilo Haz Llover</title>
+    <title>Worship Editor Pro — Iglesia YHWH</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- html2canvas para exportar PNG localmente -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <style>
         :root {
-            --bg-app: #121212; --panel-bg: #1e1e1e; --text-color: #f0f0f0;
-            --s-sep: #ff79c6; --s-str: #f1fa8c; --s-sla: #8be9fd;
-            --c-header: #083D56; --c-green: #0E4421; --c-purple: #46184A; 
-            --c-brown: #783f14; --c-red: #8b1818; --c-blue: #154c79;
+            /* Paleta Slate/Zinc (True Black OLED) */
+            --bg-app: #000000; 
+            --panel-bg: #09090b; 
+            --panel-header: #09090b;
+            --text-color: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #3f3f46; 
+            --accent-carmesi: #f43f5e; 
+            --accent-celeste: #60a5fa; 
+            --shadow: 0 16px 64px rgba(0, 0, 0, 0.95);
+
+            /* Colores de sección neón sutiles */
+            --c-header: #000000; 
+            
+            /* Tamaño de fuente UNIFORME para TODOS los acordes */
+            --chord-fs-full: 14px;
+            --chord-fs-half: 14px;
+            --chord-fs-quarter: 14px;
+
+            /* Altura de filas de control (agregar/eliminar) */
+            --ctrl-row-height: 30px;
+
+            /* Estrofa (Verde Neón) */
+            --color-estrofa-border: #10b981;
+            --color-estrofa-chord: #34d399;
+            
+            /* Coro (Celeste Neón) */
+            --color-coro-border: #60a5fa;
+            --color-coro-chord: #93c5fd;
+            
+            /* Puente (Fucsia Neón) */
+            --color-puente-border: #d946ef;
+            --color-puente-chord: #f472b6;
+            
+            /* Pre-Coro (Naranja Neón) */
+            --color-precoro-border: #f97316;
+            --color-precoro-chord: #fb923c;
+            
+            /* Intro / Outro / Solo (Azul Eléctrico) */
+            --color-intro-border: #3b82f6;
+            --color-intro-chord: #60a5fa;
+
+            /* General */
+            --color-general-border: #4b5563;
+            --color-general-chord: #e5e7eb;
         }
 
-        * { box-sizing: border-box; outline: none; }
+        /* --- TEMA CLARO DE ALTO CONTRASTE --- */
+        body.theme-light {
+            --bg-app: #f9fafb;
+            --panel-bg: #ffffff;
+            --panel-header: #f3f4f6;
+            --text-color: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #c4c8d0; 
+            --accent-carmesi: #be123c;
+            --accent-celeste: #3b82f6;
+            --shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+
+            --c-header: #f3f4f6;
+
+            /* Colores de sección para sol directo */
+            --color-estrofa-border: #059669;
+            --color-estrofa-chord: #064e3b; 
+
+            --color-coro-border: #2563eb;
+            --color-coro-chord: #1e3a8a; 
+
+            --color-puente-border: #c026d3;
+            --color-puente-chord: #701a75; 
+
+            --color-precoro-border: #ea580c;
+            --color-precoro-chord: #7c2d12; 
+
+            --color-intro-border: #1d4ed8;
+            --color-intro-chord: #0f172a; 
+
+            --color-general-border: #4b5563;
+            --color-general-chord: #111827;
+        }
+
+        /* --- PALETA DE FONDOS DE SECCIÓN (auto-asignada cíclicamente) --- */
+        /* Modo Oscuro */
+        .sect-bg-0 { background-color: #0e1e30 !important; }
+        .sect-bg-1 { background-color: #0d2119 !important; }
+        .sect-bg-2 { background-color: #1b1132 !important; }
+        .sect-bg-3 { background-color: #221a0c !important; }
+        .sect-bg-4 { background-color: #0d2028 !important; }
+        .sect-bg-5 { background-color: #25101d !important; }
+        /* Modo Claro */
+        .theme-light .sect-bg-0 { background-color: #e3ecf8 !important; }
+        .theme-light .sect-bg-1 { background-color: #dff5ea !important; }
+        .theme-light .sect-bg-2 { background-color: #ede3f8 !important; }
+        .theme-light .sect-bg-3 { background-color: #f7eddf !important; }
+        .theme-light .sect-bg-4 { background-color: #dff0f6 !important; }
+        .theme-light .sect-bg-5 { background-color: #f6dfec !important; }
+
+        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
 
         body {
-            margin: 0; font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-app); color: var(--text-color);
-            /* Usamos dvh para móviles para evitar problemas con la barra de navegación */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-app); 
+            color: var(--text-color);
             height: 100dvh; 
             overflow: hidden;
-            overscroll-behavior: none; /* Evita el rebote de la página en Mac/iOS */
+            overscroll-behavior: none;
+            display: flex;
+            flex-direction: column;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s;
         }
 
-        .main-container { 
-            display: flex; 
-            width: 100%; 
-            height: 100%; 
+        /* --- APP NAVBAR --- */
+        .app-navbar {
+            background-color: var(--panel-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            z-index: 100;
         }
 
-        /* --- EDITOR PANE --- */
-        .editor-pane {
-            width: 400px; 
-            background-color: var(--panel-bg);
-            border-right: 1px solid #444;
-            display: flex; 
-            flex-direction: column; 
-            z-index: 10;
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .editor-header {
-            padding: 10px; background: #252525; border-bottom: 1px solid #333;
-            display: flex; gap: 10px; flex-shrink: 0;
-        }
-        .editor-header input {
-            background: #333; border: 1px solid #444; color: white;
-            padding: 8px; border-radius: 4px; font-size: 16px; /* 16px evita zoom en iOS al hacer focus */
-            height: 40px;
-        }
-        #inTitle { flex: 1; min-width: 0; } 
-        #inKey { width: 60px; flex: none; text-align: center; font-weight: bold; }
-
-        /* --- CODE EDITOR (CORE FIXES HERE) --- */
-        .code-wrapper { 
-            position: relative; 
-            flex: 1; /* Ocupa todo el espacio restante verticalmente */
-            background-color: #1e1e1e; 
-            overflow: hidden; /* El contenedor no scrollea, los hijos sí */
-            min-height: 0; /* Crucial para Firefox/Flexbox */
+        .navbar-logo {
+            height: 32px;
+            width: auto;
         }
 
-        .mono-layer {
-            font-family: Consolas, "Courier New", monospace; 
-            font-size: 16px; line-height: 24px; letter-spacing: 0px; font-weight: normal;
-            position: absolute; 
-            inset: 0; /* Top, Right, Bottom, Left = 0. Fuerza a llenar el contenedor */
-            width: 100%; height: 100%;
-            margin: 0; border: 0; padding: 15px; 
-            white-space: pre; word-wrap: normal;
+        .navbar-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, var(--accent-celeste), var(--text-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Capa de renderizado de colores (detrás) */
-        .code-highlight { 
-            z-index: 1; 
-            color: #ccc; 
-            pointer-events: none; 
-            background-color: #1e1e1e;
-            overflow: hidden; /* Solo el textarea hace scroll, este le sigue por JS */
+        .navbar-actions {
+            display: flex;
+            gap: 10px;
         }
 
-        /* Capa de escritura (invisible pero interactiva) */
-        .code-editor { 
-            z-index: 2; 
-            color: transparent; 
-            background: transparent; 
-            caret-color: #fff; 
-            resize: none; 
-            overflow: auto; /* Este es el que recibe el dedo/mouse */
-            -webkit-overflow-scrolling: touch; /* Suavidad en iOS */
+        .nav-btn {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .theme-light .nav-btn {
+            background: rgba(0,0,0,0.02);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+
+        .theme-light .nav-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-celeste);
+            border-color: transparent;
+            color: #000000 !important;
+            font-weight: 700;
         }
         
-        .hlSep { color: var(--s-sep); font-weight: bold; }
-        .hlStr { color: var(--s-str); font-weight: bold; }
-        .hlSla { color: var(--s-sla); }
-
-        /* --- PREVIEW PANE --- */
-        .preview-pane {
-            flex: 1; background-color: #121212;
-            overflow: auto; display: flex; padding: 20px; position: relative;
-            -webkit-overflow-scrolling: touch;
+        .theme-light .nav-btn.primary {
+            color: #ffffff !important;
         }
 
-        .scalable-wrapper {
-            transform-origin: top left; transition: transform 0.1s ease-out;
-            margin: auto; flex-shrink: 0; 
+        /* --- MAIN WORKSPACE --- */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            align-items: center;
+            padding: 20px 10px;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        .chart-wrapper {
+            transform-origin: top center;
+            transition: transform 0.2s ease-out;
+            margin-bottom: 80px; 
         }
 
         .chart-container {
             width: 720px; 
             background: transparent; 
-            display: inline-block; 
-            /* Padding extra para que al exportar no salga cortado el borde de la sombra */
-            padding: 10px; 
+            padding: 10px 0;
+            position: relative;
         }
 
-        /* --- HEADER AL ESTILO "HAZ LLOVER" --- */
-        .header-bar {
-            background-color: var(--c-header); 
-            min-height: 60px;
-            display: flex; align-items: stretch;
-            border: 1px solid #444; /* Borde sutil en lugar de sombra */
-            /* box-shadow REMOVIDO */
-            width: 100%; 
-            position: relative;
-            z-index: 2; 
+        /* Cabecera como fila de tabla (alineada con columnas de contenido) */
+        .header-title-td {
+            height: 56px;
+            background-color: var(--c-header) !important;
+            padding: 0 20px !important;
+            cursor: pointer;
+            transition: background 0.2s;
+            vertical-align: middle;
         }
-        
-        .header-title-box {
-            flex: 1; 
-            display: flex; align-items: center;
-            padding: 0 15px;
-            overflow: hidden;
-            border-right: 1px solid rgba(255,255,255,0.2);
+        .header-title-td:hover {
+            background: rgba(255,255,255,0.02) !important;
+        }
+        .theme-light .header-title-td {
+            background-color: #f3f4f6 !important;
+        }
+        .theme-light .header-title-td:hover {
+            background: rgba(0,0,0,0.02) !important;
         }
         .header-title {
-            font-size: 20px; font-weight: 900; color: white;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+            font-size: 18px;
+            font-weight: 850;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 56px;
+        }
+        .header-key-td {
+            height: 56px;
+            background-color: rgba(255,255,255,0.02) !important;
+            cursor: pointer;
+            text-align: center;
+            vertical-align: middle;
+            transition: background 0.2s;
+        }
+        .header-key-td:hover {
+            background: rgba(255,255,255,0.06) !important;
+        }
+        .theme-light .header-key-td {
+            background-color: rgba(0,0,0,0.01) !important;
+        }
+        .theme-light .header-key-td:hover {
+            background: rgba(0,0,0,0.04) !important;
+        }
+        .key-text {
+            font-size: 22px;
+            font-weight: 850;
+            color: var(--accent-celeste);
         }
 
-        .key-card-wrapper {
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.2); 
-        }
-        
-        .key-text { font-size: 28px; font-weight: 900; color: white; }
-        
-        /* --- TABLA --- */
+        /* --- TABLA ESTRUCTURAL MINIMALISTA --- */
         .chart-table { 
             width: 100%; 
             border-collapse: separate; 
             border-spacing: 0;
             table-layout: fixed; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            box-shadow: var(--shadow); 
         }
+
         .chart-table td { 
-            border: 1px solid #555; 
-            color: white; vertical-align: middle; padding: 0; 
+            border: 1px solid var(--border-color); 
+            background-color: #000000; 
+            vertical-align: middle; 
+            padding: 0; 
+            position: relative;
         }
+
+        .theme-light .chart-table td {
+            background-color: #ffffff;
+            border-color: var(--border-color);
+        }
+
         .td-transparent { border: none !important; background: transparent !important; }
+
+        /* Celda de letra interactiva con barra indicadora vertical de color */
+        .lyrics-cell { 
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #09090b; 
+        }
+        .lyrics-cell:hover {
+            filter: brightness(1.3);
+        }
         
-        .lyrics-cell { height: 100%; }
+        .theme-light .lyrics-cell {
+            background-color: #f3f4f6;
+        }
+        .theme-light .lyrics-cell:hover {
+            filter: brightness(0.96);
+        }
+
+        .lyrics-cell.selected {
+            outline: 2px solid var(--accent-celeste);
+            outline-offset: -2px;
+        }
         .lyrics-inner {
-            display: flex; align-items: center; justify-content: center;
-            padding: 8px 12px; text-align: center; font-size: 16px; font-weight: 500;
-            white-space: pre-wrap; line-height: 1.3;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 14px 16px; 
+            text-align: center; 
+            font-size: 14px; 
+            font-weight: 700;
+            color: var(--text-color);
+            white-space: pre-wrap; 
+            line-height: 1.4;
+            border-left: 5px solid var(--color-general-border);
+            height: 100%;
+            width: 100%;
         }
-        .chord-cell { height: 50px; }
-        .chord-inner {
-            display: flex; justify-content: center; align-items: center;
-            height: 100%; width: 100%; font-size: 20px; font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-        }
-        .split-box { display: flex; flex-direction: column; height: 100%; }
-        .split-top, .split-bottom {
-            flex: 1; display: flex; justify-content: center; align-items: center;
-            font-size: 18px; font-weight: 700;
-        }
-        .split-top { border-bottom: 1px solid #555; }
         
-        /* Colores Sólidos */
-        .bg-green { background-color: var(--c-green); } .bg-purple { background-color: var(--c-purple); }
-        .bg-brown { background-color: var(--c-brown); } .bg-red { background-color: var(--c-red); }
-        .bg-blue { background-color: var(--c-blue); }
-
-        /* Controles */
-        .floating-controls {
-            position: fixed; top: 20px; right: 20px;
-            display: flex; flex-direction: column; gap: 10px; z-index: 100;
-        }
-        .ctrl-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-            color: white; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; backdrop-filter: blur(4px);
-            font-size: 18px; font-weight: bold; user-select: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en Android */
-        }
-        .ctrl-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
-        .btn-fullscreen { background: var(--c-blue); border: none; }
-        .btn-export { background: var(--c-green); border: none; } /* Botón de exportar */
-
-        /* --- MOBILE MEDIA QUERY OPTIMIZED --- */
-        @media (max-width: 768px) {
-            .main-container { flex-direction: column-reverse; }
-            
-            .editor-pane { 
-                width: 100%; 
-                /* En móvil, el editor ocupa el 60% para que el teclado no tape todo */
-                flex: 0 0 60%; 
-                border-top: 2px solid #333; 
-                border-right: none;
-            }
-            
-            .preview-pane { 
-                /* La vista previa ocupa el 40% superior */
-                flex: 0 0 40%; 
-                padding: 10px; 
-                border-bottom: 1px solid #333;
-            }
-
-            .floating-controls { top: 10px; right: 10px; gap: 5px; }
-            .ctrl-btn { width: 35px; height: 35px; font-size: 16px; }
-            
-            /* Ajuste de fuente para evitar zoom en iOS */
-            .mono-layer { font-size: 14px; padding: 10px; }
+        .theme-light .lyrics-inner {
+            color: #000000;
+            font-weight: 800;
         }
 
-        /* Pantalla completa */
-        :fullscreen .preview-pane { padding: 0; background: black; width: 100%; height: 100%; }
-        :fullscreen .floating-controls { display: none; }
+        /* Colores de indicadores de sección */
+        .lyrics-cell.sect-estrofa .lyrics-inner { border-left-color: var(--color-estrofa-border); }
+        .lyrics-cell.sect-coro .lyrics-inner { border-left-color: var(--color-coro-border); }
+        .lyrics-cell.sect-puente .lyrics-inner { border-left-color: var(--color-puente-border); }
+        .lyrics-cell.sect-pre-coro .lyrics-inner { border-left-color: var(--color-precoro-border); }
+        .lyrics-cell.sect-intro .lyrics-inner { border-left-color: var(--color-intro-border); }
+        .lyrics-cell.sect-outro .lyrics-inner { border-left-color: var(--color-intro-border); }
+        .lyrics-cell.sect-solo .lyrics-inner { border-left-color: var(--color-intro-border); }
+
+        /* Celda de acordes interactiva — padding: 0 para bordes flush */
+        .chord-cell { 
+            height: 56px; 
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0 !important; 
+        }
+        .chord-cell:hover {
+            filter: brightness(1.2);
+        }
+        .theme-light .chord-cell:hover {
+            filter: brightness(0.96);
+        }
+
+        .chord-cell.selected {
+            outline: 3px solid var(--accent-celeste);
+            outline-offset: -3px;
+            box-shadow: inset 0 0 12px rgba(96, 165, 250, 0.25);
+            background-color: rgba(96, 165, 250, 0.04);
+        }
+
+        /* --- ALTERNANCIA VISUAL POR COMPÁS (columna oscura/clara) --- */
+        .chord-cell.col-dark::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.12);
+            pointer-events: none;
+        }
+        .theme-light .chord-cell.col-dark::after {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        /* Texto por encima del overlay de alternancia */
+        .chord-inner, .split-box, .split-horizontal-box {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* --- TIPOGRAFÍA INTER PARA ACORDES: limpia, precisa, altamente legible --- */
+        .chord-inner, .split-left, .split-right, .split-top, .split-bottom {
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .chord-inner {
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            height: 100%; 
+            width: 100%; 
+            color: var(--color-general-chord);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .theme-light .chord-inner {
+            text-shadow: none;
+        }
+
+        /* Colores de acordes según la sección */
+        .sect-estrofa .chord-inner { color: var(--color-estrofa-chord); }
+        .sect-coro .chord-inner { color: var(--color-coro-chord); }
+        .sect-puente .chord-inner { color: var(--color-puente-chord); }
+        .sect-pre-coro .chord-inner { color: var(--color-precoro-chord); }
+        .sect-intro .chord-inner { color: var(--color-intro-chord); }
+        .sect-outro .chord-inner { color: var(--color-intro-chord); }
+        .sect-solo .chord-inner { color: var(--color-intro-chord); }
+
+        /* Celdas divididas Verticalmente (vueltas/comas) — 50% rígido, sin padding */
+        .split-box { 
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; 
+            width: 100%; 
+        }
+        .split-top, .split-bottom {
+            flex: 0 0 50%;
+            height: 50%;
+            max-height: 50%;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            color: var(--color-general-chord);
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0;
+        }
+        
+        .split-top > .chord-inner, .split-bottom > .chord-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 3px;
+        }
+
+        .split-top { border-bottom: 1px solid var(--border-color); }
+        .theme-light .split-top, .theme-light .split-bottom { text-shadow: none; }
+
+        .sect-estrofa .split-top, .sect-estrofa .split-bottom { color: var(--color-estrofa-chord); }
+        .sect-coro .split-top, .sect-coro .split-bottom { color: var(--color-coro-chord); }
+        .sect-puente .split-top, .sect-puente .split-bottom { color: var(--color-puente-chord); }
+        .sect-pre-coro .split-top, .sect-pre-coro .split-bottom { color: var(--color-precoro-chord); }
+        .sect-intro .split-top, .sect-intro .split-bottom { color: var(--color-intro-chord); }
+        .sect-outro .split-top, .sect-outro .split-bottom { color: var(--color-intro-chord); }
+        .sect-solo .split-top, .sect-solo .split-bottom { color: var(--color-intro-chord); }
+
+        /* --- CELDAS DIVIDIDAS HORIZONTALMENTE (Tiempos laterales |) — 50% rígido, sin padding --- */
+        .split-horizontal-box {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .split-left, .split-right {
+            flex: 0 0 50%;
+            width: 50%;
+            max-width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            color: var(--color-general-chord);
+            height: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+            padding: 0 3px;
+        }
+        
+        .split-left {
+            border-right: 1px solid var(--border-color);
+        }
+        .theme-light .split-left, .theme-light .split-right {
+            text-shadow: none;
+        }
+
+        .sect-estrofa .split-left, .sect-estrofa .split-right { color: var(--color-estrofa-chord); }
+        .sect-coro .split-left, .sect-coro .split-right { color: var(--color-coro-chord); }
+        .sect-puente .split-left, .sect-puente .split-right { color: var(--color-puente-chord); }
+        .sect-pre-coro .split-left, .sect-pre-coro .split-right { color: var(--color-precoro-chord); }
+        .sect-intro .split-left, .sect-intro .split-right { color: var(--color-intro-chord); }
+        .sect-outro .split-left, .sect-outro .split-right { color: var(--color-intro-chord); }
+        .sect-solo .split-left, .sect-solo .split-right { color: var(--color-intro-chord); }
+
+        /* Forzar simetría en el flex de cajas mixtas 2x2 */
+        .split-top .split-horizontal-box, .split-bottom .split-horizontal-box {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- CONTROLES DE ESTRUCTURA INTEGRADOS EN LA TABLA --- */
+        
+        /* Fila de Añadir Fila (Abajo) */
+        .add-row-cell {
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.01) !important;
+            border: 1px dashed var(--border-color) !important;
+            transition: all 0.2s;
+            height: var(--ctrl-row-height);
+            text-align: center;
+            vertical-align: middle;
+        }
+        .theme-light .add-row-cell {
+            background-color: rgba(0, 0, 0, 0.01) !important;
+            border-color: var(--border-color) !important;
+        }
+        .add-row-cell:hover {
+            background-color: rgba(96, 165, 250, 0.06) !important;
+            border-color: var(--accent-celeste) !important;
+        }
+        .add-row-inner {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 100%;
+        }
+        .theme-light .add-row-inner {
+            color: #111827;
+        }
+        .add-row-cell:hover .add-row-inner {
+            color: var(--accent-celeste);
+        }
+
+        /* Botón de Agregar Sección (Abajo y arriba) */
+        .add-section-cell {
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.01) !important;
+            border: 1px dashed var(--border-color) !important;
+            transition: all 0.2s;
+            text-align: center;
+            vertical-align: middle;
+            height: var(--ctrl-row-height);
+        }
+        .theme-light .add-section-cell {
+            background-color: rgba(0, 0, 0, 0.01) !important;
+            border-color: var(--border-color) !important;
+        }
+        .add-section-cell:hover {
+            background-color: rgba(96, 165, 250, 0.06) !important;
+            border-color: var(--accent-celeste) !important;
+        }
+        .add-section-inner {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .theme-light .add-section-inner {
+            color: #111827;
+        }
+        .add-section-cell:hover .add-section-inner {
+            color: var(--accent-celeste);
+        }
+
+        /* Botón de agregar sección inicial en la fila de control superior */
+        .col-control-tr .add-section-cell {
+            height: var(--ctrl-row-height) !important;
+        }
+
+        /* Celda de Agregar Columna (Compás) (Derecha) */
+        .add-col-cell {
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.01) !important;
+            border: 1px dashed var(--border-color) !important;
+            transition: all 0.2s;
+            width: 44px !important;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .theme-light .add-col-cell {
+            background-color: rgba(0, 0, 0, 0.01) !important;
+            border-color: var(--border-color) !important;
+        }
+        .add-col-cell:hover {
+            background-color: rgba(96, 165, 250, 0.06) !important;
+            border-color: var(--accent-celeste) !important;
+        }
+        .add-col-inner {
+            font-size: 18px;
+            font-weight: 850;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+        .add-col-cell:hover .add-col-inner {
+            color: var(--accent-celeste);
+        }
+
+        /* --- BOTONES DE ELIMINACIÓN DE ESTRUCTURA CUADRADOS DE COMPORTAMIENTO HOVER SIMÉTRICO --- */
+        
+        /* Eliminar Columna (Arriba) */
+        .col-control-tr td {
+            height: var(--ctrl-row-height); 
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 !important;
+        }
+        .col-control-tr td.td-transparent {
+            border: none !important;
+            background: transparent !important;
+        }
+        .col-delete-cell {
+            cursor: pointer;
+            background-color: rgba(244, 63, 94, 0.01) !important;
+            border: 1px dashed rgba(244, 63, 94, 0.25) !important;
+            transition: all 0.2s;
+        }
+        .theme-light .col-delete-cell {
+            background-color: rgba(190, 18, 60, 0.01) !important;
+            border-color: rgba(190, 18, 60, 0.25) !important;
+        }
+        .col-delete-cell:hover {
+            background-color: rgba(244, 63, 94, 0.08) !important;
+            border-color: var(--accent-carmesi) !important;
+        }
+        .theme-light .col-delete-cell:hover {
+            background-color: rgba(190, 18, 60, 0.06) !important;
+            border-color: var(--accent-carmesi) !important;
+        }
+        .col-delete-inner {
+            font-size: 11px;
+            font-weight: 800;
+            color: rgba(244, 63, 94, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        .theme-light .col-delete-inner {
+            color: rgba(190, 18, 60, 0.7);
+        }
+        .col-delete-cell:hover .col-delete-inner {
+            color: var(--accent-carmesi); 
+        }
+
+        /* Eliminar Fila (Izquierda) */
+        .row-delete-cell {
+            cursor: pointer;
+            background-color: rgba(244, 63, 94, 0.01) !important;
+            border: 1px dashed rgba(244, 63, 94, 0.25) !important;
+            transition: all 0.2s;
+            width: 44px !important;
+            height: 56px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .theme-light .row-delete-cell {
+            background-color: rgba(190, 18, 60, 0.01) !important;
+            border-color: rgba(190, 18, 60, 0.25) !important;
+        }
+        .row-delete-cell:hover {
+            background-color: rgba(244, 63, 94, 0.08) !important;
+            border-color: var(--accent-carmesi) !important;
+        }
+        .theme-light .row-delete-cell:hover {
+            background-color: rgba(190, 18, 60, 0.06) !important;
+            border-color: var(--accent-carmesi) !important;
+        }
+        .row-delete-inner {
+            font-size: 11px;
+            font-weight: 800;
+            color: rgba(244, 63, 94, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        .theme-light .row-delete-inner {
+            color: rgba(190, 18, 60, 0.7);
+        }
+        .row-delete-cell:hover .row-delete-inner {
+            color: var(--accent-carmesi); 
+        }
+
+        /* --- DISEÑO DE LA CELDA DE REORDENACIÓN DE SECCIÓN --- */
+        .lyrics-cell.reordering {
+            padding: 0 !important;
+            border: 2px dashed var(--accent-celeste) !important;
+            box-shadow: inset 0 0 20px rgba(96, 165, 250, 0.2) !important;
+        }
+        
+        .lyrics-reorder-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(96, 165, 250, 0.04);
+        }
+        
+        .reorder-btn {
+            flex: 0 0 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--accent-celeste);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+            background: rgba(96, 165, 250, 0.05);
+            border-bottom: 1px dashed rgba(96, 165, 250, 0.2);
+            user-select: none;
+        }
+        
+        .reorder-btn.btn-down {
+            border-bottom: none;
+            border-top: 1px dashed rgba(96, 165, 250, 0.2);
+        }
+        
+        .reorder-btn:hover {
+            background-color: var(--accent-celeste) !important;
+            color: #000000 !important;
+        }
+        
+        .theme-light .reorder-btn:hover {
+            color: #ffffff !important;
+        }
+        
+        .reorder-lyrics-preview {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-color);
+            opacity: 0.25; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            max-width: 160px;
+            margin: 0 auto;
+        }
+
+        /* --- CLASE DE RESALTADO TEMPORAL ANTES DE BORRAR --- */
+        .highlight-delete {
+            background-color: rgba(244, 63, 94, 0.25) !important;
+            border-color: #f43f5e !important;
+            box-shadow: inset 0 0 16px rgba(244, 63, 94, 0.3) !important;
+        }
+        .theme-light .highlight-delete {
+            background-color: rgba(190, 18, 60, 0.18) !important;
+            border-color: #be123c !important;
+        }
+
+        /* --- BOTTOM SHEET DE EDICIÓN FOCALIZADA --- */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--panel-bg);
+            border-top: 1px solid var(--border-color);
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            box-shadow: 0 -12px 40px rgba(0,0,0,0.8);
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .theme-light .sheet-header {
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+
+        .sheet-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sheet-close-btn {
+            background: var(--panel-header);
+            border: none;
+            color: var(--text-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Contenido del Panel - Edición de Acordes */
+        .sheet-body-chords {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Visor de Celda Interactiva en BottomSheet (Grilla CSS Directa) */
+        .active-cell-preview {
+            width: 100%;
+            height: 140px; 
+            background: rgba(0,0,0,0.3);
+            border: 1px dashed var(--accent-celeste);
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            position: relative;
+        }
+
+        .theme-light .active-cell-preview {
+            background: rgba(0,0,0,0.03);
+            color: var(--accent-celeste);
+            border-color: var(--accent-celeste);
+        }
+
+        /* Botones de Control de Subdivisión con Iconos SVG y Etiquetas */
+        .sheet-grid-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        
+        .grid-ctrl-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .theme-light .grid-ctrl-btn {
+            background: #ffffff;
+            border-color: var(--border-color);
+            color: #111827;
+        }
+        
+        .grid-ctrl-btn:hover {
+            border-color: var(--accent-celeste);
+            background: rgba(96, 165, 250, 0.05);
+        }
+        
+        .grid-ctrl-btn.danger {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+        
+        .grid-ctrl-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: #ef4444;
+        }
+        
+        .ctrl-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+        }
+        
+        .ctrl-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+        
+        .theme-light .ctrl-label {
+            color: #4b5563;
+        }
+
+        /* Teclado de Acordes Táctil Inteligente */
+        .chord-keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+            width: 100%;
+        }
+        .keyboard-row::-webkit-scrollbar { display: none; }
+
+        .k-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            flex: 1;
+            min-width: 44px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .theme-light .k-btn {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+            color: #111827;
+        }
+
+        .k-btn:active {
+            background: rgba(255,255,255,0.12);
+            transform: scale(0.95);
+        }
+        .theme-light .k-btn:active {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .k-btn.fundamental {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+        .theme-light .k-btn.fundamental {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.08);
+        }
+
+        .k-btn.action-clear {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.15);
+            font-weight: 600;
+        }
+
+        .k-btn.action-back {
+            color: var(--accent-celeste);
+            background: rgba(96, 165, 250, 0.08);
+            border-color: rgba(96, 165, 250, 0.15);
+        }
+
+        /* Contenido del Panel - Edición de Texto (Letra/Título) */
+        .sheet-body-text {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sheet-textarea {
+            width: 100%;
+            min-height: 110px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 12px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            line-height: 1.4;
+        }
+
+        .theme-light .sheet-textarea {
+            background: #ffffff;
+            color: #111827;
+            border-color: rgba(0,0,0,0.15);
+        }
+
+        .sheet-textarea:focus {
+            border-color: var(--accent-celeste);
+        }
+
+        /* --- TONALIDAD: Selector de Tono Táctil (Sin Teclado) --- */
+        .sheet-body-key {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .key-select-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .theme-light .key-select-btn {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+            color: #111827;
+        }
+
+        .key-select-btn.active {
+            background: var(--accent-celeste);
+            color: #000000;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.25);
+        }
+
+        .key-type-toggle {
+            display: flex;
+            background: rgba(0,0,0,0.15);
+            border-radius: 10px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-light .key-type-toggle {
+            background: rgba(0,0,0,0.03);
+        }
+
+        .type-toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .type-toggle-btn.active {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-color);
+        }
+        .theme-light .type-toggle-btn.active {
+            background: #ffffff;
+            color: #111827;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Estilo para las subceldas clickables interactivas en el BottomSheet */
+        .sheet-subcell {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 19px;
+            color: var(--text-color);
+        }
+        .sheet-subcell.selected {
+            background-color: rgba(96, 165, 250, 0.12) !important;
+            box-shadow: inset 0 0 10px rgba(96, 165, 250, 0.3);
+        }
+
+        /* --- DIÁLOGO MODAL DE CONFIRMACIÓN PERSONALIZADO --- */
+        .confirm-modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: confirmFadeIn 0.2s ease-out;
+        }
+        @keyframes confirmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .confirm-modal-box {
+            background: #09090b;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+            text-align: center;
+            animation: confirmSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .theme-light .confirm-modal-box {
+            background: #ffffff;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+        }
+        @keyframes confirmSlideUp { from { transform: translateY(20px); } to { transform: translateY(0); } }
+        .confirm-modal-title {
+            font-size: 1.15rem;
+            font-weight: 850;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+        .confirm-modal-message {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+        .confirm-modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .confirm-btn.cancel {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-color);
+        }
+        .theme-light .confirm-btn.cancel {
+            background: #f3f4f6;
+            color: #111827;
+        }
+        .confirm-btn.cancel:hover { background: rgba(255,255,255,0.1); }
+        .confirm-btn.danger {
+            background: #ef4444;
+            color: white;
+        }
+        .confirm-btn.danger:hover { background: #dc2626; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="editor-pane">
-            <div class="editor-header">
-                <input type="text" id="inTitle" value="Dame de Beber - Marco Barrientos" placeholder="Título">
-                <input type="text" id="inKey" value="D" placeholder="Tono">
-            </div>
-            
-            <div class="code-wrapper">
-                <pre id="highlighting" class="code-highlight mono-layer" aria-hidden="true"><code id="highlighting-content"></code></pre>
-                <textarea id="inCode" class="code-editor mono-layer" spellcheck="false" placeholder="Escribe aquí tu tabla...">
-Quiero estar en tu presencia
-G/E | G/D ; Asus4|A ; D > A/C# ; D/B | D/A
-G/E | G/D ; Asus4|A ; D ; D | D/B , C/D - D/F# ; EXTRA
-
-Dame de beber
-G ; A/G ; A/F# ; D/B | D/A
-G/E | G/D ; Asus4|A ; D ; C/D - D/F#, D | D/B ; EXTRA
-G ; A/G ; A/F# ; D/B | D/A</textarea>
-            </div>
+    <!-- Barra de Navegación -->
+    <nav class="app-navbar">
+        <div class="navbar-brand">
+            <img src="/logo-dark.png" alt="Logo YHWH" class="navbar-logo">
+            <span class="navbar-title">Worship Editor Pro</span>
         </div>
+        <div class="navbar-actions">
+            <button class="nav-btn" id="themeToggleBtn">☀️ Modo Día</button>
+            <button class="nav-btn primary" id="exportPngBtn">Descargar PNG</button>
+        </div>
+    </nav>
 
-        <div class="preview-pane" id="previewPane">
-            <div class="floating-controls">
-                <div class="ctrl-btn btn-export" onclick="exportToPng()" title="Exportar PNG">⬇</div>
-                <div class="ctrl-btn btn-fullscreen" onclick="toggleFullScreen()">⛶</div>
-                <div class="ctrl-btn" onclick="adjustZoom(0.05)">+</div>
-                <div class="ctrl-btn" onclick="adjustZoom(-0.05)">-</div>
-                <div class="ctrl-btn" onclick="resetZoom()" style="font-size:12px">1:1</div>
-            </div>
-
-            <div class="scalable-wrapper" id="scalableWrapper">
+    <!-- Zona de Trabajo Principal -->
+    <div class="workspace" id="workspace">
+        
+        <div class="chart-wrapper" id="chartWrapper">
+            <div class="table-container-relative" style="position: relative; width: 100%; padding-right: 0;">
+                
                 <div class="chart-container" id="chartContainer">
-                    <div class="header-bar" id="headerBar">
-                        <div class="header-title-box">
-                            <div class="header-title" id="outTitle">Título</div>
-                        </div>
-                        <div class="key-card-wrapper" id="keyWrapper">
-                            <div class="key-text" id="outKey">C</div>
-                        </div>
-                    </div>
+
+                    <!-- Tabla Estructural (incluye cabecera como primera fila) -->
                     <table class="chart-table">
                         <colgroup id="tableColGroup"></colgroup>
                         <tbody id="chartBody"></tbody>
                     </table>
+
                 </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BOTTOM SHEET DE EDICIÓN FOCALIZADA -->
+    <div class="bottom-sheet" id="bottomSheet">
+        
+        <div class="sheet-header">
+            <span class="sheet-title" id="sheetTitle">Editar</span>
+            <button class="sheet-close-btn" id="sheetCloseBtn">✕</button>
+        </div>
+
+        <!-- 1. CELDAS DE ACORDES: Cuadrícula de Subdivisión Visual Interactiva -->
+        <div class="sheet-body-chords" id="sheetBodyChords" style="display: none;">
+            
+            <!-- Visor de la Celda Dividida Interactiva (BottomSheet Grid) -->
+            <div class="active-cell-preview" id="cellPreview"></div>
+
+            <!-- Botones de Acción de Subdivisión Visual con Iconos -->
+            <div class="sheet-grid-controls">
+                <button class="grid-ctrl-btn" id="btnTimeAction" title="Dividir / Unir Tiempo">
+                    <span class="ctrl-icon" id="iconTime"></span>
+                    <span class="ctrl-label">Tiempo</span>
+                </button>
+                <button class="grid-ctrl-btn" id="btnVueltaAction" title="Dividir / Unir Vuelta">
+                    <span class="ctrl-icon" id="iconVuelta"></span>
+                    <span class="ctrl-label">Vuelta</span>
+                </button>
+                <button class="grid-ctrl-btn danger" id="btnClearSubcellBtn" title="Vaciar Acorde">
+                    <span class="ctrl-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </span>
+                    <span class="ctrl-label">Vaciar</span>
+                </button>
+            </div>
+            
+            <div class="chord-keyboard">
+                <!-- Notas Fundamentales -->
+                <div class="keyboard-row">
+                    <button class="k-btn fundamental" data-key="C">C</button>
+                    <button class="k-btn fundamental" data-key="D">D</button>
+                    <button class="k-btn fundamental" data-key="E">E</button>
+                    <button class="k-btn fundamental" data-key="F">F</button>
+                    <button class="k-btn fundamental" data-key="G">G</button>
+                    <button class="k-btn fundamental" data-key="A">A</button>
+                    <button class="k-btn fundamental" data-key="B">B</button>
+                </div>
+                <!-- Modificadores e Alteraciones -->
+                <div class="keyboard-row">
+                    <button class="k-btn" data-key="m">m</button>
+                    <button class="k-btn" data-key="#">#</button>
+                    <button class="k-btn" data-key="b">b</button>
+                    <button class="k-btn" data-key="7">7</button>
+                    <button class="k-btn" data-key="sus4">sus4</button>
+                    <button class="k-btn" data-key="add9">add9</button>
+                    <button class="k-btn" data-key="/">/</button>
+                </div>
+                <!-- Borrar y Vaciar -->
+                <div class="keyboard-row">
+                    <button class="k-btn action-clear" data-key="CLEAR" style="flex: 1;">Vaciar Cuadrante</button>
+                    <button class="k-btn action-back" data-key="BACKSPACE" style="flex: 1;">⌫ Borrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. TEXTOS Y LETRAS: Entrada de Texto Ampliada -->
+        <div class="sheet-body-text" id="sheetBodyText" style="display: none;">
+            <textarea class="sheet-textarea" id="sheetInputText" placeholder="Escribe aquí..."></textarea>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 8px; width: 100%;">
+                <button class="k-btn action-done" id="saveTextEditBtn" style="flex:1; margin-top:0;">✅ Guardar Cambios</button>
+                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="flex:none; padding: 0 16px;">🗑️ Eliminar Sección</button>
+            </div>
+        </div>
+
+        <!-- 3. TONALIDAD: Selector de Tono Táctil (Sin Teclado) -->
+        <div class="sheet-body-key" id="sheetBodyKey" style="display: none;">
+            <!-- Tipo de Tonalidad (Mayor / Menor) -->
+            <div class="key-type-toggle">
+                <button class="type-toggle-btn active" id="keyTypeMajorBtn">Mayor (Solfeggio)</button>
+                <button class="type-toggle-btn" id="keyTypeMinorBtn">Menor (m)</button>
+            </div>
+            <!-- Rejilla de Notas -->
+            <div class="key-grid">
+                <button class="key-select-btn" data-note="C">C</button>
+                <button class="key-select-btn" data-note="C#">C#</button>
+                <button class="key-select-btn" data-note="D">D</button>
+                <button class="key-select-btn" data-note="Eb">Eb</button>
+                <button class="key-select-btn" data-note="E">E</button>
+                <button class="key-select-btn" data-note="F">F</button>
+                <button class="key-select-btn" data-note="F#">F#</button>
+                <button class="key-select-btn" data-note="G">G</button>
+                <button class="key-select-btn" data-note="Ab">Ab</button>
+                <button class="key-select-btn" data-note="A">A</button>
+                <button class="key-select-btn" data-note="Bb">Bb</button>
+                <button class="key-select-btn" data-note="B">B</button>
+            </div>
+            <div class="keyboard-row" style="margin-top: 8px;">
+                <button class="k-btn action-done" id="closeKeySheetBtn" style="width: 100%;">✅ Listo</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DIÁLOGO MODAL DE CONFIRMACIÓN PERSONALIZADO -->
+    <div class="confirm-modal-backdrop" id="confirmModal" style="display: none;">
+        <div class="confirm-modal-box">
+            <div class="confirm-modal-title" id="confirmModalTitle">Eliminar Elemento</div>
+            <div class="confirm-modal-message" id="confirmModalMessage">¿Estás seguro de que deseas realizar esta acción?</div>
+            <div class="confirm-modal-actions">
+                <button class="confirm-btn cancel" id="confirmCancelBtn">Cancelar</button>
+                <button class="confirm-btn danger" id="confirmConfirmBtn">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const inCode = document.getElementById('inCode');
-        const highlightingContent = document.getElementById('highlighting-content');
-        const highlighting = document.getElementById('highlighting');
-        const inTitle = document.getElementById('inTitle');
-        const inKey = document.getElementById('inKey');
-        const outTitle = document.getElementById('outTitle');
-        const outKey = document.getElementById('outKey');
+    <script type="module">
+        // Elementos DOM
         const chartBody = document.getElementById('chartBody');
         const tableColGroup = document.getElementById('tableColGroup');
         const chartContainer = document.getElementById('chartContainer');
-        const headerBar = document.getElementById('headerBar');
-        const keyWrapper = document.getElementById('keyWrapper');
-        const scalableWrapper = document.getElementById('scalableWrapper');
-        const previewPane = document.getElementById('previewPane');
+        const scalableWrapper = document.getElementById('chartWrapper');
+        const workspace = document.getElementById('workspace');
 
-        const colorCycle = ['bg-green', 'bg-purple', 'bg-green', 'bg-purple', 'bg-brown', 'bg-red'];
+        const bottomSheet = document.getElementById('bottomSheet');
+        const sheetTitle = document.getElementById('sheetTitle');
+        const sheetBodyChords = document.getElementById('sheetBodyChords');
+        const sheetBodyText = document.getElementById('sheetBodyText');
+        const sheetBodyKey = document.getElementById('sheetBodyKey');
+        const cellPreview = document.getElementById('cellPreview');
+        const sheetInputText = document.getElementById('sheetInputText');
 
-        // --- ZOOM ---
-        let currentScale = 0.8;
+        // Datos Internos del Documento
+        let songData = {
+            title: 'Dame de Beber - Marco Barrientos',
+            key: 'D',
+            sections: [
+                {
+                    lyrics: 'Quiero estar en tu presencia',
+                    rows: [
+                        ['G/E | G/D', 'B#madd9|A', 'D > A/C#', 'D/B | D/A'],
+                        ['G/E | G/D', 'Asus4|A', 'D', 'D | D/B , C/D | D/F#']
+                    ]
+                },
+                {
+                    lyrics: 'Dame de beber',
+                    rows: [
+                        ['G', 'A/G', 'A/F#', 'D/B | D/A'],
+                        ['G/E | G/D', 'Asus4|A', 'D', 'C/D | D/F#, D | D/B'],
+                        ['G', 'A/G', 'A/F#', 'D/B | D/A']
+                    ]
+                }
+            ]
+        };
 
-        function applyZoom() {
-            scalableWrapper.style.transform = `scale(${currentScale})`;
-            const baseWidth = 720; 
-            const baseHeight = chartContainer.offsetHeight;
-            // Ajustamos el wrapper para que ocupe el espacio real después de escalar
-            scalableWrapper.style.width = `${baseWidth * currentScale}px`;
-            scalableWrapper.style.height = `${baseHeight * currentScale}px`;
+        // Estado de Edición
+        let activeSelection = null; 
+        let currentScale = 1.0;
+        let selectedKeyRoot = 'D';
+        let selectedKeyType = 'major'; 
+        let reorderingBlockIdx = null; // Índice de la sección activa para mover
+
+        // Temporizador para detectar Long-Press
+        let longPressTimer = null;
+        let isLongPressActive = false;
+
+        // Estructura interna de subdivisión
+        let sheetCellStructure = {
+            hasComma: false,
+            top: { hasPipe: false, left: '', right: '', center: '' },
+            bottom: { hasPipe: false, left: '', right: '', center: '' },
+            single: { hasPipe: false, left: '', right: '', center: '' }
+        };
+        let activeSubcell = 'single.center'; 
+
+        // --- NIVEL DE SUBDIVISIÓN DE CELDA (determina tamaño de fuente fijo) ---
+        // Todas las celdas del mismo nivel usan EXACTAMENTE el mismo tamaño.
+        function getCellLevel(cellText) {
+            const hasComma = cellText.includes(',');
+            const hasPipe = cellText.includes('|');
+            if (hasComma && hasPipe) return 'quarter';
+            if (hasComma || hasPipe) return 'half';
+            return 'full';
         }
 
-        function adjustZoom(delta) {
-            currentScale += delta;
-            if (currentScale < 0.2) currentScale = 0.2;
-            if (currentScale > 3.0) currentScale = 3.0;
-            applyZoom();
+        function getCellFontSize(level) {
+            if (level === 'quarter') return 'var(--chord-fs-quarter)';
+            if (level === 'half') return 'var(--chord-fs-half)';
+            return 'var(--chord-fs-full)';
+        }
+
+        // --- SISTEMA DE ENLACES DINÁMICOS DE EVENTOS ---
+
+        document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleTheme();
+        });
+
+        document.getElementById('exportPngBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            exportToPng();
+        });
+
+        document.getElementById('workspace').addEventListener('click', () => {
+            if (reorderingBlockIdx !== null) {
+                reorderingBlockIdx = null;
+                render();
+            }
+            deselectAll();
+        });
+
+        document.getElementById('sheetCloseBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeSheet();
+        });
+
+        document.getElementById('btnTimeAction').addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleTimeAction();
+        });
+
+        document.getElementById('btnVueltaAction').addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleVueltaAction();
+        });
+
+        document.getElementById('btnClearSubcellBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            sheetClearActiveSubcell();
+        });
+
+        document.getElementById('saveTextEditBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            saveTextEdit();
+        });
+
+        document.getElementById('deleteSectionDirectBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            confirmDeleteSectionDirect();
+        });
+
+        // Header title and key events are bound dynamically in render()
+
+        document.getElementById('keyTypeMajorBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            setKeyType('major');
+        });
+
+        document.getElementById('keyTypeMinorBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            setKeyType('minor');
+        });
+
+        document.getElementById('closeKeySheetBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeSheet();
+        });
+
+        // Registrar teclas del teclado táctil
+        document.querySelectorAll('.chord-keyboard .k-btn').forEach(btn => {
+            const val = btn.getAttribute('data-key');
+            if (val) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    pressKeyboardKey(val);
+                });
+            }
+        });
+
+        // Registrar tonos del selector táctil
+        document.querySelectorAll('.key-grid .key-select-btn').forEach(btn => {
+            const note = btn.getAttribute('data-note');
+            if (note) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectKeyRoot(note);
+                });
+            }
+        });
+
+        // --- INTERRUPTOR DE TEMA DÍA / NOCHE ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggleBtn');
+            const isLight = body.classList.toggle('theme-light');
+            
+            if (isLight) {
+                btn.textContent = '🌙 Modo Escenario';
+            } else {
+                btn.textContent = '☀️ Modo Día';
+            }
+            render();
+        }
+
+        // --- SISTEMA DE SELECCIÓN Y APERTURA DE BOTTOM SHEET ---
+
+        function openChordEdit(blockIdx, rowIdx, colIdx) {
+            deselectAll();
+            activeSelection = { type: 'chord', blockIdx, rowIdx, colIdx };
+            
+            const cell = document.querySelector(`.cell-${blockIdx}-${rowIdx}-${colIdx}`);
+            if (cell) cell.classList.add('selected');
+
+            sheetTitle.textContent = "Editar Acorde";
+            sheetBodyChords.style.display = 'flex';
+            sheetBodyText.style.display = 'none';
+            sheetBodyKey.style.display = 'none';
+            
+            const currentVal = songData.sections[blockIdx].rows[rowIdx][colIdx];
+            sheetCellStructure = parseCellToStructure(currentVal);
+            
+            if (sheetCellStructure.hasComma) {
+                activeSubcell = sheetCellStructure.top.hasPipe ? 'top.left' : 'top.center';
+            } else {
+                activeSubcell = sheetCellStructure.single.hasPipe ? 'single.left' : 'single.center';
+            }
+
+            renderBottomSheetGrid();
+            bottomSheet.classList.add('open');
+        }
+
+        function openTextEdit(type, blockIdx = null) {
+            deselectAll();
+            activeSelection = { type, blockIdx };
+
+            sheetBodyChords.style.display = 'none';
+            sheetBodyText.style.display = 'flex';
+            sheetBodyKey.style.display = 'none';
+
+            if (type === 'title') {
+                sheetTitle.textContent = "Editar Título de la Canción";
+                sheetInputText.value = songData.title;
+                document.getElementById('deleteSectionDirectBtn').style.display = 'none';
+            } else if (type === 'lyrics') {
+                sheetTitle.textContent = "Editar Letra / Tipo de Sección";
+                sheetInputText.value = songData.sections[blockIdx].lyrics;
+                const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
+                if (lyricsCell) lyricsCell.classList.add('selected');
+                document.getElementById('deleteSectionDirectBtn').style.display = 'block';
+            }
+
+            bottomSheet.classList.add('open');
+            setTimeout(() => sheetInputText.focus(), 100);
+        }
+
+        function openKeySelector() {
+            deselectAll();
+            activeSelection = { type: 'key' };
+
+            sheetTitle.textContent = "Seleccionar Tonalidad (Key)";
+            sheetBodyChords.style.display = 'none';
+            sheetBodyText.style.display = 'none';
+            sheetBodyKey.style.display = 'flex';
+
+            let currentKey = songData.key;
+            if (currentKey.endsWith('m')) {
+                selectedKeyType = 'minor';
+                selectedKeyRoot = currentKey.slice(0, -1);
+            } else {
+                selectedKeyType = 'major';
+                selectedKeyRoot = currentKey;
+            }
+
+            updateKeySelectionUI();
+            bottomSheet.classList.add('open');
+        }
+
+        // --- SELECTOR DE TONALIDAD TÁCTIL ---
+        function selectKeyRoot(note) {
+            selectedKeyRoot = note;
+            updateKeySelectionUI();
+            saveKeySelection();
+        }
+
+        function setKeyType(type) {
+            selectedKeyType = type;
+            updateKeySelectionUI();
+            saveKeySelection();
+        }
+
+        function updateKeySelectionUI() {
+            document.getElementById('keyTypeMajorBtn').classList.toggle('active', selectedKeyType === 'major');
+            document.getElementById('keyTypeMinorBtn').classList.toggle('active', selectedKeyType === 'minor');
+
+            document.querySelectorAll('.key-select-btn').forEach(btn => {
+                const isSelected = btn.getAttribute('data-note') === selectedKeyRoot;
+                btn.classList.toggle('active', isSelected);
+            });
+        }
+
+        function saveKeySelection() {
+            const keyResult = selectedKeyType === 'minor' ? selectedKeyRoot + 'm' : selectedKeyRoot;
+            songData.key = keyResult;
+            render();
+        }
+
+        function saveTextEdit() {
+            if (!activeSelection) return;
+
+            const val = sheetInputText.value.trim();
+
+            if (activeSelection.type === 'title') {
+                songData.title = val || 'Sin Título';
+            } else if (activeSelection.type === 'lyrics') {
+                songData.sections[activeSelection.blockIdx].lyrics = val;
+            }
+
+            render();
+            closeSheet();
+        }
+
+        // Cierre de Sheet
+        function closeSheet() {
+            bottomSheet.classList.remove('open');
+            deselectAll();
+        }
+
+        function deselectAll() {
+            activeSelection = null;
+            document.querySelectorAll('.chord-cell.selected').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.lyrics-cell.selected').forEach(c => c.classList.remove('selected'));
+        }
+
+        // --- ALGORITMO PARSER Y SERIALIZADOR DE CELDAS INTERACTIVOS ---
+
+        function parseCellToStructure(text) {
+            text = text.trim().replace(/\s*-\s*/g, ' | '); 
+            if (text === 'VACÍO' || text === '') text = '';
+            
+            let struct = {
+                hasComma: false,
+                top: { hasPipe: false, left: '', right: '', center: '' },
+                bottom: { hasPipe: false, left: '', right: '', center: '' },
+                single: { hasPipe: false, left: '', right: '', center: '' }
+            };
+
+            if (text.includes(',')) {
+                struct.hasComma = true;
+                const parts = text.split(',');
+                const topText = parts[0].trim();
+                const bottomText = parts[1] ? parts[1].trim() : '';
+
+                if (topText.includes('|')) {
+                    struct.top.hasPipe = true;
+                    const topParts = topText.split('|');
+                    struct.top.left = topParts[0].trim();
+                    struct.top.right = topParts[1] ? topParts[1].trim() : '';
+                } else {
+                    struct.top.hasPipe = false;
+                    struct.top.center = topText;
+                }
+
+                if (bottomText.includes('|')) {
+                    struct.bottom.hasPipe = true;
+                    const bottomParts = bottomText.split('|');
+                    struct.bottom.left = bottomParts[0].trim();
+                    struct.bottom.right = bottomParts[1] ? bottomParts[1].trim() : '';
+                } else {
+                    struct.bottom.hasPipe = false;
+                    struct.bottom.center = bottomText;
+                }
+            } else {
+                struct.hasComma = false;
+                if (text.includes('|')) {
+                    struct.single.hasPipe = true;
+                    const parts = text.split('|');
+                    struct.single.left = parts[0].trim();
+                    struct.single.right = parts[1] ? parts[1].trim() : '';
+                } else {
+                    struct.single.hasPipe = false;
+                    struct.single.center = text;
+                }
+            }
+            return struct;
+        }
+
+        function serializeStructureToCell(struct) {
+            if (struct.hasComma) {
+                let topText = '';
+                if (struct.top.hasPipe) {
+                    topText = `${struct.top.left || 'VACÍO'} | ${struct.top.right || 'VACÍO'}`;
+                } else {
+                    topText = struct.top.center || 'VACÍO';
+                }
+
+                let bottomText = '';
+                if (struct.bottom.hasPipe) {
+                    bottomText = `${struct.bottom.left || 'VACÍO'} | ${struct.bottom.right || 'VACÍO'}`;
+                } else {
+                    bottomText = struct.bottom.center || 'VACÍO';
+                }
+
+                return `${topText} , ${bottomText}`;
+            } else {
+                if (struct.single.hasPipe) {
+                    return `${struct.single.left || 'VACÍO'} | ${struct.single.right || 'VACÍO'}`;
+                } else {
+                    return struct.single.center || 'VACÍO';
+                }
+            }
+        }
+
+        // --- DIBUJADO DE LA GRILLA INTERACTIVA EN EL VISOR DEL BOTTOM SHEET ---
+
+        function selectSubcell(path) {
+            activeSubcell = path;
+            renderBottomSheetGrid();
+        }
+
+        function renderBottomSheetGrid() {
+            cellPreview.innerHTML = '';
+            
+            cellPreview.style.display = 'grid';
+            cellPreview.style.height = '140px'; 
+            cellPreview.style.width = '100%';
+            
+            if (sheetCellStructure.hasComma) {
+                cellPreview.style.gridTemplateRows = '1fr 1fr';
+                
+                // Fila Superior (Top)
+                const topRow = document.createElement('div');
+                topRow.style.display = 'grid';
+                topRow.style.width = '100%';
+                topRow.style.height = '100%';
+                if (sheetCellStructure.top.hasPipe) {
+                    topRow.style.gridTemplateColumns = '1fr 1fr';
+                    topRow.appendChild(createPreviewCell('top.left', sheetCellStructure.top.left));
+                    topRow.appendChild(createPreviewCell('top.right', sheetCellStructure.top.right));
+                } else {
+                    topRow.style.gridTemplateColumns = '1fr';
+                    topRow.appendChild(createPreviewCell('top.center', sheetCellStructure.top.center));
+                }
+                
+                // Fila Inferior (Bottom)
+                const bottomRow = document.createElement('div');
+                bottomRow.style.display = 'grid';
+                bottomRow.style.width = '100%';
+                bottomRow.style.height = '100%';
+                if (sheetCellStructure.bottom.hasPipe) {
+                    bottomRow.style.gridTemplateColumns = '1fr 1fr';
+                    bottomRow.appendChild(createPreviewCell('bottom.left', sheetCellStructure.bottom.left));
+                    bottomRow.appendChild(createPreviewCell('bottom.right', sheetCellStructure.bottom.right));
+                } else {
+                    bottomRow.style.gridTemplateColumns = '1fr';
+                    bottomRow.appendChild(createPreviewCell('bottom.center', sheetCellStructure.bottom.center));
+                }
+
+                cellPreview.appendChild(topRow);
+                cellPreview.appendChild(bottomRow);
+            } else {
+                // Fila única (Single)
+                cellPreview.style.gridTemplateRows = '1fr';
+                const singleRow = document.createElement('div');
+                singleRow.style.display = 'grid';
+                singleRow.style.width = '100%';
+                singleRow.style.height = '100%';
+                if (sheetCellStructure.single.hasPipe) {
+                    singleRow.style.gridTemplateColumns = '1fr 1fr';
+                    singleRow.appendChild(createPreviewCell('single.left', sheetCellStructure.single.left));
+                    singleRow.appendChild(createPreviewCell('single.right', sheetCellStructure.single.right));
+                } else {
+                    singleRow.style.gridTemplateColumns = '1fr';
+                    singleRow.appendChild(createPreviewCell('single.center', sheetCellStructure.single.center));
+                }
+                cellPreview.appendChild(singleRow);
+            }
+
+            updateGridActionButtons();
+        }
+
+        function createPreviewCell(path, val) {
+            const cell = document.createElement('div');
+            const isSelected = activeSubcell === path;
+            
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.style.cursor = 'pointer';
+            cell.style.width = '100%';
+            cell.style.height = '100%';
+            cell.style.border = '1px solid var(--border-color)';
+            cell.style.transition = 'all 0.15s ease';
+            
+            if (isSelected) {
+                cell.style.backgroundColor = 'rgba(96, 165, 250, 0.18)';
+                cell.style.border = '2px solid var(--accent-celeste)';
+                cell.style.color = 'var(--accent-celeste)';
+                cell.style.boxShadow = 'inset 0 0 15px rgba(96, 165, 250, 0.3)';
+            }
+
+            const span = document.createElement('span');
+            span.textContent = val || 'VACÍO';
+            
+            if (val === 'VACÍO' || !val) {
+                span.style.color = document.body.classList.contains('theme-light') ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)';
+                span.style.fontSize = '12px';
+                span.style.fontWeight = 'normal';
+            } else {
+                span.style.fontWeight = '800';
+                span.style.fontSize = '21px';
+            }
+            
+            cell.appendChild(span);
+            
+            cell.onclick = (e) => {
+                e.stopPropagation();
+                selectSubcell(path);
+            };
+            
+            return cell;
+        }
+
+        // --- BOTONES INTELIGENTES DE SUBDIVISIÓN CON ICONOS DINÁMICOS ---
+
+        function handleTimeAction() {
+            if (!activeSelection) return;
+            
+            let hasPipe = false;
+            if (sheetCellStructure.hasComma) {
+                if (activeSubcell.startsWith('top')) {
+                    hasPipe = sheetCellStructure.top.hasPipe;
+                } else {
+                    hasPipe = sheetCellStructure.bottom.hasPipe;
+                }
+            } else {
+                hasPipe = sheetCellStructure.single.hasPipe;
+            }
+
+            if (hasPipe) {
+                // Unir Horizontalmente
+                if (sheetCellStructure.hasComma) {
+                    if (activeSubcell.startsWith('top')) {
+                        sheetCellStructure.top.hasPipe = false;
+                        sheetCellStructure.top.center = sheetCellStructure.top.left || 'C';
+                        activeSubcell = 'top.center';
+                    } else {
+                        sheetCellStructure.bottom.hasPipe = false;
+                        sheetCellStructure.bottom.center = sheetCellStructure.bottom.left || 'C';
+                        activeSubcell = 'bottom.center';
+                    }
+                } else {
+                    sheetCellStructure.single.hasPipe = false;
+                    sheetCellStructure.single.center = sheetCellStructure.single.left || 'C';
+                    activeSubcell = 'single.center';
+                }
+            } else {
+                // Dividir Horizontalmente
+                if (sheetCellStructure.hasComma) {
+                    if (activeSubcell === 'top.center' || activeSubcell.startsWith('top')) {
+                        sheetCellStructure.top.hasPipe = true;
+                        sheetCellStructure.top.left = sheetCellStructure.top.center || 'C';
+                        sheetCellStructure.top.right = 'VACÍO';
+                        activeSubcell = 'top.right';
+                    } else if (activeSubcell === 'bottom.center' || activeSubcell.startsWith('bottom')) {
+                        sheetCellStructure.bottom.hasPipe = true;
+                        sheetCellStructure.bottom.left = sheetCellStructure.bottom.center || 'C';
+                        sheetCellStructure.bottom.right = 'VACÍO';
+                        activeSubcell = 'bottom.right';
+                    }
+                } else {
+                    sheetCellStructure.single.hasPipe = true;
+                    sheetCellStructure.single.left = sheetCellStructure.single.center || 'C';
+                    sheetCellStructure.single.right = 'VACÍO';
+                    activeSubcell = 'single.right';
+                }
+            }
+
+            saveChangesToMainData();
+            renderBottomSheetGrid();
+            render();
+        }
+
+        function handleVueltaAction() {
+            if (!activeSelection) return;
+
+            if (sheetCellStructure.hasComma) {
+                // Unir Verticalmente
+                sheetCellStructure.hasComma = false;
+                if (sheetCellStructure.top.hasPipe) {
+                    sheetCellStructure.single.hasPipe = true;
+                    sheetCellStructure.single.left = sheetCellStructure.top.left;
+                    sheetCellStructure.single.right = sheetCellStructure.top.right;
+                    activeSubcell = 'single.left';
+                } else {
+                    sheetCellStructure.single.hasPipe = false;
+                    sheetCellStructure.single.center = sheetCellStructure.top.center || 'C';
+                    activeSubcell = 'single.center';
+                }
+            } else {
+                // Dividir Verticalmente
+                sheetCellStructure.hasComma = true;
+                if (sheetCellStructure.single.hasPipe) {
+                    sheetCellStructure.top.hasPipe = true;
+                    sheetCellStructure.top.left = sheetCellStructure.single.left;
+                    sheetCellStructure.top.right = sheetCellStructure.single.right;
+                } else {
+                    sheetCellStructure.top.hasPipe = false;
+                    sheetCellStructure.top.center = sheetCellStructure.single.center || 'C';
+                }
+                sheetCellStructure.bottom.hasPipe = false;
+                sheetCellStructure.bottom.center = 'VACÍO';
+                activeSubcell = 'bottom.center';
+            }
+
+            saveChangesToMainData();
+            renderBottomSheetGrid();
+            render();
+        }
+
+        function updateGridActionButtons() {
+            const iconTime = document.getElementById('iconTime');
+            const iconVuelta = document.getElementById('iconVuelta');
+            
+            let hasPipe = false;
+            if (sheetCellStructure.hasComma) {
+                if (activeSubcell.startsWith('top')) {
+                    hasPipe = sheetCellStructure.top.hasPipe;
+                } else {
+                    hasPipe = sheetCellStructure.bottom.hasPipe;
+                }
+            } else {
+                hasPipe = sheetCellStructure.single.hasPipe;
+            }
+            
+            const svgDivH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`;
+            const svgUnirH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M11 9l-2 3 2 3M13 9l2 3-2 3"/></svg>`;
+            
+            if (hasPipe) {
+                iconTime.innerHTML = svgUnirH;
+                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Unir";
+            } else {
+                iconTime.innerHTML = svgDivH;
+                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Dividir";
+            }
+            
+            const hasComma = sheetCellStructure.hasComma;
+            
+            const svgDivV = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/></svg>`;
+            const svgUnirV = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 9v6M9 11l3-2 3 2M9 13l3 2 3-2"/></svg>`;
+            
+            if (hasComma) {
+                iconVuelta.innerHTML = svgUnirV;
+                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Unir";
+            } else {
+                iconVuelta.innerHTML = svgDivV;
+                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Dividir";
+            }
+        }
+
+        function sheetClearActiveSubcell() {
+            if (!activeSelection || !activeSubcell) return;
+            const parts = activeSubcell.split('.');
+            const parent = parts[0];
+            const child = parts[1];
+            
+            sheetCellStructure[parent][child] = 'VACÍO';
+            saveChangesToMainData();
+            renderBottomSheetGrid();
+            render();
+        }
+
+        function saveChangesToMainData() {
+            const blockIdx = activeSelection.blockIdx;
+            const rowIdx = activeSelection.rowIdx;
+            const colIdx = activeSelection.colIdx;
+            songData.sections[blockIdx].rows[rowIdx][colIdx] = serializeStructureToCell(sheetCellStructure);
+        }
+
+        // --- TECLADO TÁCTIL INTELIGENTE ---
+
+        function pressKeyboardKey(key) {
+            if (!activeSelection || activeSelection.type !== 'chord' || !activeSubcell) return;
+
+            const parts = activeSubcell.split('.');
+            const parent = parts[0]; 
+            const child = parts[1];  
+
+            let val = sheetCellStructure[parent][child] || '';
+            if (val === 'VACÍO') val = '';
+
+            if (key === 'CLEAR') {
+                val = '';
+            } else if (key === 'BACKSPACE') {
+                val = val.length > 0 ? val.substring(0, val.length - 1) : '';
+            } else if (['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(key)) {
+                if (val.endsWith('/')) {
+                    val = val + key;
+                } else {
+                    val = key; 
+                }
+            } else if (key === '#') {
+                const lastChar = val.slice(-1);
+                if (['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(lastChar)) {
+                    val = val + '#';
+                }
+            } else if (key === 'b') {
+                const lastChar = val.slice(-1);
+                if (['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(lastChar)) {
+                    val = val + 'b';
+                }
+            } else if (key === 'm') {
+                if (val && !val.endsWith('/') && !val.endsWith('m')) {
+                    val = val + 'm';
+                }
+            } else if (key === '/') {
+                if (val && !val.includes('/') && !val.endsWith('/')) {
+                    val = val + '/';
+                }
+            } else {
+                if (val && !val.endsWith('/') && !val.endsWith(key)) {
+                    if (!val.includes(key)) {
+                        val = val + key;
+                    }
+                }
+            }
+
+            sheetCellStructure[parent][child] = val;
+            saveChangesToMainData();
+            renderBottomSheetGrid();
+            render();
+        }
+
+        // --- DIÁLOGO MODAL DE CONFIRMACIÓN PERSONALIZADO CON RESALTADO EN LONA ---
+
+        function showDeleteConfirmation(type, index, blockIdx = null) {
+            document.querySelectorAll('.highlight-delete').forEach(el => el.classList.remove('highlight-delete'));
+
+            let title = "";
+            let message = "";
+            let onConfirmCallback = null;
+
+            if (type === 'column') {
+                title = "Eliminar Compás";
+                message = `¿Estás seguro de que deseas eliminar este compás completo (columna ${index + 1}) en toda la canción?`;
+
+                document.querySelectorAll(`.chord-cell`).forEach(cell => {
+                    const classList = Array.from(cell.classList);
+                    const match = classList.find(c => c.startsWith('cell-'));
+                    if (match) {
+                        const parts = match.split('-');
+                        const colIdx = parseInt(parts[3]);
+                        if (colIdx === index) {
+                            cell.classList.add('highlight-delete');
+                        }
+                    }
+                });
+
+                onConfirmCallback = () => {
+                    songData.sections.forEach(sect => {
+                        sect.rows.forEach(row => {
+                            row.splice(index, 1);
+                        });
+                    });
+                    render();
+                    closeSheet();
+                };
+            } else if (type === 'row') {
+                title = "Eliminar Fila de Acordes";
+                message = `¿Estás seguro de que deseas eliminar esta fila de acordes de esta sección?`;
+
+                document.querySelectorAll(`.cell-${blockIdx}-${index}-0, .cell-${blockIdx}-${index}-1, .cell-${blockIdx}-${index}-2, .cell-${blockIdx}-${index}-3, .cell-${blockIdx}-${index}-4, .cell-${blockIdx}-${index}-5, .cell-${blockIdx}-${index}-6, .cell-${blockIdx}-${index}-7, .cell-${blockIdx}-${index}-8, .cell-${blockIdx}-${index}-9`).forEach(cell => {
+                    cell.classList.add('highlight-delete');
+                });
+                
+                const rowDeleteTr = document.querySelector(`.row-delete-btn-block-${blockIdx}-row-${index}`);
+                if (rowDeleteTr) {
+                    rowDeleteTr.parentElement.classList.add('highlight-delete');
+                }
+
+                onConfirmCallback = () => {
+                    songData.sections[blockIdx].rows.splice(index, 1);
+                    render();
+                    closeSheet();
+                };
+            } else if (type === 'section') {
+                title = "Eliminar Sección Completa";
+                message = `¿Estás seguro de que deseas eliminar esta sección completa de la canción?`;
+
+                document.querySelectorAll(`[class*="cell-${blockIdx}-"]`).forEach(cell => {
+                    cell.classList.add('highlight-delete');
+                });
+                const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
+                if (lyricsCell) lyricsCell.classList.add('highlight-delete');
+
+                onConfirmCallback = () => {
+                    songData.sections.splice(blockIdx, 1);
+                    render();
+                    closeSheet();
+                };
+            }
+
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalMessage').textContent = message;
+
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+            const confirmBtn = document.getElementById('confirmConfirmBtn');
+
+            const cleanUp = () => {
+                modal.style.display = 'none';
+                document.querySelectorAll('.highlight-delete').forEach(el => el.classList.remove('highlight-delete'));
+            };
+
+            cancelBtn.onclick = (e) => {
+                e.stopPropagation();
+                cleanUp();
+            };
+
+            confirmBtn.onclick = (e) => {
+                e.stopPropagation();
+                onConfirmCallback();
+                cleanUp();
+            };
+
+            modal.style.display = 'flex';
+        }
+
+        // --- GESTIÓN DE ACCIONES DE ESTRUCTURA GLOBALES ---
+
+        function addNewRowToSection(blockIdx) {
+            const numCols = songData.sections[blockIdx].rows[0].length;
+            const newRow = Array(numCols).fill('VACÍO');
+            songData.sections[blockIdx].rows.push(newRow);
+            render();
+        }
+
+        function addNewColumnGlobal() {
+            songData.sections.forEach(sect => {
+                sect.rows.forEach(row => {
+                    row.push('VACÍO');
+                });
+            });
+            render();
+        }
+
+        function deleteColumnGlobal(colIdx) {
+            showDeleteConfirmation('column', colIdx);
+        }
+
+        function deleteRowFromSection(blockIdx, rowIdx) {
+            showDeleteConfirmation('row', rowIdx, blockIdx);
+        }
+
+        function confirmDeleteSectionDirect() {
+            let bIdx = null;
+            if (activeSelection) {
+                bIdx = activeSelection.blockIdx;
+            }
+            if (bIdx === null) return;
+            showDeleteConfirmation('section', null, bIdx);
+        }
+
+        // --- ACCIONES GENERALES (Reordenación de Secciones) ---
+
+        function moveSection(blockIdx, direction) {
+            const newIdx = blockIdx + direction;
+            if (newIdx < 0 || newIdx >= songData.sections.length) return;
+            
+            const temp = songData.sections[blockIdx];
+            songData.sections[blockIdx] = songData.sections[newIdx];
+            songData.sections[newIdx] = temp;
+            
+            reorderingBlockIdx = newIdx;
+            render();
+        }
+
+        function addNewSection(insertAfterIdx = null) {
+            const currentCols = songData.sections.length > 0 ? songData.sections[0].rows[0].length : 4;
+            const newRow = Array(currentCols).fill('VACÍO');
+            const newSect = {
+                lyrics: 'Nueva Sección\n(Escribe la letra aquí)',
+                rows: [newRow]
+            };
+            
+            if (insertAfterIdx === -1) {
+                // Insertar al inicio absoluto
+                songData.sections.unshift(newSect);
+            } else if (insertAfterIdx !== null) {
+                // Insertar después de la sección indicada
+                songData.sections.splice(insertAfterIdx + 1, 0, newSect);
+            } else {
+                songData.sections.push(newSect);
+            }
+            render();
+        }
+
+        // --- SISTEMA DE ZOOM ---
+        function applyZoom() {
+            scalableWrapper.style.transform = `scale(${currentScale})`;
         }
 
         function resetZoom() {
-            // Detección mejorada de móvil para zoom inicial
-            const isSmallScreen = window.innerWidth < 768;
-            if (isSmallScreen) {
-                // Calcular un zoom que encaje el ancho de 720px en la pantalla del móvil
-                const availableWidth = window.innerWidth - 40; // 20px padding
-                currentScale = availableWidth / 720;
-            } else {
-                currentScale = 1.0;
-            }
+            const availableWidth = workspace.clientWidth - 20;
+            currentScale = availableWidth / 720;
+            if (currentScale > 1.0) currentScale = 1.0;
             applyZoom();
         }
 
-        // --- EXPORTAR PNG ---
+        // --- EXPORTACIÓN PNG LOCAL ---
         function exportToPng() {
-            // Seleccionamos el contenedor
+            closeSheet();
             const element = document.getElementById('chartContainer');
             
-            // Usamos html2canvas
+            const originalTransform = scalableWrapper.style.transform;
+            scalableWrapper.style.transform = 'none';
+
+            const bgExportColor = document.body.classList.contains('theme-light') ? '#ffffff' : '#000000';
+
             html2canvas(element, {
-                scale: 3, // Calidad 3x para que se vea muy nítido
-                backgroundColor: '#121212', // Forzamos el fondo oscuro
+                scale: 3, 
+                backgroundColor: bgExportColor,
                 useCORS: true,
                 logging: false
             }).then(canvas => {
-                // Crear un enlace temporal para la descarga
+                scalableWrapper.style.transform = originalTransform;
+
                 const link = document.createElement('a');
-                // Nombre del archivo basado en el título
-                const filename = (inTitle.value || 'partitura').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                const filename = songData.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
                 link.download = `${filename}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }).catch(err => {
-                console.error("Error al exportar:", err);
-                alert("Hubo un error al generar la imagen.");
+                console.error("Error en exportación:", err);
+                scalableWrapper.style.transform = originalTransform;
+                alert("Ocurrió un error al descargar la imagen.");
             });
         }
 
-        // --- RENDER ---
-        function updateHighlighting() {
-            let text = inCode.value;
-            // Escapar HTML para seguridad y visualización correcta
-            text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            // Colorear sintaxis
-            text = text.replace(/(&gt;|[|;\/\-])/g, function(match) {
-                if (match === '&gt;' || match === '-') return '<span class="hlStr">' + match + '</span>';
-                if (match === '/') return '<span class="hlSla">' + match + '</span>';
-                return '<span class="hlSep">' + match + '</span>';
-            });
-            // Importante: agregar un espacio al final si termina en salto de línea para que el scroll coincida
-            if (text.endsWith('\n')) text += '&nbsp;';
-            highlightingContent.innerHTML = text;
-        }
-
-        function syncScroll() {
-            // El textarea controla el scroll del highlighting
-            highlighting.scrollTop = inCode.scrollTop;
-            highlighting.scrollLeft = inCode.scrollLeft;
-        }
+        // --- MOTOR DE DIBUJADO DE LA PARTITURA (100% Simétrica y Rígida) ---
 
         function render() {
-            outTitle.textContent = inTitle.value;
-            outKey.textContent = inKey.value;
-            updateHighlighting();
-
-            const text = inCode.value;
-            const lines = text.split('\n');
-            let sections = [];
-            let currentSection = { lyrics: '', rows: [] };
             let maxCols = 0;
-
-            lines.forEach(line => {
-                const clean = line.trim();
-                if(!clean) return;
-                // Si la línea tiene separadores de acordes, es una fila de acordes
-                if(clean.includes(';') || clean.includes('|')) {
-                    const cols = clean.split(';');
-                    if(cols.length > maxCols) maxCols = cols.length;
-                    currentSection.rows.push(clean);
-                } else {
-                    // Si ya había filas de acordes acumuladas, cerramos la sección anterior
-                    if(currentSection.rows.length > 0) {
-                        sections.push(currentSection);
-                        currentSection = { lyrics: '', rows: [] };
-                    }
-                    currentSection.lyrics += (currentSection.lyrics ? '\n' : '') + clean;
-                }
+            songData.sections.forEach(sect => {
+                sect.rows.forEach(row => {
+                    if (row.length > maxCols) maxCols = row.length;
+                });
             });
-            // Empujar la última sección si existe
-            if(currentSection.rows.length > 0 || currentSection.lyrics) sections.push(currentSection);
 
-            // Mínimo 4 columnas para estética
-            if (maxCols < 4) maxCols = 4; 
-            
-            // --- CÁLCULO DE ANCHOS ---
-            const lyricsPercent = 28; 
-            const chordAreaPercent = 100 - lyricsPercent; 
-            const singleChordPercent = chordAreaPercent / maxCols; 
+            if (maxCols < 1) maxCols = 1;
 
-            // Definimos ColGroup HTML
-            let colHtml = `<col style="width: ${lyricsPercent}%">`; 
-            for(let i=0; i<maxCols; i++) colHtml += `<col>`;
+            const deleteColWidth = 44; 
+            const addColWidth = 44;    
+            const lyricsPercent = 28;
+            const chordAreaPercent = 100 - lyricsPercent;
+            const singleChordPercent = chordAreaPercent / maxCols;
+
+            let colHtml = `<col style="width: ${deleteColWidth}px">`;
+            colHtml += `<col style="width: ${lyricsPercent}%">`;
+            for (let i = 0; i < maxCols; i++) {
+                colHtml += `<col style="width: ${singleChordPercent}%">`;
+            }
+            colHtml += `<col style="width: ${addColWidth}px">`; 
             tableColGroup.innerHTML = colHtml;
 
-            // Header recortado
-            const chordsToCover = Math.min(maxCols, 4); 
-            const headerTotalWidthPercent = lyricsPercent + (singleChordPercent * chordsToCover);
-            headerBar.style.width = `${headerTotalWidthPercent}%`;
-
-            // Key Wrapper relativo
-            const keyWidthRelative = (singleChordPercent / headerTotalWidthPercent) * 100;
-            keyWrapper.style.width = `${keyWidthRelative}%`;
-
             let html = '';
-            let colorIdx = 0;
+
+            // FILA DE CABECERA (título + tonalidad) alineada con columnas de contenido
+            const headerTitleColspan = maxCols; // lyrics col + (maxCols-1) chord cols
+            html += `<tr class="header-row" onclick="event.stopPropagation()">`;
+            html += `<td class="td-transparent"></td>`;
+            html += `<td class="header-title-td" id="headerTitleBox" colspan="${headerTitleColspan}" title="Editar Título">
+                        <div class="header-title" id="outTitle">${songData.title}</div>
+                     </td>`;
+            html += `<td class="header-key-td" id="keyWrapper" title="Editar Tono">
+                        <div class="key-text" id="outKey">${songData.key}</div>
+                     </td>`;
+            html += `<td class="td-transparent"></td>`;
+            html += `</tr>`;
+
+            // Fila de control superior para Eliminar Columnas (Arriba)
+            html += `<tr class="col-control-tr" onclick="event.stopPropagation()">`;
+            html += `<td class="td-transparent"></td>`; 
             
-            sections.forEach(sect => {
-                if(sect.rows.length === 0) return;
-                const currColor = colorCycle[colorIdx % colorCycle.length];
-                const nextColor = colorCycle[(colorIdx + 1) % colorCycle.length];
+            // BOTÓN ＋ SECCIÓN AL INICIO ABSOLUTO
+            html += `<td class="add-section-cell add-section-first" title="Añadir Nueva Sección al principio">
+                        <div class="add-section-inner">＋ Sección</div>
+                     </td>`;
+                     
+            for (let i = 0; i < maxCols; i++) {
+                html += `<td class="col-delete-cell" data-col-idx="${i}" title="Eliminar Compás (Columna ${i + 1})">
+                            <div class="col-delete-inner">✕</div>
+                         </td>`;
+            }
+            html += `<td class="td-transparent"></td>`; 
+            html += `</tr>`;
+
+            songData.sections.forEach((sect, blockIdx) => {
+                if (sect.rows.length === 0) return;
+                
+                let sectionClass = 'sect-general';
+                const lowerType = sect.lyrics.toLowerCase();
+                if (lowerType.includes('estrofa')) sectionClass = 'sect-estrofa';
+                else if (lowerType.includes('coro')) sectionClass = 'sect-coro';
+                else if (lowerType.includes('puente')) sectionClass = 'sect-puente';
+                else if (lowerType.includes('pre-coro') || lowerType.includes('precoro')) sectionClass = 'sect-pre-coro';
+                else if (lowerType.includes('intro')) sectionClass = 'sect-intro';
+                else if (lowerType.includes('outro')) sectionClass = 'sect-outro';
+                else if (lowerType.includes('solo')) sectionClass = 'sect-solo';
+
+                // Color de fondo cíclico por sección (6 colores)
+                const sectionBgClass = `sect-bg-${blockIdx % 6}`;
+
                 const rowSpan = sect.rows.length;
 
-                sect.rows.forEach((rowStr, rIdx) => {
+                sect.rows.forEach((rowArr, rowIdx) => {
                     html += `<tr>`;
-                    if(rIdx === 0) {
-                        html += `<td class="lyrics-cell ${currColor}" rowspan="${rowSpan}">
-                                    <div class="lyrics-inner">${sect.lyrics}</div>
-                                 </td>`;
+                    
+                    // 1. ELIMINAR FILA (✕ ROJO DASHED CUADRADO DEL ALTO DE LA CELDA)
+                    html += `<td class="row-delete-cell" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" title="Eliminar Fila de Acordes">
+                                <div class="row-delete-inner">✕</div>
+                             </td>`;
+
+                    // 2. LETRA (con rowspan y modo de reordenación por Long-Press)
+                    if (rowIdx === 0) {
+                        const lyricsDisplay = sect.lyrics.trim() ? sect.lyrics : 'Escribe la letra aquí...';
+                        const isEmptyClass = !sect.lyrics.trim() ? 'empty' : '';
+                        
+                        if (reorderingBlockIdx === blockIdx) {
+                            html += `
+                                <td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx} reordering" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
+                                    <div class="lyrics-reorder-container">
+                                        <div class="reorder-btn btn-up" data-block-idx="${blockIdx}" title="Mover Sección Arriba">▲ Subir</div>
+                                        <div class="reorder-lyrics-preview">${lyricsDisplay}</div>
+                                        <div class="reorder-btn btn-down" data-block-idx="${blockIdx}" title="Mover Sección Abajo">▼ Bajar</div>
+                                    </div>
+                                </td>
+                            `;
+                        } else {
+                            html += `<td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx}" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
+                                        <div class="lyrics-inner ${isEmptyClass}">${lyricsDisplay}</div>
+                                     </td>`;
+                        }
                     }
-                    const cells = rowStr.split(';');
-                    cells.forEach(cell => {
-                        cell = cell.trim();
-                        // Detección de celda dividida con coma
-                        if(cell.includes(',')) {
-                            const p = cell.split(',');
-                            html += `<td class="chord-cell" style="padding:0;">
-                                            <div class="split-box">
-                                                <div class="split-top ${currColor}">${p[0].trim()}</div>
-                                                <div class="split-bottom ${nextColor}">${p[1] ? p[1].trim() : ''}</div>
-                                            </div>
+
+                    // 3. COMPASES DE ACORDES — tamaño de fuente fijo por nivel de subdivisión
+                    rowArr.forEach((cell, colIdx) => {
+                        cell = cell.trim().replace(/\s*-\s*/g, ' | '); 
+                        const isSelected = activeSelection && activeSelection.type === 'chord' && activeSelection.blockIdx === blockIdx && activeSelection.rowIdx === rowIdx && activeSelection.colIdx === colIdx ? 'selected' : '';
+                        
+                        if (cell === 'VACÍO' || !cell) {
+                            const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
+                            html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}">
+                                        <div class="chord-inner" style="color: rgba(255,255,255,0.1); font-size: 11px;">+</div>
                                      </td>`;
                         } else {
-                            html += `<td class="chord-cell ${currColor}">
-                                            <div class="chord-inner">${cell}</div>
+                            // Nivel de subdivisión de la celda → tamaño de fuente fijo
+                            const level = getCellLevel(cell);
+                            const fontSize = getCellFontSize(level);
+
+                            const renderHorizontal = (text) => {
+                                if (text.includes('|')) {
+                                    const parts = text.split('|');
+                                    const leftText = parts[0].trim();
+                                    const rightText = parts[1] ? parts[1].trim() : '';
+
+                                    return `
+                                        <div class="split-horizontal-box">
+                                            <div class="split-left">${leftText}</div>
+                                            <div class="split-right">${rightText}</div>
+                                        </div>
+                                    `;
+                                } else {
+                                    return `<div class="chord-inner">${text}</div>`;
+                                }
+                            };
+
+                            let cellHTML = '';
+                            
+                            if (cell.includes(',')) {
+                                const parts = cell.split(',');
+                                const topText = parts[0].trim();
+                                const bottomText = parts[1] ? parts[1].trim() : '';
+
+                                const topHTML = renderHorizontal(topText);
+                                const bottomHTML = renderHorizontal(bottomText);
+
+                                cellHTML = `
+                                    <div class="split-box">
+                                        <div class="split-top">${topHTML}</div>
+                                        <div class="split-bottom">${bottomHTML}</div>
+                                    </div>
+                                `;
+                            } else {
+                                cellHTML = renderHorizontal(cell);
+                            }
+
+                            const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
+                            html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}" style="font-size: ${fontSize};">
+                                        ${cellHTML}
                                      </td>`;
                         }
                     });
-                    // Rellenar celdas vacías transparentes
-                    const missing = maxCols - cells.length;
-                    for(let i=0; i<missing; i++) html += `<td class="chord-cell td-transparent">&nbsp;</td>`;
+
+                    const missing = maxCols - rowArr.length;
+                    for (let i = 0; i < missing; i++) {
+                        const padColIdx = maxCols - missing + i;
+                        const colDarkClass = padColIdx % 2 === 1 ? 'col-dark' : '';
+                        html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${padColIdx} ${sectionClass} ${sectionBgClass} ${colDarkClass}">&nbsp;</td>`;
+                    }
+
+                    // 4. AGREGAR COMPÁS (＋ ZINZ/AZUL DASHED CUADRADO CON ROWSPAN)
+                    if (rowIdx === 0) {
+                        html += `<td class="add-col-cell" rowspan="${rowSpan}" title="Añadir Compás (Columna)">
+                                    <div class="add-col-inner">＋</div>
+                                 </td>`;
+                    }
+
                     html += `</tr>`;
                 });
-                colorIdx++;
+
+                // FILA DE CONTROL DE ESTRUCTURA LOCAL DE SECCIÓN (Abajo)
+                html += `
+                    <tr class="add-row-tr" onclick="event.stopPropagation()">
+                        <td class="td-transparent"></td>
+                        <td class="add-section-cell" data-block-idx="${blockIdx}" title="Añadir Nueva Sección debajo">
+                            <div class="add-section-inner">＋ Sección</div>
+                        </td>
+                        <td class="add-row-cell" data-block-idx="${blockIdx}" colspan="${maxCols}" title="Añadir Fila de Acordes">
+                            <div class="add-row-inner">＋ Fila de Acordes</div>
+                        </td>
+                        <td class="td-transparent"></td>
+                    </tr>
+                `;
             });
+
             chartBody.innerHTML = html;
 
-            // Pequeño delay para asegurar que el DOM se pintó antes de calcular el alto
-            setTimeout(applyZoom, 0); 
-        }
+            // --- VINCULACIÓN DINÁMICA DE EVENTOS ---
+            
+            // 1. Celdas de eliminar columna (Arriba)
+            document.querySelectorAll('.col-delete-cell').forEach(cell => {
+                const idx = parseInt(cell.getAttribute('data-col-idx'));
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteColumnGlobal(idx);
+                });
+            });
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                if (previewPane.requestFullscreen) previewPane.requestFullscreen();
-                else if (previewPane.webkitRequestFullscreen) previewPane.webkitRequestFullscreen();
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(e=>{});
+            // 2. Celdas de letras: Click e interactividad de Reordenación (Long Press)
+            document.querySelectorAll('.lyrics-cell').forEach(cell => {
+                const bIdx = parseInt(cell.getAttribute('data-block-idx'));
+                
+                if (cell.classList.contains('reordering')) return;
+
+                // Captura de Long Press (Pulsación Larga)
+                const startLongPressTimer = () => {
+                    isLongPressActive = false;
+                    longPressTimer = setTimeout(() => {
+                        isLongPressActive = true;
+                        reorderingBlockIdx = bIdx;
+                        render();
+                    }, 550); 
+                };
+
+                const clearLongPressTimer = () => {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                    }
+                };
+
+                cell.addEventListener('mousedown', startLongPressTimer);
+                cell.addEventListener('touchstart', startLongPressTimer);
+                
+                cell.addEventListener('mouseup', clearLongPressTimer);
+                cell.addEventListener('touchend', clearLongPressTimer);
+                cell.addEventListener('mousemove', clearLongPressTimer);
+                cell.addEventListener('touchmove', clearLongPressTimer);
+
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (isLongPressActive) {
+                        isLongPressActive = false;
+                        return; 
+                    }
+                    
+                    if (reorderingBlockIdx !== null) {
+                        reorderingBlockIdx = null;
+                        render();
+                        return;
+                    }
+                    
+                    openTextEdit('lyrics', bIdx);
+                });
+            });
+
+            // 3. Botones de reordenación de sección (Up/Down)
+            document.querySelectorAll('.reorder-btn.btn-up').forEach(btn => {
+                const bIdx = parseInt(btn.getAttribute('data-block-idx'));
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    moveSection(bIdx, -1);
+                });
+            });
+
+            document.querySelectorAll('.reorder-btn.btn-down').forEach(btn => {
+                const bIdx = parseInt(btn.getAttribute('data-block-idx'));
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    moveSection(bIdx, 1);
+                });
+            });
+
+            // 4. Celdas de acordes
+            document.querySelectorAll('.chord-cell').forEach(cell => {
+                const bIdx = cell.getAttribute('data-block-idx');
+                const rIdx = cell.getAttribute('data-row-idx');
+                const cIdx = cell.getAttribute('data-col-idx');
+                if (bIdx !== null && rIdx !== null && cIdx !== null) {
+                    cell.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (reorderingBlockIdx !== null) {
+                            reorderingBlockIdx = null;
+                            render();
+                            return;
+                        }
+                        openChordEdit(parseInt(bIdx), parseInt(rIdx), parseInt(cIdx));
+                    });
                 }
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
+            });
+
+            // 5. Botones de eliminar fila (Izquierda)
+            document.querySelectorAll('.row-delete-cell').forEach(cell => {
+                const bIdx = cell.getAttribute('data-block-idx');
+                const rIdx = cell.getAttribute('data-row-idx');
+                if (bIdx !== null && rIdx !== null) {
+                    cell.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteRowFromSection(parseInt(bIdx), parseInt(rIdx));
+                    });
+                }
+            });
+
+            // 6. Botón agregar compás (Columna - Derecha)
+            document.querySelectorAll('.add-col-cell').forEach(cell => {
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addNewColumnGlobal();
+                });
+            });
+
+            // 7. Botón agregar fila (Abajo)
+            document.querySelectorAll('.add-row-cell').forEach(cell => {
+                const bIdx = parseInt(cell.getAttribute('data-block-idx'));
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addNewRowToSection(bIdx);
+                });
+            });
+
+            // 8. Botones agregar sección (Abajo e Inicial)
+            document.querySelectorAll('.add-section-cell').forEach(cell => {
+                cell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const bIdx = cell.getAttribute('data-block-idx');
+                    if (bIdx !== null) {
+                        addNewSection(parseInt(bIdx));
+                    } else if (cell.classList.contains('add-section-first')) {
+                        addNewSection(-1);
+                    }
+                });
+            });
+
+            // 9. Cabecera: título y tonalidad (generados dinámicamente)
+            const headerTitleBox = document.getElementById('headerTitleBox');
+            if (headerTitleBox) {
+                headerTitleBox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openTextEdit('title');
+                });
             }
+
+            const keyWrapperEl = document.getElementById('keyWrapper');
+            if (keyWrapperEl) {
+                keyWrapperEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openKeySelector();
+                });
+            }
+
+            // Resetear escala y zoom de visualización
+            setTimeout(applyZoom, 0);
         }
 
-        // Event Listeners
-        inCode.addEventListener('input', render);
-        inCode.addEventListener('scroll', syncScroll);
-        inTitle.addEventListener('input', render);
-        inKey.addEventListener('input', render);
-        
-        // Inicialización
+        // Inicializar
         window.addEventListener('load', () => {
             resetZoom();
             render();
-            // Forzar un repintado del scroll
-            setTimeout(() => {
-                inCode.scrollTop = 1; 
-                inCode.scrollTop = 0; 
-            }, 100);
         });
-        
+
         window.addEventListener('resize', () => {
-            // Solo ajustar zoom si no estamos editando activamente (para evitar saltos con el teclado)
-            if(document.activeElement !== inCode) {
-               // Opcional: resetZoom(); 
+            if (!bottomSheet.classList.contains('open')) {
+                resetZoom();
             }
         });
     </script>
