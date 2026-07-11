@@ -216,7 +216,6 @@
         .chart-wrapper {
             margin: 0 auto 80px auto;
             transform-origin: top center;
-            transition: transform 0.2s ease-out;
         }
 
         .chart-container {
@@ -867,140 +866,121 @@
         }
 
         /* Botones de Control de Subdivisión con Iconos SVG y Etiquetas */
-        .sheet-grid-controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            width: 100%;
+        /* Ocultar el título/encabezado superior del bottom sheet para ahorrar espacio vertical */
+        .sheet-header {
+            display: none !important;
         }
-        
-        .grid-ctrl-btn {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 12px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-            user-select: none;
-        }
-        
-        .theme-light .grid-ctrl-btn {
-            background: #ffffff;
-            border-color: var(--border-color);
-            color: #111827;
-        }
-        
-        .grid-ctrl-btn:hover {
-            border-color: var(--accent-celeste);
-            background: rgba(96, 165, 250, 0.05);
-        }
-        
-        .grid-ctrl-btn.danger {
-            color: #ef4444;
-            border-color: rgba(239, 68, 68, 0.15);
-        }
-        
-        .grid-ctrl-btn.danger:hover {
-            background: rgba(239, 68, 68, 0.08);
-            border-color: #ef4444;
-        }
-        
-        .ctrl-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 24px;
-        }
-        
-        .ctrl-label {
-            font-size: 10px;
-            font-weight: 700;
+
+        /* Títulos de sección internos planos */
+        .sheet-section-title {
+            font-size: 0.85rem;
+            font-weight: 750;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            text-align: center;
         }
-        
-        .theme-light .ctrl-label {
+        .theme-light .sheet-section-title {
             color: #4b5563;
         }
 
-        /* Teclado de Acordes Táctil Inteligente */
-        .chord-keyboard {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .keyboard-row {
-            display: flex;
+        /* Teclado de Acordes Táctil Inteligente Unificado (Flat, estilo Calculadora) */
+        .chord-keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
             gap: 6px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            padding-bottom: 2px;
             width: 100%;
         }
-        .keyboard-row::-webkit-scrollbar { display: none; }
 
-        .k-btn {
+        .chord-keyboard-grid .grid-btn {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 8px;
             font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             user-select: none;
-            flex: 1;
-            min-width: 44px;
-            min-height: 48px;
+            min-height: 44px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-family: inherit;
+            transition: all 0.2s;
         }
 
-        .theme-light .k-btn {
+        .theme-light .chord-keyboard-grid .grid-btn {
             background: #ffffff;
             border-color: rgba(0,0,0,0.1);
             color: #111827;
         }
 
-        .k-btn:active {
+        .chord-keyboard-grid .grid-btn:active {
             background: rgba(255,255,255,0.12);
             transform: scale(0.95);
         }
-        .theme-light .k-btn:active {
+        .theme-light .chord-keyboard-grid .grid-btn:active {
             background: rgba(0,0,0,0.08);
         }
 
-        .k-btn.fundamental {
+        /* Teclas de Acción */
+        .chord-keyboard-grid .action-split-h {
+            grid-column: span 2;
+            background: rgba(96, 165, 250, 0.06) !important;
+            border-color: rgba(96, 165, 250, 0.15) !important;
+            color: var(--accent-celeste) !important;
+            font-size: 11px;
+            gap: 2px;
+        }
+        .chord-keyboard-grid .action-split-v {
+            grid-column: span 2;
+            background: rgba(96, 165, 250, 0.06) !important;
+            border-color: rgba(96, 165, 250, 0.15) !important;
+            color: var(--accent-celeste) !important;
+            font-size: 11px;
+            gap: 2px;
+        }
+        .chord-keyboard-grid .action-back {
+            grid-column: span 2;
+            background: rgba(251, 146, 60, 0.06) !important;
+            border-color: rgba(251, 146, 60, 0.15) !important;
+            color: #fb923c !important;
+            font-size: 1.1rem;
+        }
+        .chord-keyboard-grid .action-clear {
+            grid-column: span 1;
+            background: rgba(239, 68, 68, 0.06) !important;
+            border-color: rgba(239, 68, 68, 0.15) !important;
+            color: #f43f5e !important;
+            font-size: 1.1rem;
+        }
+
+        .chord-keyboard-grid .grid-btn.fundamental {
             background: rgba(255,255,255,0.06);
             border-color: rgba(255,255,255,0.1);
         }
-        .theme-light .k-btn.fundamental {
+        .theme-light .chord-keyboard-grid .grid-btn.fundamental {
             background: rgba(0,0,0,0.02);
             border-color: rgba(0,0,0,0.08);
         }
 
-        .k-btn.action-clear {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.08);
-            border-color: rgba(239, 68, 68, 0.15);
+        .chord-keyboard-grid .grid-btn.modifier {
+            background: rgba(255,255,255,0.02);
             font-weight: 600;
         }
 
-        .k-btn.action-back {
-            color: var(--accent-celeste);
-            background: rgba(96, 165, 250, 0.08);
-            border-color: rgba(96, 165, 250, 0.15);
+        .ctrl-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 20px;
+        }
+
+        .ctrl-label {
+            font-size: 10px;
+            font-weight: 700;
         }
 
         /* Contenido del Panel - Edición de Texto (Letra/Título) */
@@ -1008,6 +988,38 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+        }
+        
+        .sheet-body-text .k-btn.action-done {
+            background: var(--accent-celeste);
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+        .theme-light .sheet-body-text .k-btn.action-done {
+            color: #ffffff;
+        }
+        .sheet-body-text .k-btn.action-done:active {
+            opacity: 0.8;
+        }
+        .s-grid-btn.danger {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .s-grid-btn.danger:active {
+            background: rgba(239, 68, 68, 0.15);
         }
 
         .sheet-textarea {
@@ -1106,7 +1118,8 @@
         .theme-light .type-toggle-btn.active {
             background: #ffffff;
             color: #111827;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: none;
+            border: 1px solid var(--border-color);
         }
 
         /* Estilo para las subceldas clickables interactivas en el BottomSheet */
@@ -1254,12 +1267,22 @@
     <!-- Barra de Navegación -->
     <nav class="app-navbar">
         <div class="navbar-brand">
-            <img src="../logo-dark.png" alt="Logo YHWH" class="navbar-logo">
+            <img id="navbarLogo" src="../logo-dark.png" alt="Logo YHWH" class="navbar-logo">
             <span class="navbar-title">Tabla de Acordes</span>
         </div>
         <div class="navbar-actions">
-            <button class="nav-btn" id="themeToggleBtn"><span class="theme-icon">☀️</span><span class="btn-text"> Modo Día</span></button>
-            <button class="nav-btn primary" id="exportPngBtn">📥<span class="btn-text"> Descargar PNG</span></button>
+            <button class="nav-btn" id="themeToggleBtn" title="Cambiar Tema">
+                <span class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </span>
+                <span class="btn-text" style="margin-left: 6px;">Modo Día</span>
+            </button>
+            <button class="nav-btn primary" id="exportPngBtn" title="Descargar PNG">
+                <span class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </span>
+                <span class="btn-text" style="margin-left: 6px;">Descargar PNG</span>
+            </button>
         </div>
     </nav>
 
@@ -1298,69 +1321,61 @@
             <!-- Visor de la Celda Dividida Interactiva (BottomSheet Grid) -->
             <div class="active-cell-preview" id="cellPreview"></div>
 
-            <!-- Botones de Acción de Subdivisión Visual con Iconos -->
-            <div class="sheet-grid-controls">
-                <button class="grid-ctrl-btn" id="btnTimeAction" title="Dividir / Unir Tiempo">
+            <div class="chord-keyboard-grid">
+                <!-- Fila 1: Control (Acciones) -->
+                <button class="grid-btn action-split-h" id="btnTimeAction" title="Dividir / Unir Tiempo">
                     <span class="ctrl-icon" id="iconTime"></span>
-                    <span class="ctrl-label">Tiempo</span>
+                    <span class="ctrl-label">Dividir Horiz.</span>
                 </button>
-                <button class="grid-ctrl-btn" id="btnVueltaAction" title="Dividir / Unir Vuelta">
+                <button class="grid-btn action-split-v" id="btnVueltaAction" title="Dividir / Unir Vuelta">
                     <span class="ctrl-icon" id="iconVuelta"></span>
-                    <span class="ctrl-label">Vuelta</span>
+                    <span class="ctrl-label">Dividir Vert.</span>
                 </button>
-                <button class="grid-ctrl-btn danger" id="btnClearSubcellBtn" title="Vaciar Acorde">
-                    <span class="ctrl-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                    </span>
-                    <span class="ctrl-label">Vaciar</span>
+                <button class="grid-btn action-back" data-key="BACKSPACE" title="Borrar último carácter">
+                    <span>⌫</span>
                 </button>
-            </div>
-            
-            <div class="chord-keyboard">
-                <!-- Notas Fundamentales -->
-                <div class="keyboard-row">
-                    <button class="k-btn fundamental" data-key="C">C</button>
-                    <button class="k-btn fundamental" data-key="D">D</button>
-                    <button class="k-btn fundamental" data-key="E">E</button>
-                    <button class="k-btn fundamental" data-key="F">F</button>
-                    <button class="k-btn fundamental" data-key="G">G</button>
-                    <button class="k-btn fundamental" data-key="A">A</button>
-                    <button class="k-btn fundamental" data-key="B">B</button>
-                </div>
-                <!-- Modificadores e Alteraciones -->
-                <div class="keyboard-row">
-                    <button class="k-btn" data-key="m">m</button>
-                    <button class="k-btn" data-key="#">#</button>
-                    <button class="k-btn" data-key="b">b</button>
-                    <button class="k-btn" data-key="7">7</button>
-                    <button class="k-btn" data-key="sus4">sus4</button>
-                    <button class="k-btn" data-key="add9">add9</button>
-                    <button class="k-btn" data-key="/">/</button>
-                </div>
-                <!-- Borrar y Vaciar -->
-                <div class="keyboard-row">
-                    <button class="k-btn action-clear" data-key="CLEAR" style="flex: 1;">Vaciar Cuadrante</button>
-                    <button class="k-btn action-back" data-key="BACKSPACE" style="flex: 1;">⌫ Borrar</button>
-                </div>
+                <button class="grid-btn action-clear" id="btnClearSubcellBtn" title="Vaciar cuadrante activo">
+                    <span>🗑️</span>
+                </button>
+
+                <!-- Fila 2: Notas -->
+                <button class="grid-btn fundamental" data-key="C">C</button>
+                <button class="grid-btn fundamental" data-key="D">D</button>
+                <button class="grid-btn fundamental" data-key="E">E</button>
+                <button class="grid-btn fundamental" data-key="F">F</button>
+                <button class="grid-btn fundamental" data-key="G">G</button>
+                <button class="grid-btn fundamental" data-key="A">A</button>
+                <button class="grid-btn fundamental" data-key="B">B</button>
+
+                <!-- Fila 3: Modificadores -->
+                <button class="grid-btn modifier" data-key="m">m</button>
+                <button class="grid-btn modifier" data-key="#">#</button>
+                <button class="grid-btn modifier" data-key="b">b</button>
+                <button class="grid-btn modifier" data-key="7">7</button>
+                <button class="grid-btn modifier" data-key="sus4">sus4</button>
+                <button class="grid-btn modifier" data-key="add9">add9</button>
+                <button class="grid-btn modifier" data-key="/">/</button>
             </div>
         </div>
 
         <!-- 2. TEXTOS Y LETRAS: Entrada de Texto Ampliada -->
         <div class="sheet-body-text" id="sheetBodyText" style="display: none;">
+            <div class="sheet-section-title">Editar Letra</div>
             <textarea class="sheet-textarea" id="sheetInputText" placeholder="Escribe aquí..."></textarea>
             
-            <div style="display: flex; gap: 8px; margin-bottom: 8px; width: 100%;">
-                <button class="k-btn action-done" id="saveTextEditBtn" style="flex:1; margin-top:0;">✅ Guardar Cambios</button>
-                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="flex:none; padding: 0 16px;">🗑️ Eliminar Sección</button>
+            <div style="display: flex; gap: 8px; width: 100%;">
+                <button class="k-btn action-done" id="saveTextEditBtn" style="flex:1; margin-top:0;">Guardar</button>
+                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="flex:none; padding: 0 16px;">Eliminar Sección</button>
             </div>
         </div>
 
         <!-- 3. TONALIDAD: Selector de Tono Táctil (Sin Teclado) -->
         <div class="sheet-body-key" id="sheetBodyKey" style="display: none;">
+            <div class="sheet-section-title">Tonalidad</div>
             <!-- Tipo de Tonalidad (Mayor / Menor) -->
             <div class="key-type-toggle">
-                <button class="type-toggle-btn active" id="keyTypeMajorBtn">Mayor (Solfeggio)</button>
-                <button class="type-toggle-btn" id="keyTypeMinorBtn">Menor (m)</button>
+                <button class="type-toggle-btn active" id="keyTypeMajorBtn">Mayor</button>
+                <button class="type-toggle-btn" id="keyTypeMinorBtn">Menor</button>
             </div>
             <!-- Rejilla de Notas -->
             <div class="key-grid">
@@ -1376,9 +1391,6 @@
                 <button class="key-select-btn" data-note="A">A</button>
                 <button class="key-select-btn" data-note="Bb">Bb</button>
                 <button class="key-select-btn" data-note="B">B</button>
-            </div>
-            <div class="keyboard-row" style="margin-top: 8px;">
-                <button class="k-btn action-done" id="closeKeySheetBtn" style="width: 100%;">✅ Listo</button>
             </div>
         </div>
 
@@ -1488,7 +1500,7 @@
                 reorderingBlockIdx = null;
                 render();
             }
-            deselectAll();
+            closeSheet();
         });
 
         document.getElementById('sheetCloseBtn').addEventListener('click', (e) => {
@@ -1533,13 +1545,8 @@
             setKeyType('minor');
         });
 
-        document.getElementById('closeKeySheetBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeSheet();
-        });
-
         // Registrar teclas del teclado táctil
-        document.querySelectorAll('.chord-keyboard .k-btn').forEach(btn => {
+        document.querySelectorAll('.chord-keyboard-grid .grid-btn').forEach(btn => {
             const val = btn.getAttribute('data-key');
             if (val) {
                 btn.addEventListener('click', (e) => {
@@ -1564,16 +1571,23 @@
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeToggleBtn');
+            const logo = document.getElementById('navbarLogo');
             const isLight = body.classList.toggle('theme-light');
             
             const themeIcon = btn.querySelector('.theme-icon');
             const btnText = btn.querySelector('.btn-text');
+
+            const svgSun = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+            const svgMoon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
             if (isLight) {
-                if (themeIcon) themeIcon.textContent = '🌙';
+                if (themeIcon) themeIcon.innerHTML = svgMoon;
                 if (btnText) btnText.textContent = ' Modo Escenario';
+                if (logo) logo.src = '../logo-light.png';
             } else {
-                if (themeIcon) themeIcon.textContent = '☀️';
+                if (themeIcon) themeIcon.innerHTML = svgSun;
                 if (btnText) btnText.textContent = ' Modo Día';
+                if (logo) logo.src = '../logo-dark.png';
             }
             render();
         }
@@ -2288,11 +2302,12 @@
             const availableWidth = workspace.clientWidth - 20;
             currentScale = availableWidth / 720;
             if (currentScale > 1.0) currentScale = 1.0;
-            if (currentScale < 0.4) currentScale = 0.4; // Límite inferior inicial razonable
+            // Establecer un límite mínimo inicial de 0.82 para legibilidad garantizada en móviles
+            if (currentScale < 0.82) currentScale = 0.82; 
             applyZoom();
         }
 
-        // Pinch-to-zoom gestual en el área de trabajo
+        // Pinch-to-zoom gestual en dispositivos móviles
         let touchStartDist = 0;
         let touchStartScale = 1.0;
 
@@ -2316,7 +2331,7 @@
                 );
                 let newScale = touchStartScale * (dist / touchStartDist);
                 if (newScale < 0.35) newScale = 0.35;
-                if (newScale > 2.0) newScale = 2.0;
+                if (newScale > 2.5) newScale = 2.5;
                 currentScale = newScale;
                 applyZoom();
             }
@@ -2327,6 +2342,19 @@
                 touchStartDist = 0;
             }
         });
+
+        // Zoom en PC mediante Ctrl + Rueda del ratón (o pellizco en Trackpad de PC)
+        workspace.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                let delta = e.deltaY * -0.0015;
+                let newScale = currentScale + delta;
+                if (newScale < 0.35) newScale = 0.35;
+                if (newScale > 2.5) newScale = 2.5;
+                currentScale = newScale;
+                applyZoom();
+            }
+        }, { passive: false });
 
         // --- EXPORTACIÓN PNG LOCAL ---
         function exportToPng() {
