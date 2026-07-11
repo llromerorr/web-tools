@@ -12,6 +12,7 @@ const htmlEntries = glob.sync('**/*.html', {
 });
 
 export default defineConfig({
+  base: '/web-tools/',
   build: {
     rollupOptions: {
       input: {
