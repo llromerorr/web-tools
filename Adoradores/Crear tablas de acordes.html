@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Worship Editor Pro — Iglesia YHWH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Tabla de Acordes — Iglesia YHWH</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
             --border-color: #3f3f46; 
             --accent-carmesi: #f43f5e; 
             --accent-celeste: #60a5fa; 
-            --shadow: 0 16px 64px rgba(0, 0, 0, 0.95);
+            --shadow: none;
 
             /* Colores de sección neón sutiles */
             --c-header: #000000; 
@@ -72,7 +72,7 @@
             --border-color: #c4c8d0; 
             --accent-carmesi: #be123c;
             --accent-celeste: #3b82f6;
-            --shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --shadow: none;
 
             --c-header: #f3f4f6;
 
@@ -207,17 +207,16 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            align-items: center;
+            overflow: auto;
             padding: 20px 10px;
             -webkit-overflow-scrolling: touch;
             position: relative;
         }
 
         .chart-wrapper {
+            margin: 0 auto 80px auto;
             transform-origin: top center;
             transition: transform 0.2s ease-out;
-            margin-bottom: 80px; 
         }
 
         .chart-container {
@@ -794,7 +793,7 @@
             border-top: 1px solid var(--border-color);
             border-top-left-radius: 24px;
             border-top-right-radius: 24px;
-            box-shadow: 0 -12px 40px rgba(0,0,0,0.8);
+            box-shadow: none;
             z-index: 200;
             transform: translateY(100%);
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1071,7 +1070,7 @@
             background: var(--accent-celeste);
             color: #000000;
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.25);
+            box-shadow: none;
         }
 
         .key-type-toggle {
@@ -1126,13 +1125,12 @@
         }
 
         /* --- DIÁLOGO MODAL DE CONFIRMACIÓN PERSONALIZADO --- */
-        .confirm-modal-backdrop {
+        .confirm-modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.15);
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
             z-index: 1000;
             animation: confirmFadeIn 0.2s ease-out;
@@ -1142,18 +1140,19 @@
             background: #09090b;
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             width: 90%;
-            max-width: 380px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+            max-width: 420px;
+            margin-bottom: 24px;
+            box-shadow: none;
             text-align: center;
-            animation: confirmSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: confirmSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .theme-light .confirm-modal-box {
             background: #ffffff;
-            box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+            box-shadow: none;
         }
-        @keyframes confirmSlideUp { from { transform: translateY(20px); } to { transform: translateY(0); } }
+        @keyframes confirmSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .confirm-modal-title {
             font-size: 1.15rem;
             font-weight: 850;
@@ -1195,6 +1194,59 @@
             color: white;
         }
         .confirm-btn.danger:hover { background: #dc2626; }
+
+        /* --- RESPONSIVE MOBILE STYLES --- */
+        @media (max-width: 600px) {
+            .btn-text {
+                display: none;
+            }
+            .nav-btn {
+                padding: 8px;
+                border-radius: 50%;
+                font-size: 1.1rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+            }
+            .navbar-title {
+                font-size: 0.95rem;
+            }
+            .navbar-logo {
+                height: 26px;
+            }
+            .k-btn {
+                min-width: 0 !important;
+                padding: 8px 4px !important;
+                font-size: 0.82rem !important;
+                min-height: 40px !important;
+                border-radius: 6px !important;
+            }
+            .active-cell-preview {
+                height: 90px !important;
+            }
+            .bottom-sheet {
+                padding: 12px !important;
+                border-top-left-radius: 16px !important;
+                border-top-right-radius: 16px !important;
+            }
+            .sheet-header {
+                margin-bottom: 8px !important;
+                padding-bottom: 4px !important;
+            }
+            .keyboard-row {
+                gap: 4px !important;
+            }
+            .grid-ctrl-btn {
+                padding: 6px !important;
+                border-radius: 8px !important;
+            }
+            .ctrl-icon svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1203,11 +1255,11 @@
     <nav class="app-navbar">
         <div class="navbar-brand">
             <img src="../logo-dark.png" alt="Logo YHWH" class="navbar-logo">
-            <span class="navbar-title">Worship Editor Pro</span>
+            <span class="navbar-title">Tabla de Acordes</span>
         </div>
         <div class="navbar-actions">
-            <button class="nav-btn" id="themeToggleBtn">☀️ Modo Día</button>
-            <button class="nav-btn primary" id="exportPngBtn">Descargar PNG</button>
+            <button class="nav-btn" id="themeToggleBtn"><span class="theme-icon">☀️</span><span class="btn-text"> Modo Día</span></button>
+            <button class="nav-btn primary" id="exportPngBtn">📥<span class="btn-text"> Descargar PNG</span></button>
         </div>
     </nav>
 
@@ -1333,7 +1385,7 @@
     </div>
 
     <!-- DIÁLOGO MODAL DE CONFIRMACIÓN PERSONALIZADO -->
-    <div class="confirm-modal-backdrop" id="confirmModal" style="display: none;">
+    <div class="confirm-modal-overlay" id="confirmModal" style="display: none;">
         <div class="confirm-modal-box">
             <div class="confirm-modal-title" id="confirmModalTitle">Eliminar Elemento</div>
             <div class="confirm-modal-message" id="confirmModalMessage">¿Estás seguro de que deseas realizar esta acción?</div>
@@ -1514,10 +1566,14 @@
             const btn = document.getElementById('themeToggleBtn');
             const isLight = body.classList.toggle('theme-light');
             
+            const themeIcon = btn.querySelector('.theme-icon');
+            const btnText = btn.querySelector('.btn-text');
             if (isLight) {
-                btn.textContent = '🌙 Modo Escenario';
+                if (themeIcon) themeIcon.textContent = '🌙';
+                if (btnText) btnText.textContent = ' Modo Escenario';
             } else {
-                btn.textContent = '☀️ Modo Día';
+                if (themeIcon) themeIcon.textContent = '☀️';
+                if (btnText) btnText.textContent = ' Modo Día';
             }
             render();
         }
@@ -1953,27 +2009,27 @@
             }
             
             const svgDivH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`;
-            const svgUnirH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M11 9l-2 3 2 3M13 9l2 3-2 3"/></svg>`;
+            const svgUnirH = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M5 12h4M7 9l-2 3 2 3M19 12h-4M17 9l2 3-2 3"/></svg>`;
             
             if (hasPipe) {
                 iconTime.innerHTML = svgUnirH;
-                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Unir";
+                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Unir Horiz.";
             } else {
                 iconTime.innerHTML = svgDivH;
-                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Dividir";
+                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Dividir Horiz.";
             }
             
             const hasComma = sheetCellStructure.hasComma;
             
             const svgDivV = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/></svg>`;
-            const svgUnirV = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 9v6M9 11l3-2 3 2M9 13l3 2 3-2"/></svg>`;
+            const svgUnirV = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 5v4M9 7l3-2 3 2M12 19v-4M9 17l3 2 3-2"/></svg>`;
             
             if (hasComma) {
                 iconVuelta.innerHTML = svgUnirV;
-                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Unir";
+                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Unir Vert.";
             } else {
                 iconVuelta.innerHTML = svgDivV;
-                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Dividir";
+                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Dividir Vert.";
             }
         }
 
@@ -2214,17 +2270,63 @@
             render();
         }
 
-        // --- SISTEMA DE ZOOM ---
+        // --- SISTEMA DE ZOOM Y GESTOS TÁCTILES ---
         function applyZoom() {
-            scalableWrapper.style.transform = `scale(${currentScale})`;
+            // Usar zoom como primera opción para ajustar la maquetación y habilitar scrollbars nativos
+            scalableWrapper.style.zoom = currentScale;
+            // Para navegadores antiguos o Firefox antiguo que no soporten zoom de maquetación,
+            // usamos transform como fallback
+            if (!('zoom' in document.documentElement.style)) {
+                scalableWrapper.style.transform = `scale(${currentScale})`;
+                scalableWrapper.style.transformOrigin = 'top center';
+            } else {
+                scalableWrapper.style.transform = 'none';
+            }
         }
 
         function resetZoom() {
             const availableWidth = workspace.clientWidth - 20;
             currentScale = availableWidth / 720;
             if (currentScale > 1.0) currentScale = 1.0;
+            if (currentScale < 0.4) currentScale = 0.4; // Límite inferior inicial razonable
             applyZoom();
         }
+
+        // Pinch-to-zoom gestual en el área de trabajo
+        let touchStartDist = 0;
+        let touchStartScale = 1.0;
+
+        workspace.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                touchStartDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                touchStartScale = currentScale;
+            }
+        }, { passive: false });
+
+        workspace.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && touchStartDist > 0) {
+                e.preventDefault();
+                const dist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                let newScale = touchStartScale * (dist / touchStartDist);
+                if (newScale < 0.35) newScale = 0.35;
+                if (newScale > 2.0) newScale = 2.0;
+                currentScale = newScale;
+                applyZoom();
+            }
+        }, { passive: false });
+
+        workspace.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                touchStartDist = 0;
+            }
+        });
 
         // --- EXPORTACIÓN PNG LOCAL ---
         function exportToPng() {
@@ -2232,7 +2334,10 @@
             const element = document.getElementById('chartContainer');
             
             const originalTransform = scalableWrapper.style.transform;
+            const originalZoom = scalableWrapper.style.zoom;
+            
             scalableWrapper.style.transform = 'none';
+            scalableWrapper.style.zoom = '1';
 
             const bgExportColor = document.body.classList.contains('theme-light') ? '#ffffff' : '#000000';
 
@@ -2243,6 +2348,7 @@
                 logging: false
             }).then(canvas => {
                 scalableWrapper.style.transform = originalTransform;
+                scalableWrapper.style.zoom = originalZoom;
 
                 const link = document.createElement('a');
                 const filename = songData.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -2252,6 +2358,7 @@
             }).catch(err => {
                 console.error("Error en exportación:", err);
                 scalableWrapper.style.transform = originalTransform;
+                scalableWrapper.style.zoom = originalZoom;
                 alert("Ocurrió un error al descargar la imagen.");
             });
         }
