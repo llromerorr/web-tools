@@ -798,22 +798,7 @@
             background: rgba(244, 63, 94, 0.02);
         }
 
-        /* Efectos Hover solo en dispositivos no táctiles (evita botones atascados en móviles y emuladores) */
-        .no-touch .reorder-col-left .reorder-btn.btn-delete:hover {
-            background-color: #f43f5e !important;
-            color: #ffffff !important;
-        }
-        .no-touch .theme-light .reorder-col-left .reorder-btn.btn-delete:hover {
-            background-color: #e11d48 !important;
-            color: #ffffff !important;
-        }
-        .no-touch .reorder-col-right .reorder-btn:hover {
-            background-color: var(--accent-celeste) !important;
-            color: #000000 !important;
-        }
-        .no-touch .theme-light .reorder-col-right .reorder-btn:hover {
-            color: #ffffff !important;
-        }
+
 
         .reorder-col-left .reorder-btn.btn-delete:active {
             background-color: #f43f5e !important;
@@ -1662,10 +1647,6 @@
     </div>
 
     <script type="module">
-        // Detectar si el dispositivo es táctil
-        if (!('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
-            document.body.classList.add('no-touch');
-        }
 
         // Elementos DOM
         const chartBody = document.getElementById('chartBody');
