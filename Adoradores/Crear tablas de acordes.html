@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Tabla de Acordes — Iglesia YHWH</title>
+    <link rel="icon" type="image/png" href="../public/logo-dark.png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,36 +65,36 @@
 
         /* --- TEMA CLARO DE ALTO CONTRASTE --- */
         body.theme-light {
-            --bg-app: #f9fafb;
+            --bg-app: #f1f5f9;
             --panel-bg: #ffffff;
-            --panel-header: #f3f4f6;
-            --text-color: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #c4c8d0; 
-            --accent-carmesi: #be123c;
-            --accent-celeste: #3b82f6;
+            --panel-header: #e2e8f0;
+            --text-color: #0f172a;
+            --text-secondary: #334155;
+            --border-color: #64748b; 
+            --accent-carmesi: #e11d48;
+            --accent-celeste: #1d4ed8;
             --shadow: none;
 
-            --c-header: #f3f4f6;
+            --c-header: #e2e8f0;
 
             /* Colores de sección para sol directo */
-            --color-estrofa-border: #059669;
+            --color-estrofa-border: #047857;
             --color-estrofa-chord: #064e3b; 
 
-            --color-coro-border: #2563eb;
+            --color-coro-border: #1d4ed8;
             --color-coro-chord: #1e3a8a; 
 
-            --color-puente-border: #c026d3;
+            --color-puente-border: #a21caf;
             --color-puente-chord: #701a75; 
 
-            --color-precoro-border: #ea580c;
+            --color-precoro-border: #c2410c;
             --color-precoro-chord: #7c2d12; 
 
             --color-intro-border: #1d4ed8;
             --color-intro-chord: #0f172a; 
 
-            --color-general-border: #4b5563;
-            --color-general-chord: #111827;
+            --color-general-border: #475569;
+            --color-general-chord: #0f172a;
         }
 
         /* --- PALETA DE FONDOS DE SECCIÓN (auto-asignada cíclicamente) --- */
@@ -154,9 +155,7 @@
             font-size: 1.1rem;
             font-weight: 800;
             letter-spacing: -0.02em;
-            background: linear-gradient(to right, var(--accent-celeste), var(--text-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-color);
         }
 
         .navbar-actions {
@@ -213,6 +212,10 @@
             position: relative;
         }
 
+        .workspace.has-sheet-open {
+            padding-bottom: 420px !important;
+        }
+
         .chart-wrapper {
             margin: 0 auto 80px auto;
             transform-origin: top center;
@@ -251,6 +254,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             line-height: 56px;
+            text-align: center;
         }
         .header-key-td {
             height: 56px;
@@ -355,7 +359,7 @@
             height: 56px; 
             cursor: pointer;
             transition: all 0.2s;
-            padding: 0 !important; 
+            padding: 0 !important;
         }
         .chord-cell:hover {
             filter: brightness(1.2);
@@ -372,20 +376,11 @@
         }
 
         /* --- ALTERNANCIA VISUAL POR COMPÁS (columna oscura/clara) --- */
-        .chord-cell.col-dark::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.12);
-            pointer-events: none;
+        .chord-cell.col-dark {
+            box-shadow: inset 0 0 0 999px rgba(0, 0, 0, 0.12);
         }
-        .theme-light .chord-cell.col-dark::after {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        /* Texto por encima del overlay de alternancia */
-        .chord-inner, .split-box, .split-horizontal-box {
-            position: relative;
-            z-index: 1;
+        .theme-light .chord-cell.col-dark {
+            box-shadow: inset 0 0 0 999px rgba(0, 0, 0, 0.05);
         }
         
         /* --- TIPOGRAFÍA INTER PARA ACORDES: limpia, precisa, altamente legible --- */
@@ -632,8 +627,8 @@
         }
         .col-delete-cell {
             cursor: pointer;
-            background-color: rgba(244, 63, 94, 0.01) !important;
-            border: 1px dashed rgba(244, 63, 94, 0.25) !important;
+            background-color: rgba(244, 63, 94, 0.04) !important;
+            border: 1px dashed rgba(244, 63, 94, 0.45) !important;
             transition: all 0.2s;
         }
         .theme-light .col-delete-cell {
@@ -651,7 +646,7 @@
         .col-delete-inner {
             font-size: 11px;
             font-weight: 800;
-            color: rgba(244, 63, 94, 0.6);
+            color: rgba(244, 63, 94, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -669,8 +664,8 @@
         /* Eliminar Fila (Izquierda) */
         .row-delete-cell {
             cursor: pointer;
-            background-color: rgba(244, 63, 94, 0.01) !important;
-            border: 1px dashed rgba(244, 63, 94, 0.25) !important;
+            background-color: rgba(244, 63, 94, 0.04) !important;
+            border: 1px dashed rgba(244, 63, 94, 0.45) !important;
             transition: all 0.2s;
             width: 44px !important;
             height: 56px;
@@ -692,7 +687,7 @@
         .row-delete-inner {
             font-size: 11px;
             font-weight: 800;
-            color: rgba(244, 63, 94, 0.6);
+            color: rgba(244, 63, 94, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -745,63 +740,101 @@
             padding: 0 !important;
             border: 2px dashed var(--accent-celeste) !important;
             box-shadow: inset 0 0 20px rgba(96, 165, 250, 0.2) !important;
+            height: 1px !important; /* Force parent cell height calculation hack */
         }
         
         .lyrics-reorder-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* 2 columnas principales */
             height: 100%;
             width: 100%;
             background-color: rgba(96, 165, 250, 0.04);
         }
         
+        .reorder-col-left {
+            flex: 1;
+            height: 100%;
+            border-right: 1px dashed rgba(96, 165, 250, 0.15);
+        }
+        
+        .reorder-col-right {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .reorder-btn {
-            flex: 0 0 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--accent-celeste);
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             transition: all 0.2s;
-            background: rgba(96, 165, 250, 0.05);
-            border-bottom: 1px dashed rgba(96, 165, 250, 0.2);
+            background: rgba(96, 165, 250, 0.03);
             user-select: none;
+            width: 100%;
+            height: 100%;
         }
         
-        .reorder-btn.btn-down {
-            border-bottom: none;
-            border-top: 1px dashed rgba(96, 165, 250, 0.2);
+        .reorder-col-right .reorder-btn {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 850;
+            color: var(--accent-celeste);
         }
         
-        .reorder-btn:hover {
+        .reorder-col-right .reorder-btn.btn-up {
+            border-bottom: 1px dashed rgba(96, 165, 250, 0.15);
+        }
+        
+        .reorder-col-left .reorder-btn.btn-delete {
+            background: rgba(244, 63, 94, 0.04);
+            color: #f43f5e;
+            height: 100%;
+        }
+        
+        .theme-light .reorder-col-left .reorder-btn.btn-delete {
+            color: #e11d48;
+            background: rgba(244, 63, 94, 0.02);
+        }
+
+        /* Efectos Hover solo en dispositivos no táctiles (evita botones atascados en móviles y emuladores) */
+        .no-touch .reorder-col-left .reorder-btn.btn-delete:hover {
+            background-color: #f43f5e !important;
+            color: #ffffff !important;
+        }
+        .no-touch .theme-light .reorder-col-left .reorder-btn.btn-delete:hover {
+            background-color: #e11d48 !important;
+            color: #ffffff !important;
+        }
+        .no-touch .reorder-col-right .reorder-btn:hover {
             background-color: var(--accent-celeste) !important;
             color: #000000 !important;
         }
-        
-        .theme-light .reorder-btn:hover {
+        .no-touch .theme-light .reorder-col-right .reorder-btn:hover {
+            color: #ffffff !important;
+        }
+
+        .reorder-col-left .reorder-btn.btn-delete:active {
+            background-color: #f43f5e !important;
+            color: #ffffff !important;
+        }
+        .theme-light .reorder-col-left .reorder-btn.btn-delete:active {
+            background-color: #e11d48 !important;
+            color: #ffffff !important;
+        }
+        .reorder-col-right .reorder-btn:active {
+            background-color: var(--accent-celeste) !important;
+            color: #000000 !important;
+        }
+        .theme-light .reorder-col-right .reorder-btn:active {
             color: #ffffff !important;
         }
         
-        .reorder-lyrics-preview {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-color);
-            opacity: 0.25; 
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            max-width: 160px;
-            margin: 0 auto;
+        .reorder-btn.disabled {
+            opacity: 0.25 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
         }
 
         /* --- CLASE DE RESALTADO TEMPORAL ANTES DE BORRAR --- */
@@ -886,7 +919,7 @@
             height: 140px; 
             background: rgba(0,0,0,0.3);
             border: 1px dashed var(--accent-celeste);
-            border-radius: 12px;
+            border-radius: 6px;
             overflow: hidden;
             display: grid;
             position: relative;
@@ -918,15 +951,92 @@
             color: #4b5563;
         }
 
-        /* Teclado de Acordes Táctil Inteligente Unificado (Flat, estilo Calculadora) */
-        .chord-keyboard-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+        /* Teclado de Acordes Táctil Inteligente Organizado por Secciones Coloridas */
+        .keyboard-sections-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
         }
 
-        .chord-keyboard-grid .grid-btn {
+        .kb-section {
+            border-radius: 12px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 2px;
+        }
+
+        .kb-actions {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        .kb-mid-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .kb-notes {
+            flex: 1.15;
+            background: rgba(52, 211, 153, 0.02);
+            border-color: rgba(52, 211, 153, 0.12);
+        }
+        .kb-notes .section-label {
+            color: #34d399;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .kb-modifiers {
+            flex: 0.85;
+            background: rgba(167, 139, 250, 0.02);
+            border-color: rgba(167, 139, 250, 0.12);
+        }
+        .kb-modifiers .section-label {
+            color: #a78bfa;
+        }
+
+        .modifiers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .kb-special-symbols {
+            background: rgba(251, 191, 36, 0.02);
+            border-color: rgba(251, 191, 36, 0.12);
+        }
+        .kb-special-symbols .section-label {
+            color: #fbbf24;
+        }
+
+        .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        /* Botón Base del Teclado */
+        .keyboard-sections-container .grid-btn {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
             color: var(--text-color);
@@ -944,22 +1054,40 @@
             transition: all 0.2s;
         }
 
-        .theme-light .chord-keyboard-grid .grid-btn {
-            background: #ffffff;
-            border-color: rgba(0,0,0,0.1);
-            color: #111827;
-        }
-
-        .chord-keyboard-grid .grid-btn:active {
-            background: rgba(255,255,255,0.12);
+        .keyboard-sections-container .grid-btn:active {
             transform: scale(0.95);
         }
-        .theme-light .chord-keyboard-grid .grid-btn:active {
-            background: rgba(0,0,0,0.08);
+
+        /* Estilo Específico de Botones por Sección - Tema Oscuro (Defecto) */
+        .kb-notes .grid-btn {
+            background: rgba(52, 211, 153, 0.05);
+            border-color: rgba(52, 211, 153, 0.15);
+            color: #a7f3d0;
+        }
+        .kb-notes .grid-btn:active {
+            background: rgba(52, 211, 153, 0.18);
         }
 
-        /* Teclas de Acción */
-        .chord-keyboard-grid .action-split-h {
+        .kb-modifiers .grid-btn {
+            background: rgba(167, 139, 250, 0.05);
+            border-color: rgba(167, 139, 250, 0.15);
+            color: #ddd6fe;
+        }
+        .kb-modifiers .grid-btn:active {
+            background: rgba(167, 139, 250, 0.18);
+        }
+
+        .kb-special-symbols .grid-btn {
+            background: rgba(251, 191, 36, 0.05);
+            border-color: rgba(251, 191, 36, 0.15);
+            color: #fde68a;
+        }
+        .kb-special-symbols .grid-btn:active {
+            background: rgba(251, 191, 36, 0.18);
+        }
+
+        /* Estilos de Acciones (Fijos) */
+        .keyboard-sections-container .action-split-h {
             grid-column: span 2;
             background: rgba(96, 165, 250, 0.06) !important;
             border-color: rgba(96, 165, 250, 0.15) !important;
@@ -967,7 +1095,7 @@
             font-size: 11px;
             gap: 2px;
         }
-        .chord-keyboard-grid .action-split-v {
+        .keyboard-sections-container .action-split-v {
             grid-column: span 2;
             background: rgba(96, 165, 250, 0.06) !important;
             border-color: rgba(96, 165, 250, 0.15) !important;
@@ -975,14 +1103,14 @@
             font-size: 11px;
             gap: 2px;
         }
-        .chord-keyboard-grid .action-back {
+        .keyboard-sections-container .action-back {
             grid-column: span 2;
             background: rgba(251, 146, 60, 0.06) !important;
             border-color: rgba(251, 146, 60, 0.15) !important;
             color: #fb923c !important;
             font-size: 1.1rem;
         }
-        .chord-keyboard-grid .action-clear {
+        .keyboard-sections-container .action-clear {
             grid-column: span 1;
             background: rgba(239, 68, 68, 0.06) !important;
             border-color: rgba(239, 68, 68, 0.15) !important;
@@ -990,18 +1118,63 @@
             font-size: 1.1rem;
         }
 
-        .chord-keyboard-grid .grid-btn.fundamental {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.1);
+        .keyboard-sections-container .action-split-h:active { background: rgba(96, 165, 250, 0.18) !important; }
+        .keyboard-sections-container .action-split-v:active { background: rgba(96, 165, 250, 0.18) !important; }
+        .keyboard-sections-container .action-back:active { background: rgba(251, 146, 60, 0.18) !important; }
+        .keyboard-sections-container .action-clear:active { background: rgba(239, 68, 68, 0.18) !important; }
+
+        /* Estilo Específico de Botones por Sección - Tema Claro */
+        .theme-light .kb-notes {
+            background: rgba(4, 120, 87, 0.01);
+            border-color: rgba(4, 120, 87, 0.12);
         }
-        .theme-light .chord-keyboard-grid .grid-btn.fundamental {
-            background: rgba(0,0,0,0.02);
-            border-color: rgba(0,0,0,0.08);
+        .theme-light .kb-notes .section-label {
+            color: #047857;
+        }
+        .theme-light .kb-notes .grid-btn {
+            background: #f0fdf4;
+            border-color: #a7f3d0;
+            color: #047857;
+        }
+        .theme-light .kb-notes .grid-btn:active {
+            background: #d1fae5;
         }
 
-        .chord-keyboard-grid .grid-btn.modifier {
-            background: rgba(255,255,255,0.02);
-            font-weight: 600;
+        .theme-light .kb-modifiers {
+            background: rgba(109, 40, 217, 0.01);
+            border-color: rgba(109, 40, 217, 0.12);
+        }
+        .theme-light .kb-modifiers .section-label {
+            color: #6d28d9;
+        }
+        .theme-light .kb-modifiers .grid-btn {
+            background: #f5f3ff;
+            border-color: #ddd6fe;
+            color: #6d28d9;
+        }
+        .theme-light .kb-modifiers .grid-btn:active {
+            background: #ede9fe;
+        }
+
+        .theme-light .kb-special-symbols {
+            background: rgba(180, 83, 9, 0.01);
+            border-color: rgba(180, 83, 9, 0.12);
+        }
+        .theme-light .kb-special-symbols .section-label {
+            color: #b45309;
+        }
+        .theme-light .kb-special-symbols .grid-btn {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #b45309;
+        }
+        .theme-light .kb-special-symbols .grid-btn:active {
+            background: #fef3c7;
+        }
+
+        .theme-light .keyboard-sections-container .grid-btn {
+            border-color: #a1a5b0;
+            color: #0f172a;
         }
 
         .ctrl-icon {
@@ -1270,16 +1443,31 @@
                 border-radius: 6px !important;
             }
             .active-cell-preview {
-                height: 90px !important;
+                height: 60px !important;
             }
             .bottom-sheet {
-                padding: 12px !important;
+                padding: 10px 12px 14px 12px !important;
                 border-top-left-radius: 16px !important;
                 border-top-right-radius: 16px !important;
             }
             .sheet-header {
                 margin-bottom: 8px !important;
                 padding-bottom: 4px !important;
+            }
+            .keyboard-sections-container .grid-btn {
+                min-height: 36px !important;
+                font-size: 0.85rem !important;
+            }
+            .kb-section {
+                padding: 6px 8px !important;
+                gap: 4px !important;
+            }
+            .section-label {
+                font-size: 0.62rem !important;
+                margin-bottom: 0px !important;
+            }
+            .workspace.has-sheet-open {
+                padding-bottom: 340px !important;
             }
             .keyboard-row {
                 gap: 4px !important;
@@ -1304,6 +1492,12 @@
             <span class="navbar-title">Tabla de Acordes</span>
         </div>
         <div class="navbar-actions">
+            <button class="nav-btn" id="createNewBtn" title="Nueva Tabla">
+                <span class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+                <span class="btn-text" style="margin-left: 6px;">Nueva Tabla</span>
+            </button>
             <button class="nav-btn" id="themeToggleBtn" title="Cambiar Tema">
                 <span class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -1354,40 +1548,66 @@
             <!-- Visor de la Celda Dividida Interactiva (BottomSheet Grid) -->
             <div class="active-cell-preview" id="cellPreview"></div>
 
-            <div class="chord-keyboard-grid">
+            <div class="keyboard-sections-container">
                 <!-- Fila 1: Control (Acciones) -->
-                <button class="grid-btn action-split-h" id="btnTimeAction" title="Dividir / Unir Tiempo">
-                    <span class="ctrl-icon" id="iconTime"></span>
-                    <span class="ctrl-label">Dividir Horiz.</span>
-                </button>
-                <button class="grid-btn action-split-v" id="btnVueltaAction" title="Dividir / Unir Vuelta">
-                    <span class="ctrl-icon" id="iconVuelta"></span>
-                    <span class="ctrl-label">Dividir Vert.</span>
-                </button>
-                <button class="grid-btn action-back" data-key="BACKSPACE" title="Borrar último carácter">
-                    <span>⌫</span>
-                </button>
-                <button class="grid-btn action-clear" id="btnClearSubcellBtn" title="Vaciar cuadrante activo">
-                    <span>🗑️</span>
-                </button>
+                <div class="kb-actions">
+                    <button class="grid-btn action-split-h" id="btnTimeAction" title="Dividir / Unir Tiempo">
+                        <span class="ctrl-icon" id="iconTime"></span>
+                    </button>
+                    <button class="grid-btn action-split-v" id="btnVueltaAction" title="Dividir / Unir Vuelta">
+                        <span class="ctrl-icon" id="iconVuelta"></span>
+                    </button>
+                    <button class="grid-btn action-back" data-key="BACKSPACE" title="Borrar último carácter">
+                        <span>⌫</span>
+                    </button>
+                    <button class="grid-btn action-clear" id="btnClearSubcellBtn" title="Vaciar celda completa">
+                        <span style="display: flex; align-items: center; justify-content: center;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
+                        </span>
+                    </button>
+                </div>
 
-                <!-- Fila 2: Notas -->
-                <button class="grid-btn fundamental" data-key="C">C</button>
-                <button class="grid-btn fundamental" data-key="D">D</button>
-                <button class="grid-btn fundamental" data-key="E">E</button>
-                <button class="grid-btn fundamental" data-key="F">F</button>
-                <button class="grid-btn fundamental" data-key="G">G</button>
-                <button class="grid-btn fundamental" data-key="A">A</button>
-                <button class="grid-btn fundamental" data-key="B">B</button>
+                <!-- Fila Media: Notas y Alteraciones lado a lado -->
+                <div class="kb-mid-row">
+                    <!-- Notas (A, B, C, D, E, F, G) en 3 columnas -->
+                    <div class="kb-section kb-notes">
+                        <div class="section-label">Notas</div>
+                        <div class="notes-grid">
+                            <button class="grid-btn fundamental" data-key="A">A</button>
+                            <button class="grid-btn fundamental" data-key="B">B</button>
+                            <button class="grid-btn fundamental" data-key="C">C</button>
+                            <button class="grid-btn fundamental" data-key="D">D</button>
+                            <button class="grid-btn fundamental" data-key="E">E</button>
+                            <button class="grid-btn fundamental" data-key="F">F</button>
+                            <button class="grid-btn fundamental" data-key="G" style="grid-column: span 3;">G</button>
+                        </div>
+                    </div>
 
-                <!-- Fila 3: Modificadores -->
-                <button class="grid-btn modifier" data-key="m">m</button>
-                <button class="grid-btn modifier" data-key="#">#</button>
-                <button class="grid-btn modifier" data-key="b">b</button>
-                <button class="grid-btn modifier" data-key="7">7</button>
-                <button class="grid-btn modifier" data-key="sus4">sus4</button>
-                <button class="grid-btn modifier" data-key="add9">add9</button>
-                <button class="grid-btn modifier" data-key="/">/</button>
+                    <!-- Alteraciones en 2 columnas -->
+                    <div class="kb-section kb-modifiers">
+                        <div class="section-label">Alteraciones</div>
+                        <div class="modifiers-grid">
+                            <button class="grid-btn modifier" data-key="m">m</button>
+                            <button class="grid-btn modifier" data-key="#">#</button>
+                            <button class="grid-btn modifier" data-key="b">b</button>
+                            <button class="grid-btn modifier" data-key="7">7</button>
+                            <button class="grid-btn modifier" data-key="sus4">sus4</button>
+                            <button class="grid-btn modifier" data-key="add9">add9</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fila Inferior: Símbolos Especiales (con / incluido) -->
+                <div class="kb-section kb-special-symbols">
+                    <div class="section-label">Símbolos Especiales</div>
+                    <div class="symbols-grid">
+                        <button class="grid-btn modifier" data-key="<">&lt;</button>
+                        <button class="grid-btn modifier" data-key=">">&gt;</button>
+                        <button class="grid-btn modifier" data-key="|">|</button>
+                        <button class="grid-btn modifier" data-key="-">-</button>
+                        <button class="grid-btn modifier" data-key="/">/</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1398,7 +1618,7 @@
             
             <div style="display: flex; gap: 8px; width: 100%;">
                 <button class="k-btn action-done" id="saveTextEditBtn" style="flex:1; margin-top:0;">Guardar</button>
-                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="flex:none; padding: 0 16px;">Eliminar Sección</button>
+                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="display: none !important;">Eliminar Sección</button>
             </div>
         </div>
 
@@ -1442,6 +1662,11 @@
     </div>
 
     <script type="module">
+        // Detectar si el dispositivo es táctil
+        if (!('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+            document.body.classList.add('no-touch');
+        }
+
         // Elementos DOM
         const chartBody = document.getElementById('chartBody');
         const tableColGroup = document.getElementById('tableColGroup');
@@ -1459,26 +1684,29 @@
 
         // Datos Internos del Documento
         let songData = {
-            title: 'Dame de Beber - Marco Barrientos',
+            title: 'Dame De Beber - Marco Barrientos',
             key: 'D',
             sections: [
                 {
                     lyrics: 'Quiero estar en tu presencia',
                     rows: [
-                        ['G/E | G/D', 'B#madd9|A', 'D > A/C#', 'D/B | D/A'],
-                        ['G/E | G/D', 'Asus4|A', 'D', 'D | D/B , C/D | D/F#']
+                        ['G/E │ G/D', 'Asus4 │ A', 'D > A/C#', 'D/B │ D/A'],
+                        ['G/E │ G/D', 'Asus4 │ A', 'D', 'D │ D/B , C/D - D/F#']
                     ]
                 },
                 {
                     lyrics: 'Dame de beber',
                     rows: [
-                        ['G', 'A/G', 'A/F#', 'D/B | D/A'],
-                        ['G/E | G/D', 'Asus4|A', 'D', 'C/D | D/F#, D | D/B'],
-                        ['G', 'A/G', 'A/F#', 'D/B | D/A']
+                        ['G', 'A/G', 'A/F#', 'D/B │ D/A'],
+                        ['G/E │ G/D', 'Asus4 │ A', 'D', 'C/D - D/F# , D │ D/B']
                     ]
                 }
             ]
         };
+
+        function saveSongToLocalStorage() {
+            localStorage.setItem('yhwh_chord_table_song_data', JSON.stringify(songData));
+        }
 
         // Estado de Edición
         let activeSelection = null; 
@@ -1504,7 +1732,7 @@
         // Todas las celdas del mismo nivel usan EXACTAMENTE el mismo tamaño.
         function getCellLevel(cellText) {
             const hasComma = cellText.includes(',');
-            const hasPipe = cellText.includes('|');
+            const hasPipe = cellText.includes('│');
             if (hasComma && hasPipe) return 'quarter';
             if (hasComma || hasPipe) return 'half';
             return 'full';
@@ -1553,7 +1781,7 @@
 
         document.getElementById('btnClearSubcellBtn').addEventListener('click', (e) => {
             e.stopPropagation();
-            sheetClearActiveSubcell();
+            sheetClearEntireCell();
         });
 
         document.getElementById('saveTextEditBtn').addEventListener('click', (e) => {
@@ -1579,7 +1807,7 @@
         });
 
         // Registrar teclas del teclado táctil
-        document.querySelectorAll('.chord-keyboard-grid .grid-btn').forEach(btn => {
+        document.querySelectorAll('.keyboard-sections-container .grid-btn').forEach(btn => {
             const val = btn.getAttribute('data-key');
             if (val) {
                 btn.addEventListener('click', (e) => {
@@ -1650,6 +1878,46 @@
 
             renderBottomSheetGrid();
             bottomSheet.classList.add('open');
+
+            const workspace = document.getElementById('workspace');
+            if (workspace) {
+                workspace.classList.add('has-sheet-open');
+            }
+
+            scrollCellIntoView(cell);
+        }
+
+        function scrollCellIntoView(cell) {
+            if (!cell) return;
+            const workspace = document.getElementById('workspace');
+            if (!workspace) return;
+
+            // Wait for the bottom sheet animation to settle and layout to recalculate
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    const sheetEl = document.getElementById('bottomSheet');
+                    const sheetHeight = sheetEl ? sheetEl.offsetHeight : 0;
+
+                    const workspaceRect = workspace.getBoundingClientRect();
+                    const cellRect = cell.getBoundingClientRect();
+
+                    // The visible area is workspace height minus the sheet covering it
+                    const visibleHeight = workspaceRect.height - sheetHeight;
+
+                    // Where the cell currently is relative to workspace top
+                    const cellRelativeTop = cellRect.top - workspaceRect.top;
+                    const cellCenter = cellRelativeTop + (cellRect.height / 2);
+                    const visibleCenter = visibleHeight / 2;
+
+                    // How much to scroll to bring the cell to center of visible area
+                    const scrollDelta = cellCenter - visibleCenter;
+
+                    workspace.scrollBy({
+                        top: scrollDelta,
+                        behavior: 'smooth'
+                    });
+                });
+            }, 400);
         }
 
         function openTextEdit(type, blockIdx = null) {
@@ -1670,18 +1938,16 @@
                 const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
                 if (lyricsCell) lyricsCell.classList.add('selected');
                 
-                const deleteBtn = document.getElementById('deleteSectionDirectBtn');
-                deleteBtn.style.display = 'block';
-                if (songData.sections.length === 1) {
-                    deleteBtn.classList.add('disabled');
-                    deleteBtn.disabled = true;
-                } else {
-                    deleteBtn.classList.remove('disabled');
-                    deleteBtn.disabled = false;
-                }
+
             }
 
             bottomSheet.classList.add('open');
+            
+            const workspace = document.getElementById('workspace');
+            if (workspace) {
+                workspace.classList.add('has-sheet-open');
+            }
+
             setTimeout(() => sheetInputText.focus(), 100);
         }
 
@@ -1705,6 +1971,11 @@
 
             updateKeySelectionUI();
             bottomSheet.classList.add('open');
+
+            const workspace = document.getElementById('workspace');
+            if (workspace) {
+                workspace.classList.add('has-sheet-open');
+            }
         }
 
         // --- SELECTOR DE TONALIDAD TÁCTIL ---
@@ -1755,6 +2026,11 @@
         function closeSheet() {
             bottomSheet.classList.remove('open');
             deselectAll();
+
+            const workspace = document.getElementById('workspace');
+            if (workspace) {
+                workspace.classList.remove('has-sheet-open');
+            }
         }
 
         function deselectAll() {
@@ -1766,7 +2042,7 @@
         // --- ALGORITMO PARSER Y SERIALIZADOR DE CELDAS INTERACTIVOS ---
 
         function parseCellToStructure(text) {
-            text = text.trim().replace(/\s*-\s*/g, ' | '); 
+            text = text.trim(); 
             if (text === 'VACÍO' || text === '') text = '';
             
             let struct = {
@@ -1782,9 +2058,9 @@
                 const topText = parts[0].trim();
                 const bottomText = parts[1] ? parts[1].trim() : '';
 
-                if (topText.includes('|')) {
+                if (topText.includes('│')) {
                     struct.top.hasPipe = true;
-                    const topParts = topText.split('|');
+                    const topParts = topText.split('│');
                     struct.top.left = topParts[0].trim();
                     struct.top.right = topParts[1] ? topParts[1].trim() : '';
                 } else {
@@ -1792,9 +2068,9 @@
                     struct.top.center = topText;
                 }
 
-                if (bottomText.includes('|')) {
+                if (bottomText.includes('│')) {
                     struct.bottom.hasPipe = true;
-                    const bottomParts = bottomText.split('|');
+                    const bottomParts = bottomText.split('│');
                     struct.bottom.left = bottomParts[0].trim();
                     struct.bottom.right = bottomParts[1] ? bottomParts[1].trim() : '';
                 } else {
@@ -1803,9 +2079,9 @@
                 }
             } else {
                 struct.hasComma = false;
-                if (text.includes('|')) {
+                if (text.includes('│')) {
                     struct.single.hasPipe = true;
-                    const parts = text.split('|');
+                    const parts = text.split('│');
                     struct.single.left = parts[0].trim();
                     struct.single.right = parts[1] ? parts[1].trim() : '';
                 } else {
@@ -1820,14 +2096,14 @@
             if (struct.hasComma) {
                 let topText = '';
                 if (struct.top.hasPipe) {
-                    topText = `${struct.top.left || 'VACÍO'} | ${struct.top.right || 'VACÍO'}`;
+                    topText = `${struct.top.left || 'VACÍO'} │ ${struct.top.right || 'VACÍO'}`;
                 } else {
                     topText = struct.top.center || 'VACÍO';
                 }
 
                 let bottomText = '';
                 if (struct.bottom.hasPipe) {
-                    bottomText = `${struct.bottom.left || 'VACÍO'} | ${struct.bottom.right || 'VACÍO'}`;
+                    bottomText = `${struct.bottom.left || 'VACÍO'} │ ${struct.bottom.right || 'VACÍO'}`;
                 } else {
                     bottomText = struct.bottom.center || 'VACÍO';
                 }
@@ -1835,7 +2111,7 @@
                 return `${topText} , ${bottomText}`;
             } else {
                 if (struct.single.hasPipe) {
-                    return `${struct.single.left || 'VACÍO'} | ${struct.single.right || 'VACÍO'}`;
+                    return `${struct.single.left || 'VACÍO'} │ ${struct.single.right || 'VACÍO'}`;
                 } else {
                     return struct.single.center || 'VACÍO';
                 }
@@ -2069,10 +2345,10 @@
             
             if (hasPipe) {
                 iconTime.innerHTML = svgUnirH;
-                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Unir Horiz.";
+                document.getElementById('btnTimeAction').title = "Unir Horizontalmente";
             } else {
                 iconTime.innerHTML = svgDivH;
-                document.querySelector('#btnTimeAction .ctrl-label').textContent = "Dividir Horiz.";
+                document.getElementById('btnTimeAction').title = "Dividir Horizontalmente";
             }
             
             const hasComma = sheetCellStructure.hasComma;
@@ -2082,21 +2358,23 @@
             
             if (hasComma) {
                 iconVuelta.innerHTML = svgUnirV;
-                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Unir Vert.";
+                document.getElementById('btnVueltaAction').title = "Unir Verticalmente";
             } else {
                 iconVuelta.innerHTML = svgDivV;
-                document.querySelector('#btnVueltaAction .ctrl-label').textContent = "Dividir Vert.";
+                document.getElementById('btnVueltaAction').title = "Dividir Verticalmente";
             }
         }
 
-        function sheetClearActiveSubcell() {
-            if (!activeSelection || !activeSubcell) return;
-            const parts = activeSubcell.split('.');
-            const parent = parts[0];
-            const child = parts[1];
+        function sheetClearEntireCell() {
+            if (!activeSelection) return;
+            const blockIdx = activeSelection.blockIdx;
+            const rowIdx = activeSelection.rowIdx;
+            const colIdx = activeSelection.colIdx;
             
-            sheetCellStructure[parent][child] = 'VACÍO';
-            saveChangesToMainData();
+            songData.sections[blockIdx].rows[rowIdx][colIdx] = 'VACÍO';
+            sheetCellStructure = parseCellToStructure('VACÍO');
+            activeSubcell = 'single.center';
+            
             renderBottomSheetGrid();
             render();
         }
@@ -2120,12 +2398,24 @@
             let val = sheetCellStructure[parent][child] || '';
             if (val === 'VACÍO') val = '';
 
+            const lastChord = val.split(/[\s><|─│-]+/).pop() || '';
+
             if (key === 'CLEAR') {
                 val = '';
             } else if (key === 'BACKSPACE') {
-                val = val.length > 0 ? val.substring(0, val.length - 1) : '';
+                if (val.endsWith('add9')) {
+                    val = val.substring(0, val.length - 4);
+                } else if (val.endsWith('sus4')) {
+                    val = val.substring(0, val.length - 4);
+                } else if (val.endsWith(' | ') || val.endsWith(' - ') || val.endsWith(' > ') || val.endsWith(' < ')) {
+                    val = val.substring(0, val.length - 3);
+                } else if (val.endsWith('| ') || val.endsWith('- ') || val.endsWith('> ') || val.endsWith('< ')) {
+                    val = val.substring(0, val.length - 2);
+                } else {
+                    val = val.length > 0 ? val.substring(0, val.length - 1) : '';
+                }
             } else if (['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(key)) {
-                if (val.endsWith('/')) {
+                if (val.endsWith('/') || val.endsWith(' ') || ['>', '<', '|', '-'].some(char => val.endsWith(char))) {
                     val = val + key;
                 } else {
                     val = key; 
@@ -2145,12 +2435,54 @@
                     val = val + 'm';
                 }
             } else if (key === '/') {
-                if (val && !val.includes('/') && !val.endsWith('/')) {
+                if (val && !lastChord.includes('/') && !val.endsWith('/')) {
                     val = val + '/';
+                }
+            } else if (key === 'add9') {
+                if (val && !val.endsWith('/') && !lastChord.includes('add9') && !lastChord.includes('sus4')) {
+                    val = val + 'add9';
+                }
+            } else if (key === 'sus4') {
+                if (val && !val.endsWith('/') && !lastChord.includes('sus4') && !lastChord.includes('add9')) {
+                    val = val + 'sus4';
+                }
+            } else if (['>', '<', '|', '-'].includes(key)) {
+                if (key === '|') {
+                    if (val === '') {
+                        val = '| ';
+                    } else if (val.endsWith(' ')) {
+                        val = val + '| ';
+                    } else {
+                        val = val + ' | ';
+                    }
+                } else if (key === '-') {
+                    if (val === '') {
+                        val = '- ';
+                    } else if (val.endsWith(' ')) {
+                        val = val + '- ';
+                    } else {
+                        val = val + ' - ';
+                    }
+                } else if (key === '>') {
+                    if (val === '') {
+                        val = '> ';
+                    } else if (val.endsWith(' ')) {
+                        val = val + '> ';
+                    } else {
+                        val = val + ' > ';
+                    }
+                } else if (key === '<') {
+                    if (val === '') {
+                        val = '< ';
+                    } else if (val.endsWith(' ')) {
+                        val = val + '< ';
+                    } else {
+                        val = val + ' < ';
+                    }
                 }
             } else {
                 if (val && !val.endsWith('/') && !val.endsWith(key)) {
-                    if (!val.includes(key)) {
+                    if (!lastChord.includes(key)) {
                         val = val + key;
                     }
                 }
@@ -2255,6 +2587,13 @@
             };
 
             modal.style.display = 'flex';
+
+            // Close on click outside the modal box
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    cleanUp();
+                }
+            };
         }
 
         // --- GESTIÓN DE ACCIONES DE ESTRUCTURA GLOBALES ---
@@ -2286,12 +2625,20 @@
 
         // Eliminar fila de una sección específica
         function deleteRowFromSection(blockIdx, rowIdx) {
-            // Comprobar si la eliminación de fila está deshabilitada (máximo 1 fila restante en esta sección)
             const sect = songData.sections[blockIdx];
-            if (sect && sect.rows.length <= 1) {
-                return; // Ignorar acción si solo queda una fila
+            if (!sect) return;
+            
+            // Si es la última fila de la única sección de la canción, está completamente inhabilitado
+            if (songData.sections.length <= 1 && sect.rows.length <= 1) {
+                return;
             }
-            showDeleteConfirmation('row', rowIdx, blockIdx);
+            
+            if (sect.rows.length === 1) {
+                // Si es la última fila de esta sección, eliminamos la sección completa
+                showDeleteConfirmation('section', null, blockIdx);
+            } else {
+                showDeleteConfirmation('row', rowIdx, blockIdx);
+            }
         }
 
         function confirmDeleteSectionDirect() {
@@ -2415,7 +2762,12 @@
 
         // --- EXPORTACIÓN PNG LOCAL ---
         function exportToPng() {
+            // Cerrar cualquier selección o panel abierto
+            activeSelection = null;
+            reorderingBlockIdx = null;
+            render();
             closeSheet();
+
             const element = document.getElementById('chartContainer');
             
             const originalTransform = scalableWrapper.style.transform;
@@ -2430,7 +2782,57 @@
                 scale: 3, 
                 backgroundColor: bgExportColor,
                 useCORS: true,
-                logging: false
+                logging: false,
+                onclone: function(clonedDoc) {
+                    const container = clonedDoc.getElementById('chartContainer');
+                    if (!container) return;
+
+                    // 1. Eliminar la fila de controles de columnas (× borrar columna + ＋ Sección al inicio)
+                    container.querySelectorAll('.col-control-tr').forEach(el => el.remove());
+
+                    // 2. Eliminar todas las filas de agregar (＋ Fila / ＋ Sección debajo)
+                    container.querySelectorAll('.add-row-tr').forEach(el => el.remove());
+
+                    // 3. De cada fila de datos, quitar la celda de borrar fila (primera columna) y la de agregar compás (última)
+                    container.querySelectorAll('.row-delete-cell').forEach(el => el.remove());
+                    container.querySelectorAll('.add-col-cell').forEach(el => el.remove());
+
+                    // 4. De la fila de cabecera, quitar las celdas transparentes de relleno (col 1 y última col)
+                    const headerRow = container.querySelector('.header-row');
+                    if (headerRow) {
+                        const tds = headerRow.querySelectorAll('td');
+                        // La primera td es td-transparent (col delete placeholder)
+                        if (tds[0] && tds[0].classList.contains('td-transparent')) tds[0].remove();
+                        // La última td es td-transparent (col add placeholder)
+                        const tdsAfter = headerRow.querySelectorAll('td');
+                        const lastTd = tdsAfter[tdsAfter.length - 1];
+                        if (lastTd && lastTd.classList.contains('td-transparent')) lastTd.remove();
+                    }
+
+                    // 5. Ajustar el colgroup: eliminar la primera col (44px delete) y la última col (44px add)
+                    const colgroup = container.querySelector('colgroup');
+                    if (colgroup) {
+                        const cols = colgroup.querySelectorAll('col');
+                        if (cols.length >= 2) {
+                            cols[0].remove(); // columna de borrar fila
+                            const remainingCols = colgroup.querySelectorAll('col');
+                            remainingCols[remainingCols.length - 1].remove(); // columna de agregar compás
+                        }
+                    }
+
+                    // 6. Hacer las celdas vacías ("+") completamente invisibles
+                    container.querySelectorAll('.chord-cell').forEach(cell => {
+                        const inner = cell.querySelector('.chord-inner');
+                        if (inner && inner.textContent.trim() === '+') {
+                            inner.style.color = 'transparent';
+                        }
+                    });
+
+                    // 7. Eliminar borde de selección si quedó alguno
+                    container.querySelectorAll('.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                }
             }).then(canvas => {
                 scalableWrapper.style.transform = originalTransform;
                 scalableWrapper.style.zoom = originalZoom;
@@ -2529,7 +2931,8 @@
                     html += `<tr>`;
                      
                     // 1. ELIMINAR FILA (✕ ROJO DASHED CUADRADO DEL ALTO DE LA CELDA)
-                    const rowDisabledClass = sect.rows.length === 1 ? 'disabled' : '';
+                    const isAbsoluteLastRow = (songData.sections.length === 1 && sect.rows.length === 1);
+                    const rowDisabledClass = isAbsoluteLastRow ? 'disabled' : '';
                     html += `<td class="row-delete-cell ${rowDisabledClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" title="Eliminar Fila de Acordes">
                                 <div class="row-delete-inner">✕</div>
                              </td>`;
@@ -2543,9 +2946,17 @@
                             html += `
                                 <td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx} reordering" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
                                     <div class="lyrics-reorder-container">
-                                        <div class="reorder-btn btn-up" data-block-idx="${blockIdx}" title="Mover Sección Arriba">▲ Subir</div>
-                                        <div class="reorder-lyrics-preview">${lyricsDisplay}</div>
-                                        <div class="reorder-btn btn-down" data-block-idx="${blockIdx}" title="Mover Sección Abajo">▼ Bajar</div>
+                                        <!-- Columna Izquierda: Eliminar -->
+                                        <div class="reorder-col-left">
+                                            <div class="reorder-btn btn-delete ${songData.sections.length === 1 ? 'disabled' : ''}" data-block-idx="${blockIdx}" title="Eliminar Sección">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
+                                            </div>
+                                        </div>
+                                        <!-- Columna Derecha: Mover (Subir/Bajar) -->
+                                        <div class="reorder-col-right">
+                                            <div class="reorder-btn btn-up" data-block-idx="${blockIdx}" title="Mover Sección Arriba">▲</div>
+                                            <div class="reorder-btn btn-down" data-block-idx="${blockIdx}" title="Mover Sección Abajo">▼</div>
+                                        </div>
                                     </div>
                                 </td>
                             `;
@@ -2558,7 +2969,7 @@
 
                     // 3. COMPASES DE ACORDES — tamaño de fuente fijo por nivel de subdivisión
                     rowArr.forEach((cell, colIdx) => {
-                        cell = cell.trim().replace(/\s*-\s*/g, ' | '); 
+                        cell = cell.trim(); 
                         const isSelected = activeSelection && activeSelection.type === 'chord' && activeSelection.blockIdx === blockIdx && activeSelection.rowIdx === rowIdx && activeSelection.colIdx === colIdx ? 'selected' : '';
                         
                         if (cell === 'VACÍO' || !cell) {
@@ -2572,8 +2983,8 @@
                             const fontSize = getCellFontSize(level);
 
                             const renderHorizontal = (text) => {
-                                if (text.includes('|')) {
-                                    const parts = text.split('|');
+                                if (text.includes('│')) {
+                                    const parts = text.split('│');
                                     const leftText = parts[0].trim();
                                     const rightText = parts[1] ? parts[1].trim() : '';
 
@@ -2662,9 +3073,14 @@
 
             // 2. Celdas de letras: Click e interactividad de Reordenación (Long Press)
             document.querySelectorAll('.lyrics-cell').forEach(cell => {
-                const bIdx = parseInt(cell.getAttribute('data-block-idx'));
-                
+                // Prevenir menú contextual en todas las celdas de letra (incluso en modo reordenación)
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                });
+
                 if (cell.classList.contains('reordering')) return;
+
+                const bIdx = parseInt(cell.getAttribute('data-block-idx'));
 
                 // Captura de Long Press (Pulsación Larga)
                 const startLongPressTimer = () => {
@@ -2690,10 +3106,6 @@
                 cell.addEventListener('touchend', clearLongPressTimer);
                 cell.addEventListener('mousemove', clearLongPressTimer);
                 cell.addEventListener('touchmove', clearLongPressTimer);
-
-                cell.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                });
 
                 cell.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2726,6 +3138,15 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     moveSection(bIdx, 1);
+                });
+            });
+
+            document.querySelectorAll('.reorder-btn.btn-delete').forEach(btn => {
+                const bIdx = parseInt(btn.getAttribute('data-block-idx'));
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (songData.sections.length <= 1) return;
+                    showDeleteConfirmation('section', null, bIdx);
                 });
             });
 
@@ -2806,14 +3227,86 @@
                 });
             }
 
+            // Guardar en el almacenamiento local con cada renderizado
+            saveSongToLocalStorage();
+
             // Resetear escala y zoom de visualización
             setTimeout(applyZoom, 0);
         }
 
         // Inicializar
         window.addEventListener('load', () => {
+            const savedData = localStorage.getItem('yhwh_chord_table_song_data');
+            if (savedData) {
+                try {
+                    songData = JSON.parse(savedData);
+                } catch (e) {
+                    console.error("Error al cargar la tabla desde memoria", e);
+                }
+            }
+
+            // Configurar el botón de nueva tabla
+            const createNewBtn = document.getElementById('createNewBtn');
+            if (createNewBtn) {
+                createNewBtn.addEventListener('click', () => {
+                    if (confirm("¿Estás seguro de que deseas crear una nueva tabla desde cero? Esto borrará el contenido actual que estás viendo.")) {
+                        localStorage.removeItem('yhwh_chord_table_song_data');
+                        songData = {
+                            title: 'Nueva Canción',
+                            key: 'C',
+                            sections: [
+                                {
+                                    lyrics: 'Sección 1',
+                                    rows: [['VACÍO', 'VACÍO', 'VACÍO', 'VACÍO']]
+                                }
+                            ]
+                        };
+                        activeSelection = null;
+                        reorderingBlockIdx = null;
+                        closeSheet();
+                        resetZoom();
+                        render();
+                    }
+                });
+            }
+
             resetZoom();
             render();
+
+            // Interceptor de captura para cerrar el bottom sheet y salir de reordenación al hacer click afuera
+            document.addEventListener('click', (e) => {
+                const bottomSheet = document.getElementById('bottomSheet');
+                const confirmModal = document.getElementById('confirmModal');
+                
+                // Si el modal de confirmación está activo, ignorar interceptores globales
+                if (confirmModal && confirmModal.style.display !== 'none') {
+                    return;
+                }
+                
+                // 1. Si el bottom sheet está abierto, cerrarlo
+                if (bottomSheet && bottomSheet.classList.contains('open') && !bottomSheet.contains(e.target)) {
+                    const navbar = document.querySelector('.app-navbar');
+                    if (navbar && navbar.contains(e.target)) {
+                        closeSheet();
+                        return;
+                    }
+                    closeSheet();
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return;
+                }
+                
+                // 2. Si la reordenación de sección está activa, cerrarla al hacer click afuera
+                if (reorderingBlockIdx !== null) {
+                    const reorderContainer = document.querySelector('.lyrics-cell.reordering');
+                    if (reorderContainer && !reorderContainer.contains(e.target)) {
+                        reorderingBlockIdx = null;
+                        render();
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }
+            }, true);
         });
 
         window.addEventListener('resize', () => {
