@@ -1984,6 +1984,49 @@
 
         function saveKeySelection() {
             const keyResult = selectedKeyType === 'minor' ? selectedKeyRoot + 'm' : selectedKeyRoot;
+            const oldKey = songData.key;
+            
+            if (oldKey && oldKey !== keyResult) {
+                const chromatic = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+                const oldRoot = oldKey.replace('m', '');
+                const newRoot = selectedKeyRoot;
+                
+                let oldIdx = chromatic.indexOf(oldRoot);
+                let newIdx = chromatic.indexOf(newRoot);
+                
+                // Verificar si hay al menos un acorde escrito en la canción
+                let hasChords = false;
+                songData.sections.forEach(sec => sec.rows.forEach(r => r.forEach(c => {
+                    if (c !== 'VACÍO') hasChords = true;
+                })));
+                
+                if (oldIdx !== -1 && newIdx !== -1 && hasChords) {
+                    let semitones = newIdx - oldIdx;
+                    if (confirm(`¿Deseas transportar automáticamente todos los acordes a la nueva tonalidad (${keyResult})?`)) {
+                        songData.sections.forEach(section => {
+                            section.rows.forEach(row => {
+                                row.forEach((cellText, idx) => {
+                                    if (cellText === 'VACÍO') return;
+                                    row[idx] = cellText.replace(/(^|[\s\/\<\>\|\-])([CDEFGAB][#b]?)/g, (match, prefix, note) => {
+                                        let nIdx = chromatic.indexOf(note);
+                                        if (nIdx === -1) {
+                                            const enharmonics = { 'Db': 'C#', 'D#': 'Eb', 'Gb': 'F#', 'G#': 'Ab', 'A#': 'Bb' };
+                                            if (enharmonics[note]) nIdx = chromatic.indexOf(enharmonics[note]);
+                                        }
+                                        if (nIdx !== -1) {
+                                            let shifted = (nIdx + semitones) % 12;
+                                            if (shifted < 0) shifted += 12;
+                                            return prefix + chromatic[shifted];
+                                        }
+                                        return match;
+                                    });
+                                });
+                            });
+                        });
+                    }
+                }
+            }
+            
             songData.key = keyResult;
             render();
         }
