@@ -1376,6 +1376,12 @@
             box-shadow: none;
             border: 1px solid var(--border-color);
         }
+        
+        .type-toggle-btn.disabled {
+            opacity: 0.35 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+        }
 
         /* Estilo para las subceldas clickables interactivas en el BottomSheet */
         .sheet-subcell {
@@ -1861,6 +1867,10 @@
             setKeyType('minor');
         });
 
+        document.getElementById('transposeToggle').addEventListener('change', () => {
+            updateKeySelectionUI();
+        });
+
         // Registrar teclas del teclado táctil
         document.querySelectorAll('.keyboard-sections-container .grid-btn').forEach(btn => {
             const val = btn.getAttribute('data-key');
@@ -2041,14 +2051,33 @@
         }
 
         function setKeyType(type) {
+            const isTransportActive = document.getElementById('transposeToggle').checked;
+            if (isTransportActive) return; // Ignorar si transportar está activo
+            
             selectedKeyType = type;
             updateKeySelectionUI();
             saveKeySelection();
         }
 
         function updateKeySelectionUI() {
-            document.getElementById('keyTypeMajorBtn').classList.toggle('active', selectedKeyType === 'major');
-            document.getElementById('keyTypeMinorBtn').classList.toggle('active', selectedKeyType === 'minor');
+            const isTransportActive = document.getElementById('transposeToggle').checked;
+            const btnMajor = document.getElementById('keyTypeMajorBtn');
+            const btnMinor = document.getElementById('keyTypeMinorBtn');
+            
+            btnMajor.classList.toggle('active', selectedKeyType === 'major');
+            btnMinor.classList.toggle('active', selectedKeyType === 'minor');
+            
+            if (isTransportActive) {
+                btnMajor.classList.add('disabled');
+                btnMinor.classList.add('disabled');
+                btnMajor.setAttribute('disabled', 'true');
+                btnMinor.setAttribute('disabled', 'true');
+            } else {
+                btnMajor.classList.remove('disabled');
+                btnMinor.classList.remove('disabled');
+                btnMajor.removeAttribute('disabled');
+                btnMinor.removeAttribute('disabled');
+            }
 
             document.querySelectorAll('.key-select-btn').forEach(btn => {
                 const isSelected = btn.getAttribute('data-note') === selectedKeyRoot;
