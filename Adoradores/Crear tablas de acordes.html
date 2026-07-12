@@ -707,6 +707,39 @@
             color: var(--accent-carmesi); 
         }
 
+        /* Desactivar botones de borrado conservando simetría */
+        .col-delete-cell.disabled,
+        .row-delete-cell.disabled {
+            opacity: 0.18 !important;
+            cursor: not-allowed !important;
+            background-color: transparent !important;
+            border-color: var(--border-color) !important;
+        }
+        .col-delete-cell.disabled:hover,
+        .row-delete-cell.disabled:hover {
+            background-color: transparent !important;
+            border-color: var(--border-color) !important;
+        }
+        .col-delete-cell.disabled .col-delete-inner,
+        .row-delete-cell.disabled .row-delete-inner {
+            color: var(--text-secondary) !important;
+        }
+        
+        .s-grid-btn.danger.disabled {
+            opacity: 0.25 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+        }
+
+        /* Evitar selección de texto en la tabla durante el long press */
+        .chart-table,
+        .chart-table * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
         /* --- DISEÑO DE LA CELDA DE REORDENACIÓN DE SECCIÓN --- */
         .lyrics-cell.reordering {
             padding: 0 !important;
@@ -1636,7 +1669,16 @@
                 sheetInputText.value = songData.sections[blockIdx].lyrics;
                 const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
                 if (lyricsCell) lyricsCell.classList.add('selected');
-                document.getElementById('deleteSectionDirectBtn').style.display = 'block';
+                
+                const deleteBtn = document.getElementById('deleteSectionDirectBtn');
+                deleteBtn.style.display = 'block';
+                if (songData.sections.length === 1) {
+                    deleteBtn.classList.add('disabled');
+                    deleteBtn.disabled = true;
+                } else {
+                    deleteBtn.classList.remove('disabled');
+                    deleteBtn.disabled = false;
+                }
             }
 
             bottomSheet.classList.add('open');
@@ -2234,10 +2276,21 @@
         }
 
         function deleteColumnGlobal(colIdx) {
+            // Comprobar si la eliminación de columna está deshabilitada (máximo 1 columna restante)
+            const sect = songData.sections[0];
+            if (sect && sect.rows[0].length <= 1) {
+                return; // Ignorar acción si solo queda una columna
+            }
             showDeleteConfirmation('column', colIdx);
         }
 
+        // Eliminar fila de una sección específica
         function deleteRowFromSection(blockIdx, rowIdx) {
+            // Comprobar si la eliminación de fila está deshabilitada (máximo 1 fila restante en esta sección)
+            const sect = songData.sections[blockIdx];
+            if (sect && sect.rows.length <= 1) {
+                return; // Ignorar acción si solo queda una fila
+            }
             showDeleteConfirmation('row', rowIdx, blockIdx);
         }
 
@@ -2247,6 +2300,10 @@
                 bIdx = activeSelection.blockIdx;
             }
             if (bIdx === null) return;
+            // Comprobar si la eliminación de sección está deshabilitada (máximo 1 sección restante)
+            if (songData.sections.length <= 1) {
+                return; // Ignorar acción si solo queda una sección
+            }
             showDeleteConfirmation('section', null, bIdx);
         }
 
@@ -2442,7 +2499,8 @@
                      </td>`;
                      
             for (let i = 0; i < maxCols; i++) {
-                html += `<td class="col-delete-cell" data-col-idx="${i}" title="Eliminar Compás (Columna ${i + 1})">
+                const colDisabledClass = maxCols === 1 ? 'disabled' : '';
+                html += `<td class="col-delete-cell ${colDisabledClass}" data-col-idx="${i}" title="Eliminar Compás (Columna ${i + 1})">
                             <div class="col-delete-inner">✕</div>
                          </td>`;
             }
@@ -2469,9 +2527,10 @@
 
                 sect.rows.forEach((rowArr, rowIdx) => {
                     html += `<tr>`;
-                    
+                     
                     // 1. ELIMINAR FILA (✕ ROJO DASHED CUADRADO DEL ALTO DE LA CELDA)
-                    html += `<td class="row-delete-cell" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" title="Eliminar Fila de Acordes">
+                    const rowDisabledClass = sect.rows.length === 1 ? 'disabled' : '';
+                    html += `<td class="row-delete-cell ${rowDisabledClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" title="Eliminar Fila de Acordes">
                                 <div class="row-delete-inner">✕</div>
                              </td>`;
 
@@ -2631,6 +2690,10 @@
                 cell.addEventListener('touchend', clearLongPressTimer);
                 cell.addEventListener('mousemove', clearLongPressTimer);
                 cell.addEventListener('touchmove', clearLongPressTimer);
+
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                });
 
                 cell.addEventListener('click', (e) => {
                     e.stopPropagation();
