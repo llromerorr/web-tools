@@ -38,25 +38,25 @@
             /* Altura de filas de control (agregar/eliminar) */
             --ctrl-row-height: 30px;
 
-            /* Estrofa (Verde Neón) */
+            /* Estrofa (Verde Esmeralda) */
             --color-estrofa-border: #10b981;
             --color-estrofa-chord: #34d399;
             
-            /* Coro (Celeste Neón) */
-            --color-coro-border: #60a5fa;
-            --color-coro-chord: #93c5fd;
+            /* Coro (Celeste Turquesa) */
+            --color-coro-border: #06b6d4;
+            --color-coro-chord: #22d3ee;
             
             /* Puente (Fucsia Neón) */
             --color-puente-border: #d946ef;
             --color-puente-chord: #f472b6;
             
-            /* Pre-Coro (Naranja Neón) */
-            --color-precoro-border: #f97316;
-            --color-precoro-chord: #fb923c;
+            /* Pre-Coro (Amarillo Oro) */
+            --color-precoro-border: #eab308;
+            --color-precoro-chord: #fde047;
             
-            /* Intro / Outro / Solo (Azul Eléctrico) */
-            --color-intro-border: #3b82f6;
-            --color-intro-chord: #60a5fa;
+            /* Intro / Outro / Solo (Rojo Coral) */
+            --color-intro-border: #f43f5e;
+            --color-intro-chord: #fda4af;
 
             /* General */
             --color-general-border: #4b5563;
@@ -76,47 +76,185 @@
             --shadow: none;
 
             --c-header: #e2e8f0;
-
-            /* Colores de sección para sol directo */
+            /* Colores de sección para sol directo (Modo Claro) */
             --color-estrofa-border: #047857;
             --color-estrofa-chord: #064e3b; 
 
-            --color-coro-border: #1d4ed8;
-            --color-coro-chord: #1e3a8a; 
+            --color-coro-border: #0891b2;
+            --color-coro-chord: #164e63; 
 
             --color-puente-border: #a21caf;
             --color-puente-chord: #701a75; 
 
-            --color-precoro-border: #c2410c;
-            --color-precoro-chord: #7c2d12; 
+            --color-precoro-border: #ca8a04;
+            --color-precoro-chord: #713f12; 
 
-            --color-intro-border: #1d4ed8;
-            --color-intro-chord: #0f172a; 
+            --color-intro-border: #e11d48;
+            --color-intro-chord: #4c0519; 
 
             --color-general-border: #475569;
             --color-general-chord: #0f172a;
         }
 
-        /* --- PALETA DE FONDOS DE SECCIÓN (auto-asignada cíclicamente) --- */
+        /* --- FONDOS DE SECCIÓN ESPECÍFICOS PARA EVITAR CHOQUES DE COLOR --- */
         /* Modo Oscuro */
-        .sect-bg-0 { background-color: #0e1e30 !important; }
-        .sect-bg-1 { background-color: #0d2119 !important; }
-        .sect-bg-2 { background-color: #1b1132 !important; }
-        .sect-bg-3 { background-color: #221a0c !important; }
-        .sect-bg-4 { background-color: #0d2028 !important; }
-        .sect-bg-5 { background-color: #25101d !important; }
+        .sect-bg-estrofa { background-color: #03140e !important; }
+        .sect-bg-coro { background-color: #011218 !important; }
+        .sect-bg-pre-coro { background-color: #141103 !important; }
+        .sect-bg-puente { background-color: #12051a !important; }
+        .sect-bg-intro,
+        .sect-bg-outro,
+        .sect-bg-solo { background-color: #180407 !important; }
+        .sect-bg-general { background-color: transparent !important; }
+
         /* Modo Claro */
-        .theme-light .sect-bg-0 { background-color: #e3ecf8 !important; }
-        .theme-light .sect-bg-1 { background-color: #dff5ea !important; }
-        .theme-light .sect-bg-2 { background-color: #ede3f8 !important; }
-        .theme-light .sect-bg-3 { background-color: #f7eddf !important; }
-        .theme-light .sect-bg-4 { background-color: #dff0f6 !important; }
-        .theme-light .sect-bg-5 { background-color: #f6dfec !important; }
+        .theme-light .sect-bg-estrofa { background-color: #f0fdf4 !important; }
+        .theme-light .sect-bg-coro { background-color: #ecfeff !important; }
+        .theme-light .sect-bg-pre-coro { background-color: #fefce8 !important; }
+        .theme-light .sect-bg-puente { background-color: #fdf4ff !important; }
+        .theme-light .sect-bg-intro,
+        .theme-light .sect-bg-outro,
+        .theme-light .sect-bg-solo { background-color: #fff1f2 !important; }
+        .theme-light .sect-bg-general { background-color: transparent !important; }
+
+        /* Rejilla de selección del tipo de sección */
+        .section-type-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+        .type-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .theme-light .type-btn {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+            color: #475569;
+        }
+        .type-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Botones del Selector de Tipo de Sección con colores predefinidos (Modo Oscuro) */
+        .type-btn[data-type="estrofa"] { border-color: rgba(16, 185, 129, 0.35); color: #34d399; }
+        .type-btn[data-type="coro"] { border-color: rgba(96, 165, 250, 0.35); color: #93c5fd; }
+        .type-btn[data-type="pre-coro"] { border-color: rgba(249, 115, 22, 0.35); color: #fb923c; }
+        .type-btn[data-type="puente"] { border-color: rgba(217, 70, 239, 0.35); color: #f472b6; }
+        .type-btn[data-type="intro"],
+        .type-btn[data-type="outro"],
+        .type-btn[data-type="solo"] { border-color: rgba(59, 130, 246, 0.35); color: #60a5fa; }
+        .type-btn[data-type="general"] { border-color: rgba(156, 163, 175, 0.35); color: #9ca3af; }
+
+        .type-btn.active {
+            color: #000000 !important;
+            border-color: transparent !important;
+        }
+        .type-btn.active[data-type="estrofa"] { background-color: var(--color-estrofa-border) !important; }
+        .type-btn.active[data-type="coro"] { background-color: var(--color-coro-border) !important; }
+        .type-btn.active[data-type="pre-coro"] { background-color: var(--color-precoro-border) !important; }
+        .type-btn.active[data-type="puente"] { background-color: var(--color-puente-border) !important; }
+        .type-btn.active[data-type="intro"],
+        .type-btn.active[data-type="outro"],
+        .type-btn.active[data-type="solo"] { background-color: var(--color-intro-border) !important; }
+        .type-btn.active[data-type="general"] { background-color: var(--text-color) !important; color: var(--bg-app) !important; }
+
+        /* Colores botones inactivos Modo Claro */
+        .theme-light .type-btn[data-type="estrofa"] { border-color: rgba(4, 120, 87, 0.35); color: #047857; }
+        .theme-light .type-btn[data-type="coro"] { border-color: rgba(29, 78, 216, 0.35); color: #1d4ed8; }
+        .theme-light .type-btn[data-type="pre-coro"] { border-color: rgba(194, 65, 12, 0.35); color: #c2410c; }
+        .theme-light .type-btn[data-type="puente"] { border-color: rgba(162, 28, 175, 0.35); color: #a21caf; }
+        .theme-light .type-btn[data-type="intro"],
+        .theme-light .type-btn[data-type="outro"],
+        .theme-light .type-btn[data-type="solo"] { border-color: rgba(29, 78, 216, 0.35); color: #1d4ed8; }
+        .theme-light .type-btn[data-type="general"] { border-color: rgba(71, 85, 105, 0.35); color: #475569; }
+
+        /* Estilos de las etiquetas de sección (badges) */
+        .lyrics-badge.large {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 850;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1.5px solid currentColor;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .lyrics-badge.large[data-type="estrofa"] { color: #34d399 !important; }
+        .lyrics-badge.large[data-type="coro"] { color: #93c5fd !important; }
+        .lyrics-badge.large[data-type="pre-coro"] { color: #fb923c !important; }
+        .lyrics-badge.large[data-type="puente"] { color: #f472b6 !important; }
+        .lyrics-badge.large[data-type="intro"],
+        .lyrics-badge.large[data-type="outro"],
+        .lyrics-badge.large[data-type="solo"] { color: #60a5fa !important; }
+        
+        .theme-light .lyrics-badge.large[data-type="estrofa"] { color: #047857 !important; }
+        .theme-light .lyrics-badge.large[data-type="coro"] { color: #1d4ed8 !important; }
+        .theme-light .lyrics-badge.large[data-type="pre-coro"] { color: #c2410c !important; }
+        .theme-light .lyrics-badge.large[data-type="puente"] { color: #a21caf !important; }
+        .theme-light .lyrics-badge.large[data-type="intro"],
+        .theme-light .lyrics-badge.large[data-type="outro"],
+        .theme-light .lyrics-badge.large[data-type="solo"] { color: #1d4ed8 !important; }
+
+        /* Cabecera de sección cuando hay letra */
+        .lyrics-badge-header {
+            display: block;
+            width: 100%;
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding-bottom: 4px;
+            margin-bottom: 2px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+            background: transparent !important;
+            text-align: center;
+        }
+        .theme-light .lyrics-badge-header {
+            border-bottom-color: rgba(0, 0, 0, 0.12);
+        }
+        
+        .lyrics-badge-header[data-type="estrofa"] { color: #34d399 !important; }
+        .lyrics-badge-header[data-type="coro"] { color: #93c5fd !important; }
+        .lyrics-badge-header[data-type="pre-coro"] { color: #fb923c !important; }
+        .lyrics-badge-header[data-type="puente"] { color: #f472b6 !important; }
+        .lyrics-badge-header[data-type="intro"],
+        .lyrics-badge-header[data-type="outro"],
+        .lyrics-badge-header[data-type="solo"] { color: #60a5fa !important; }
+        
+        .theme-light .lyrics-badge-header[data-type="estrofa"] { color: #047857 !important; }
+        .theme-light .lyrics-badge-header[data-type="coro"] { color: #1d4ed8 !important; }
+        .theme-light .lyrics-badge-header[data-type="pre-coro"] { color: #c2410c !important; }
+        .theme-light .lyrics-badge-header[data-type="puente"] { color: #a21caf !important; }
+        .theme-light .lyrics-badge-header[data-type="intro"],
+        .theme-light .lyrics-badge-header[data-type="outro"],
+        .theme-light .lyrics-badge-header[data-type="solo"] { color: #1d4ed8 !important; }
+
+        .lyrics-text {
+            width: 100%;
+            font-size: 13px;
+            line-height: 1.4;
+            color: inherit;
+            font-weight: inherit;
+            text-align: center;
+        }
 
         * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             background-color: var(--bg-app); 
             color: var(--text-color);
             height: 100dvh; 
@@ -326,9 +464,10 @@
         }
         .lyrics-inner {
             display: flex; 
+            flex-direction: column;
             align-items: center; 
             justify-content: center;
-            padding: 14px 16px; 
+            padding: 10px 8px; 
             text-align: center; 
             font-size: 14px; 
             font-weight: 700;
@@ -338,6 +477,7 @@
             border-left: 5px solid var(--color-general-border);
             height: 100%;
             width: 100%;
+            gap: 6px;
         }
         
         .theme-light .lyrics-inner {
@@ -385,7 +525,7 @@
         
         /* --- TIPOGRAFÍA INTER PARA ACORDES: limpia, precisa, altamente legible --- */
         .chord-inner, .split-left, .split-right, .split-top, .split-bottom {
-            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Consolas', 'Cascadia Code', monospace;
             font-weight: 700;
             letter-spacing: -0.01em;
         }
@@ -1668,13 +1808,20 @@
 
         <!-- 2. TEXTOS Y LETRAS: Entrada de Texto Ampliada -->
         <div class="sheet-body-text" id="sheetBodyText" style="display: none;">
+            <div class="sheet-section-title">Tipo de Sección</div>
+            <div class="section-type-grid" id="sectionTypeSelector">
+                <button class="type-btn" data-type="estrofa">Estrofa</button>
+                <button class="type-btn" data-type="coro">Coro</button>
+                <button class="type-btn" data-type="pre-coro">Pre-Coro</button>
+                <button class="type-btn" data-type="puente">Puente</button>
+                <button class="type-btn" data-type="intro">Intro</button>
+                <button class="type-btn" data-type="outro">Outro</button>
+                <button class="type-btn" data-type="solo">Solo</button>
+                <button class="type-btn" data-type="general">Ninguno</button>
+            </div>
+
             <div class="sheet-section-title">Editar Letra</div>
             <textarea class="sheet-textarea" id="sheetInputText" placeholder="Escribe aquí..."></textarea>
-            
-            <div style="display: flex; gap: 8px; width: 100%;">
-                <button class="k-btn action-done" id="saveTextEditBtn" style="flex:1; margin-top:0;">Guardar</button>
-                <button class="s-grid-btn danger" id="deleteSectionDirectBtn" style="display: none !important;">Eliminar Sección</button>
-            </div>
         </div>
 
         <!-- 3. TONALIDAD: Selector de Tono Táctil (Sin Teclado) -->
@@ -1742,6 +1889,8 @@
         const sheetBodyKey = document.getElementById('sheetBodyKey');
         const cellPreview = document.getElementById('cellPreview');
         const sheetInputText = document.getElementById('sheetInputText');
+
+        let activeSectionType = 'general';
 
         // Datos Internos del Documento
         let songData = {
@@ -1845,14 +1994,15 @@
             sheetClearEntireCell();
         });
 
-        document.getElementById('saveTextEditBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            saveTextEdit();
-        });
-
-        document.getElementById('deleteSectionDirectBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            confirmDeleteSectionDirect();
+        document.getElementById('sheetInputText').addEventListener('input', (e) => {
+            if (!activeSelection) return;
+            const val = e.target.value;
+            if (activeSelection.type === 'title') {
+                songData.title = val;
+            } else if (activeSelection.type === 'lyrics') {
+                songData.sections[activeSelection.blockIdx].lyrics = val;
+            }
+            render();
         });
 
         // Header title and key events are bound dynamically in render()
@@ -1869,6 +2019,22 @@
 
         document.getElementById('transposeToggle').addEventListener('change', () => {
             updateKeySelectionUI();
+        });
+
+        // Registrar botones de tipo de sección en el editor
+        document.querySelectorAll('#sectionTypeSelector .type-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                activeSectionType = btn.getAttribute('data-type');
+                document.querySelectorAll('#sectionTypeSelector .type-btn').forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-type') === activeSectionType);
+                });
+                
+                if (activeSelection && activeSelection.type === 'lyrics') {
+                    songData.sections[activeSelection.blockIdx].type = activeSectionType;
+                    render();
+                }
+            });
         });
 
         // Registrar teclas del teclado táctil
@@ -1997,13 +2163,23 @@
                 sheetTitle.textContent = "Editar Título de la Canción";
                 sheetInputText.value = songData.title;
                 document.getElementById('deleteSectionDirectBtn').style.display = 'none';
+                
+                const titleCell = document.getElementById('headerTitleBox');
+                if (titleCell) scrollCellIntoView(titleCell);
             } else if (type === 'lyrics') {
                 sheetTitle.textContent = "Editar Letra / Tipo de Sección";
-                sheetInputText.value = songData.sections[blockIdx].lyrics;
-                const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
-                if (lyricsCell) lyricsCell.classList.add('selected');
+                sheetInputText.value = songData.sections[blockIdx].lyrics || '';
                 
-
+                activeSectionType = songData.sections[blockIdx].type || getSectionType(songData.sections[blockIdx]);
+                document.querySelectorAll('#sectionTypeSelector .type-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-type') === activeSectionType);
+                });
+                
+                const lyricsCell = document.querySelector(`.lyrics-${blockIdx}`);
+                if (lyricsCell) {
+                    lyricsCell.classList.add('selected');
+                    scrollCellIntoView(lyricsCell);
+                }
             }
 
             bottomSheet.classList.add('open');
@@ -2135,24 +2311,20 @@
             render();
         }
 
-        function saveTextEdit() {
-            if (!activeSelection) return;
-
-            const val = sheetInputText.value.trim();
-
-            if (activeSelection.type === 'title') {
-                songData.title = val || 'Sin Título';
-            } else if (activeSelection.type === 'lyrics') {
-                songData.sections[activeSelection.blockIdx].lyrics = val;
-            }
-
-            render();
-            closeSheet();
-        }
-
         // Cierre de Sheet
         function closeSheet() {
             bottomSheet.classList.remove('open');
+            
+            // Sanitizar valores finales al cerrar la edición
+            if (activeSelection) {
+                if (activeSelection.type === 'title') {
+                    songData.title = (songData.title || '').trim() || 'Sin Título';
+                } else if (activeSelection.type === 'lyrics') {
+                    songData.sections[activeSelection.blockIdx].lyrics = (songData.sections[activeSelection.blockIdx].lyrics || '').trim();
+                }
+                render();
+            }
+            
             deselectAll();
 
             const workspace = document.getElementById('workspace');
@@ -2165,6 +2337,21 @@
             activeSelection = null;
             document.querySelectorAll('.chord-cell.selected').forEach(c => c.classList.remove('selected'));
             document.querySelectorAll('.lyrics-cell.selected').forEach(c => c.classList.remove('selected'));
+        }
+
+        function getSectionType(sect) {
+            if (sect.type) return sect.type;
+            
+            // Fallback: auto-detectar por texto
+            const lower = (sect.lyrics || '').toLowerCase();
+            if (lower.includes('estrofa')) return 'estrofa';
+            if (lower.includes('coro')) return 'coro';
+            if (lower.includes('puente')) return 'puente';
+            if (lower.includes('pre-coro') || lower.includes('precoro')) return 'pre-coro';
+            if (lower.includes('intro')) return 'intro';
+            if (lower.includes('outro')) return 'outro';
+            if (lower.includes('solo')) return 'solo';
+            return 'general';
         }
 
         // --- ALGORITMO PARSER Y SERIALIZADOR DE CELDAS INTERACTIVOS ---
@@ -2333,15 +2520,17 @@
                 cell.style.color = 'var(--accent-celeste)';
                 cell.style.boxShadow = 'inset 0 0 15px rgba(96, 165, 250, 0.3)';
             }
-
+            
             const span = document.createElement('span');
-            span.textContent = val || 'VACÍO';
+            span.style.fontFamily = "'Consolas', 'Cascadia Code', monospace";
             
             if (val === 'VACÍO' || !val) {
+                span.textContent = '';
                 span.style.color = document.body.classList.contains('theme-light') ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)';
                 span.style.fontSize = '12px';
                 span.style.fontWeight = 'normal';
             } else {
+                span.textContent = val;
                 span.style.fontWeight = '800';
                 span.style.fontSize = '21px';
             }
@@ -2377,16 +2566,16 @@
                 if (sheetCellStructure.hasComma) {
                     if (activeSubcell.startsWith('top')) {
                         sheetCellStructure.top.hasPipe = false;
-                        sheetCellStructure.top.center = sheetCellStructure.top.left || 'C';
+                        sheetCellStructure.top.center = sheetCellStructure.top.left || 'VACÍO';
                         activeSubcell = 'top.center';
                     } else {
                         sheetCellStructure.bottom.hasPipe = false;
-                        sheetCellStructure.bottom.center = sheetCellStructure.bottom.left || 'C';
+                        sheetCellStructure.bottom.center = sheetCellStructure.bottom.left || 'VACÍO';
                         activeSubcell = 'bottom.center';
                     }
                 } else {
                     sheetCellStructure.single.hasPipe = false;
-                    sheetCellStructure.single.center = sheetCellStructure.single.left || 'C';
+                    sheetCellStructure.single.center = sheetCellStructure.single.left || 'VACÍO';
                     activeSubcell = 'single.center';
                 }
             } else {
@@ -2394,18 +2583,18 @@
                 if (sheetCellStructure.hasComma) {
                     if (activeSubcell === 'top.center' || activeSubcell.startsWith('top')) {
                         sheetCellStructure.top.hasPipe = true;
-                        sheetCellStructure.top.left = sheetCellStructure.top.center || 'C';
+                        sheetCellStructure.top.left = sheetCellStructure.top.center || 'VACÍO';
                         sheetCellStructure.top.right = 'VACÍO';
                         activeSubcell = 'top.right';
                     } else if (activeSubcell === 'bottom.center' || activeSubcell.startsWith('bottom')) {
                         sheetCellStructure.bottom.hasPipe = true;
-                        sheetCellStructure.bottom.left = sheetCellStructure.bottom.center || 'C';
+                        sheetCellStructure.bottom.left = sheetCellStructure.bottom.center || 'VACÍO';
                         sheetCellStructure.bottom.right = 'VACÍO';
                         activeSubcell = 'bottom.right';
                     }
                 } else {
                     sheetCellStructure.single.hasPipe = true;
-                    sheetCellStructure.single.left = sheetCellStructure.single.center || 'C';
+                    sheetCellStructure.single.left = sheetCellStructure.single.center || 'VACÍO';
                     sheetCellStructure.single.right = 'VACÍO';
                     activeSubcell = 'single.right';
                 }
@@ -2429,7 +2618,7 @@
                     activeSubcell = 'single.left';
                 } else {
                     sheetCellStructure.single.hasPipe = false;
-                    sheetCellStructure.single.center = sheetCellStructure.top.center || 'C';
+                    sheetCellStructure.single.center = sheetCellStructure.top.center || 'VACÍO';
                     activeSubcell = 'single.center';
                 }
             } else {
@@ -2441,7 +2630,7 @@
                     sheetCellStructure.top.right = sheetCellStructure.single.right;
                 } else {
                     sheetCellStructure.top.hasPipe = false;
-                    sheetCellStructure.top.center = sheetCellStructure.single.center || 'C';
+                    sheetCellStructure.top.center = sheetCellStructure.single.center || 'VACÍO';
                 }
                 sheetCellStructure.bottom.hasPipe = false;
                 sheetCellStructure.bottom.center = 'VACÍO';
@@ -2800,7 +2989,8 @@
             const currentCols = songData.sections.length > 0 ? songData.sections[0].rows[0].length : 4;
             const newRow = Array(currentCols).fill('VACÍO');
             const newSect = {
-                lyrics: 'Nueva Sección\n(Escribe la letra aquí)',
+                type: 'general',
+                lyrics: '',
                 rows: [newRow]
             };
             
@@ -3040,18 +3230,18 @@
             songData.sections.forEach((sect, blockIdx) => {
                 if (sect.rows.length === 0) return;
                 
+                const secType = getSectionType(sect);
                 let sectionClass = 'sect-general';
-                const lowerType = sect.lyrics.toLowerCase();
-                if (lowerType.includes('estrofa')) sectionClass = 'sect-estrofa';
-                else if (lowerType.includes('coro')) sectionClass = 'sect-coro';
-                else if (lowerType.includes('puente')) sectionClass = 'sect-puente';
-                else if (lowerType.includes('pre-coro') || lowerType.includes('precoro')) sectionClass = 'sect-pre-coro';
-                else if (lowerType.includes('intro')) sectionClass = 'sect-intro';
-                else if (lowerType.includes('outro')) sectionClass = 'sect-outro';
-                else if (lowerType.includes('solo')) sectionClass = 'sect-solo';
+                if (secType === 'estrofa') sectionClass = 'sect-estrofa';
+                else if (secType === 'coro') sectionClass = 'sect-coro';
+                else if (secType === 'puente') sectionClass = 'sect-puente';
+                else if (secType === 'pre-coro') sectionClass = 'sect-pre-coro';
+                else if (secType === 'intro') sectionClass = 'sect-intro';
+                else if (secType === 'outro') sectionClass = 'sect-outro';
+                else if (secType === 'solo') sectionClass = 'sect-solo';
 
-                // Color de fondo cíclico por sección (6 colores)
-                const sectionBgClass = `sect-bg-${blockIdx % 6}`;
+                // Usar fondo específico del tipo de sección
+                const sectionBgClass = `sect-bg-${secType}`;
 
                 const rowSpan = sect.rows.length;
 
@@ -3067,8 +3257,38 @@
 
                     // 2. LETRA (con rowspan y modo de reordenación por Long-Press)
                     if (rowIdx === 0) {
-                        const lyricsDisplay = sect.lyrics.trim() ? sect.lyrics : 'Escribe la letra aquí...';
-                        const isEmptyClass = !sect.lyrics.trim() ? 'empty' : '';
+                        const typeNames = {
+                            'estrofa': 'Estrofa',
+                            'coro': 'Coro',
+                            'pre-coro': 'Pre-Coro',
+                            'puente': 'Puente',
+                            'intro': 'Intro',
+                            'outro': 'Outro',
+                            'solo': 'Solo',
+                            'general': ''
+                        };
+                        
+                        let lyricsDisplay = sect.lyrics.trim();
+                        let cellContentHtml = '';
+                        
+                        if (secType !== 'general') {
+                            if (!lyricsDisplay) {
+                                // Mostrar la etiqueta en grande y centrada
+                                cellContentHtml = `<div class="lyrics-badge large" data-type="${secType}">${typeNames[secType]}</div>`;
+                            } else {
+                                // Mostrar la etiqueta arriba y la letra abajo con separación
+                                cellContentHtml = `
+                                    <div class="lyrics-badge-header" data-type="${secType}">${typeNames[secType]}</div>
+                                    <div class="lyrics-text">${lyricsDisplay}</div>
+                                `;
+                            }
+                        } else {
+                            if (lyricsDisplay) {
+                                cellContentHtml = `<div class="lyrics-text">${lyricsDisplay}</div>`;
+                            } else {
+                                cellContentHtml = ''; // Celda completamente en blanco
+                            }
+                        }
                         
                         if (reorderingBlockIdx === blockIdx) {
                             html += `
@@ -3089,8 +3309,11 @@
                                 </td>
                             `;
                         } else {
+                            const isEmptyClass = !lyricsDisplay && secType === 'general' ? 'empty' : '';
                             html += `<td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx}" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
-                                        <div class="lyrics-inner ${isEmptyClass}">${lyricsDisplay}</div>
+                                        <div class="lyrics-inner ${isEmptyClass}">
+                                            ${cellContentHtml}
+                                        </div>
                                      </td>`;
                         }
                     }
@@ -3113,8 +3336,11 @@
                             const renderHorizontal = (text) => {
                                 if (text.includes('│')) {
                                     const parts = text.split('│');
-                                    const leftText = parts[0].trim();
-                                    const rightText = parts[1] ? parts[1].trim() : '';
+                                    let leftText = parts[0].trim();
+                                    let rightText = parts[1] ? parts[1].trim() : '';
+
+                                    if (leftText === 'VACÍO') leftText = '';
+                                    if (rightText === 'VACÍO') rightText = '';
 
                                     return `
                                         <div class="split-horizontal-box">
@@ -3123,7 +3349,8 @@
                                         </div>
                                     `;
                                 } else {
-                                    return `<div class="chord-inner">${text}</div>`;
+                                    const displayVal = text === 'VACÍO' ? '' : text;
+                                    return `<div class="chord-inner">${displayVal}</div>`;
                                 }
                             };
 
