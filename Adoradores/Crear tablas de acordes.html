@@ -120,7 +120,7 @@
         /* Rejilla de selección del tipo de sección */
         .section-type-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 6px;
             margin-bottom: 12px;
             width: 100%;
@@ -129,13 +129,14 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 8px;
-            font-size: 0.8rem;
+            padding: 6px;
+            font-size: 0.76rem;
             font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
+            opacity: 0.6;
         }
         .theme-light .type-btn {
             background: #ffffff;
@@ -146,38 +147,79 @@
             transform: scale(0.95);
         }
         
-        /* Botones del Selector de Tipo de Sección con colores predefinidos (Modo Oscuro) */
-        .type-btn[data-type="estrofa"] { border-color: rgba(16, 185, 129, 0.35); color: #34d399; }
-        .type-btn[data-type="coro"] { border-color: rgba(96, 165, 250, 0.35); color: #93c5fd; }
-        .type-btn[data-type="pre-coro"] { border-color: rgba(249, 115, 22, 0.35); color: #fb923c; }
-        .type-btn[data-type="puente"] { border-color: rgba(217, 70, 239, 0.35); color: #f472b6; }
-        .type-btn[data-type="intro"],
-        .type-btn[data-type="outro"],
-        .type-btn[data-type="solo"] { border-color: rgba(59, 130, 246, 0.35); color: #60a5fa; }
-        .type-btn[data-type="general"] { border-color: rgba(156, 163, 175, 0.35); color: #9ca3af; }
-
         .type-btn.active {
-            color: #000000 !important;
+            opacity: 1 !important;
+            background-color: var(--color-general-border) !important;
+            color: #ffffff !important;
             border-color: transparent !important;
         }
-        .type-btn.active[data-type="estrofa"] { background-color: var(--color-estrofa-border) !important; }
-        .type-btn.active[data-type="coro"] { background-color: var(--color-coro-border) !important; }
-        .type-btn.active[data-type="pre-coro"] { background-color: var(--color-precoro-border) !important; }
-        .type-btn.active[data-type="puente"] { background-color: var(--color-puente-border) !important; }
-        .type-btn.active[data-type="intro"],
-        .type-btn.active[data-type="outro"],
-        .type-btn.active[data-type="solo"] { background-color: var(--color-intro-border) !important; }
-        .type-btn.active[data-type="general"] { background-color: var(--text-color) !important; color: var(--bg-app) !important; }
+        .theme-light .type-btn.active {
+            background-color: var(--color-general-border) !important;
+            color: #ffffff !important;
+        }
 
-        /* Colores botones inactivos Modo Claro */
-        .theme-light .type-btn[data-type="estrofa"] { border-color: rgba(4, 120, 87, 0.35); color: #047857; }
-        .theme-light .type-btn[data-type="coro"] { border-color: rgba(29, 78, 216, 0.35); color: #1d4ed8; }
-        .theme-light .type-btn[data-type="pre-coro"] { border-color: rgba(194, 65, 12, 0.35); color: #c2410c; }
-        .theme-light .type-btn[data-type="puente"] { border-color: rgba(162, 28, 175, 0.35); color: #a21caf; }
-        .theme-light .type-btn[data-type="intro"],
-        .theme-light .type-btn[data-type="outro"],
-        .theme-light .type-btn[data-type="solo"] { border-color: rgba(29, 78, 216, 0.35); color: #1d4ed8; }
-        .theme-light .type-btn[data-type="general"] { border-color: rgba(71, 85, 105, 0.35); color: #475569; }
+        /* Estilo del botón alternador de división de canción */
+        .separator-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-light .separator-toggle-btn {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+            color: #475569;
+        }
+        .separator-toggle-btn:active {
+            transform: scale(0.95);
+        }
+        .separator-toggle-btn.active {
+            background-color: var(--accent-celeste) !important;
+            border-color: transparent !important;
+            color: #000000 !important;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+        }
+        .theme-light .separator-toggle-btn.active {
+            color: #ffffff !important;
+        }
+
+        /* Estilos de la fila divisoria de canción */
+        .song-title-row {
+            background: transparent !important;
+        }
+        .song-title-td {
+            border: none !important;
+            background: transparent !important;
+            padding: 24px 0 10px 0 !important;
+        }
+        .song-title-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-weight: 850;
+            color: var(--accent-celeste);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 8px;
+        }
+        .theme-light .song-title-inner {
+            background: #e2e8f0;
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #1d4ed8;
+        }
 
         /* Estilos de las etiquetas de sección (badges) */
         .lyrics-badge.large {
@@ -249,6 +291,59 @@
             color: inherit;
             font-weight: inherit;
             text-align: center;
+        }
+
+        /* Celda de título de sección / canción */
+        .section-title-cell {
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background-color: #000000;
+            padding: 0;
+            vertical-align: middle;
+            color: var(--text-color);
+        }
+        .theme-light .section-title-cell {
+            background-color: #ffffff;
+        }
+        .section-title-cell:hover {
+            filter: brightness(1.2);
+        }
+        .section-title-cell.sect-estrofa { border-color: var(--color-estrofa-border); color: var(--color-estrofa-border); }
+        .section-title-cell.sect-coro { border-color: var(--color-coro-border); color: var(--color-coro-border); }
+        .section-title-cell.sect-pre-coro { border-color: var(--color-precoro-border); color: var(--color-precoro-border); }
+        .section-title-cell.sect-puente { border-color: var(--color-puente-border); color: var(--color-puente-border); }
+        .section-title-cell.sect-intro { border-color: var(--color-intro-border); color: var(--color-intro-border); }
+        .section-title-cell.sect-outro { border-color: var(--color-intro-border); color: var(--color-intro-border); }
+        .section-title-cell.sect-solo { border-color: var(--color-intro-border); color: var(--color-intro-border); }
+        
+        .section-title-inner-text {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 850;
+            color: inherit; /* Inherits the custom color theme */
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 12px 16px;
+        }
+
+        /* Estilos del selector de color de sección */
+        .color-dot-btn {
+            border: 2px solid transparent !important;
+            outline: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .color-dot-btn:active {
+            transform: scale(0.9) !important;
+        }
+        .color-dot-btn.active {
+            border-color: var(--text-color) !important;
+            transform: scale(1.25) !important;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+        .theme-light .color-dot-btn.active {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
@@ -351,7 +446,7 @@
         }
 
         .workspace.has-sheet-open {
-            padding-bottom: 420px !important;
+            padding-bottom: 65vh !important;
         }
 
         .chart-wrapper {
@@ -369,17 +464,18 @@
         /* Cabecera como fila de tabla (alineada con columnas de contenido) */
         .header-title-td {
             height: 56px;
-            background-color: var(--c-header) !important;
+            background-color: var(--c-header);
             padding: 0 20px !important;
             cursor: pointer;
             transition: background 0.2s;
             vertical-align: middle;
+            color: var(--text-color);
         }
         .header-title-td:hover {
             background: rgba(255,255,255,0.02) !important;
         }
         .theme-light .header-title-td {
-            background-color: #f3f4f6 !important;
+            background-color: #f3f4f6;
         }
         .theme-light .header-title-td:hover {
             background: rgba(0,0,0,0.02) !important;
@@ -387,7 +483,7 @@
         .header-title {
             font-size: 18px;
             font-weight: 850;
-            color: var(--text-color);
+            color: inherit;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -546,6 +642,15 @@
 
         .theme-light .chord-inner {
             text-shadow: none;
+        }
+
+        .empty-chord-plus {
+            color: rgba(255, 255, 255, 0.15) !important;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .theme-light .empty-chord-plus {
+            color: rgba(0, 0, 0, 0.12) !important;
         }
 
         /* Colores de acordes según la sección */
@@ -772,8 +877,8 @@
             transition: all 0.2s;
         }
         .theme-light .col-delete-cell {
-            background-color: rgba(190, 18, 60, 0.01) !important;
-            border-color: rgba(190, 18, 60, 0.25) !important;
+            background-color: rgba(225, 29, 72, 0.05) !important;
+            border-color: rgba(225, 29, 72, 0.35) !important;
         }
         .col-delete-cell:hover {
             background-color: rgba(244, 63, 94, 0.08) !important;
@@ -795,7 +900,7 @@
             transition: color 0.2s;
         }
         .theme-light .col-delete-inner {
-            color: rgba(190, 18, 60, 0.7);
+            color: rgba(225, 29, 72, 0.85);
         }
         .col-delete-cell:hover .col-delete-inner {
             color: var(--accent-carmesi); 
@@ -813,8 +918,8 @@
             vertical-align: middle;
         }
         .theme-light .row-delete-cell {
-            background-color: rgba(190, 18, 60, 0.01) !important;
-            border-color: rgba(190, 18, 60, 0.25) !important;
+            background-color: rgba(225, 29, 72, 0.05) !important;
+            border-color: rgba(225, 29, 72, 0.35) !important;
         }
         .row-delete-cell:hover {
             background-color: rgba(244, 63, 94, 0.08) !important;
@@ -836,7 +941,7 @@
             transition: color 0.2s;
         }
         .theme-light .row-delete-inner {
-            color: rgba(190, 18, 60, 0.7);
+            color: rgba(225, 29, 72, 0.85);
         }
         .row-delete-cell:hover .row-delete-inner {
             color: var(--accent-carmesi); 
@@ -989,7 +1094,7 @@
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
-            padding: 16px;
+            padding: 10px 14px 12px 14px;
         }
 
         .bottom-sheet.open {
@@ -1041,7 +1146,7 @@
         /* Visor de Celda Interactiva en BottomSheet (Grilla CSS Directa) */
         .active-cell-preview {
             width: 100%;
-            height: 140px; 
+            height: 70px; 
             background: rgba(0,0,0,0.3);
             border: 1px dashed var(--accent-celeste);
             border-radius: 6px;
@@ -1064,12 +1169,12 @@
 
         /* Títulos de sección internos planos */
         .sheet-section-title {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 750;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             text-align: center;
         }
         .theme-light .sheet-section-title {
@@ -1080,17 +1185,17 @@
         .keyboard-sections-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
             width: 100%;
         }
 
         .kb-section {
             border-radius: 12px;
-            padding: 8px 10px;
+            padding: 6px 8px;
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
         .section-label {
@@ -1103,11 +1208,32 @@
 
         .kb-actions {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
             border: none;
             padding: 0;
             background: transparent;
+            margin-bottom: 4px;
+        }
+        .kb-actions .grid-btn {
+            min-height: 34px !important;
+            height: 34px !important;
+            padding: 2px !important;
+            grid-column: span 1 !important;
+        }
+        .kb-actions .action-nav {
+            background: rgba(99, 102, 241, 0.08) !important;
+            border-color: rgba(99, 102, 241, 0.35) !important;
+            color: #818cf8 !important;
+            font-size: 1.1rem !important;
+        }
+        .theme-light .kb-actions .action-nav {
+            background: rgba(79, 70, 229, 0.05) !important;
+            border-color: rgba(79, 70, 229, 0.25) !important;
+            color: #4f46e5 !important;
+        }
+        .kb-actions .action-nav:active {
+            transform: scale(0.95);
         }
 
         .kb-mid-row {
@@ -1117,7 +1243,6 @@
         }
 
         .kb-notes {
-            flex: 1.15;
             background: rgba(52, 211, 153, 0.02);
             border-color: rgba(52, 211, 153, 0.12);
         }
@@ -1127,8 +1252,8 @@
 
         .notes-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
         }
 
         .kb-modifiers {
@@ -1142,8 +1267,8 @@
 
         .modifiers-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px 6px;
         }
 
         .kb-special-symbols {
@@ -1157,7 +1282,7 @@
         .symbols-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
+            gap: 4px;
         }
 
         /* Botón Base del Teclado */
@@ -1166,11 +1291,11 @@
             border: 1px solid var(--border-color);
             color: var(--text-color);
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
             user-select: none;
-            min-height: 44px;
+            min-height: 34px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1317,8 +1442,15 @@
         /* Contenido del Panel - Edición de Texto (Letra/Título) */
         .sheet-body-text {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            flex-direction: row;
+            gap: 16px;
+            width: 100%;
+        }
+        @media (max-width: 480px) {
+            .sheet-body-text {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
         
         .sheet-body-text .k-btn.action-done {
@@ -1355,14 +1487,15 @@
 
         .sheet-textarea {
             width: 100%;
-            min-height: 110px;
+            min-height: 68px;
+            height: 68px;
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 10px;
+            padding: 10px 12px;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.95rem;
             resize: none;
             line-height: 1.4;
         }
@@ -1473,11 +1606,77 @@
             color: #111827;
         }
 
+        /* Paleta de Variables Cromáticas */
+        .key-color-C  { --key-color: #ef4444; }
+        .key-color-Cs { --key-color: #f97316; }
+        .key-color-D  { --key-color: #f59e0b; }
+        .key-color-Eb { --key-color: #eab308; }
+        .key-color-E  { --key-color: #10b981; }
+        .key-color-F  { --key-color: #06b6d4; }
+        .key-color-Fs { --key-color: #3b82f6; }
+        .key-color-G  { --key-color: #6366f1; }
+        .key-color-Ab { --key-color: #8b5cf6; }
+        .key-color-A  { --key-color: #d946ef; }
+        .key-color-Bb { --key-color: #f43f5e; }
+        .key-color-B  { --key-color: #ec4899; }
+
+        /* Colores individuales de Tonalidades en Inactivo (Bordes sutiles) */
+        .key-select-btn.key-color-C  { border-color: rgba(239, 68, 68, 0.4) !important; color: #ef4444 !important; }
+        .key-select-btn.key-color-Cs { border-color: rgba(249, 115, 22, 0.4) !important; color: #f97316 !important; }
+        .key-select-btn.key-color-D  { border-color: rgba(245, 158, 11, 0.4) !important; color: #f59e0b !important; }
+        .key-select-btn.key-color-Eb { border-color: rgba(234, 179, 8, 0.4) !important; color: #eab308 !important; }
+        .key-select-btn.key-color-E  { border-color: rgba(16, 185, 129, 0.4) !important; color: #10b981 !important; }
+        .key-select-btn.key-color-F  { border-color: rgba(6, 182, 212, 0.4) !important; color: #06b6d4 !important; }
+        .key-select-btn.key-color-Fs { border-color: rgba(59, 130, 246, 0.4) !important; color: #3b82f6 !important; }
+        .key-select-btn.key-color-G  { border-color: rgba(99, 102, 241, 0.4) !important; color: #6366f1 !important; }
+        .key-select-btn.key-color-Ab { border-color: rgba(139, 92, 246, 0.4) !important; color: #8b5cf6 !important; }
+        .key-select-btn.key-color-A  { border-color: rgba(217, 70, 239, 0.4) !important; color: #d946ef !important; }
+        .key-select-btn.key-color-Bb { border-color: rgba(244, 63, 94, 0.4) !important; color: #f43f5e !important; }
+        .key-select-btn.key-color-B  { border-color: rgba(236, 72, 153, 0.4) !important; color: #ec4899 !important; }
+
+        .theme-light .key-select-btn.key-color-C  { border-color: rgba(239, 68, 68, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-Cs { border-color: rgba(249, 115, 22, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-D  { border-color: rgba(245, 158, 11, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-Eb { border-color: rgba(234, 179, 8, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-E  { border-color: rgba(16, 185, 129, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-F  { border-color: rgba(6, 182, 212, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-Fs { border-color: rgba(59, 130, 246, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-G  { border-color: rgba(99, 102, 241, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-Ab { border-color: rgba(139, 92, 246, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-A  { border-color: rgba(217, 70, 239, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-Bb { border-color: rgba(244, 63, 94, 0.3) !important; }
+        .theme-light .key-select-btn.key-color-B  { border-color: rgba(236, 72, 153, 0.3) !important; }
+
+        /* Botón Activo: Brillo de color */
         .key-select-btn.active {
-            background: var(--accent-celeste);
-            color: #000000;
-            border-color: transparent;
-            box-shadow: none;
+            color: #ffffff !important;
+            background-color: var(--key-color) !important;
+            border-color: transparent !important;
+            box-shadow: 0 0 14px var(--key-color) !important;
+            transform: scale(1.04);
+            z-index: 2;
+        }
+
+        /* Celda de Tono en el Cuadro Principal (Active styling) */
+        .header-key-td {
+            transition: all 0.3s ease;
+        }
+        .header-key-td.key-color-C  { border: 1px solid #ef4444 !important; color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.08) !important; }
+        .header-key-td.key-color-Cs { border: 1px solid #f97316 !important; color: #f97316 !important; background-color: rgba(249, 115, 22, 0.08) !important; }
+        .header-key-td.key-color-D  { border: 1px solid #f59e0b !important; color: #f59e0b !important; background-color: rgba(245, 158, 11, 0.08) !important; }
+        .header-key-td.key-color-Eb { border: 1px solid #eab308 !important; color: #eab308 !important; background-color: rgba(234, 179, 8, 0.08) !important; }
+        .header-key-td.key-color-E  { border: 1px solid #10b981 !important; color: #10b981 !important; background-color: rgba(16, 185, 129, 0.08) !important; }
+        .header-key-td.key-color-F  { border: 1px solid #06b6d4 !important; color: #06b6d4 !important; background-color: rgba(6, 182, 212, 0.08) !important; }
+        .header-key-td.key-color-Fs { border: 1px solid #3b82f6 !important; color: #3b82f6 !important; background-color: rgba(59, 130, 246, 0.08) !important; }
+        .header-key-td.key-color-G  { border: 1px solid #6366f1 !important; color: #6366f1 !important; background-color: rgba(99, 102, 241, 0.08) !important; }
+        .header-key-td.key-color-Ab { border: 1px solid #8b5cf6 !important; color: #8b5cf6 !important; background-color: rgba(139, 92, 246, 0.08) !important; }
+        .header-key-td.key-color-A  { border: 1px solid #d946ef !important; color: #d946ef !important; background-color: rgba(217, 70, 239, 0.08) !important; }
+        .header-key-td.key-color-Bb { border: 1px solid #f43f5e !important; color: #f43f5e !important; background-color: rgba(244, 63, 94, 0.08) !important; }
+        .header-key-td.key-color-B  { border: 1px solid #ec4899 !important; color: #ec4899 !important; background-color: rgba(236, 72, 153, 0.08) !important; }
+
+        .header-key-td .key-text {
+            color: inherit !important;
+            font-weight: 850;
         }
 
         .key-type-toggle {
@@ -1641,12 +1840,12 @@
                 height: 60px !important;
             }
             .bottom-sheet {
-                padding: 10px 12px 14px 12px !important;
+                padding: 8px 12px 10px 12px !important;
                 border-top-left-radius: 16px !important;
                 border-top-right-radius: 16px !important;
             }
             .sheet-header {
-                margin-bottom: 8px !important;
+                margin-bottom: 6px !important;
                 padding-bottom: 4px !important;
             }
             .keyboard-sections-container .grid-btn {
@@ -1662,7 +1861,7 @@
                 margin-bottom: 0px !important;
             }
             .workspace.has-sheet-open {
-                padding-bottom: 340px !important;
+                padding-bottom: 60vh !important;
             }
             .keyboard-row {
                 gap: 4px !important;
@@ -1746,6 +1945,12 @@
             <div class="keyboard-sections-container">
                 <!-- Fila 1: Control (Acciones) -->
                 <div class="kb-actions">
+                    <button class="grid-btn action-nav" id="btnPrevCell" title="Celda Anterior">
+                        <span>←</span>
+                    </button>
+                    <button class="grid-btn action-nav" id="btnNextCell" title="Celda Siguiente">
+                        <span>→</span>
+                    </button>
                     <button class="grid-btn action-split-h" id="btnTimeAction" title="Dividir / Unir Tiempo">
                         <span class="ctrl-icon" id="iconTime"></span>
                     </button>
@@ -1762,33 +1967,36 @@
                     </button>
                 </div>
 
-                <!-- Fila Media: Notas y Alteraciones lado a lado -->
-                <div class="kb-mid-row">
-                    <!-- Notas (A, B, C, D, E, F, G) en 3 columnas -->
-                    <div class="kb-section kb-notes">
-                        <div class="section-label">Notas</div>
-                        <div class="notes-grid">
-                            <button class="grid-btn fundamental" data-key="A">A</button>
-                            <button class="grid-btn fundamental" data-key="B">B</button>
-                            <button class="grid-btn fundamental" data-key="C">C</button>
-                            <button class="grid-btn fundamental" data-key="D">D</button>
-                            <button class="grid-btn fundamental" data-key="E">E</button>
-                            <button class="grid-btn fundamental" data-key="F">F</button>
-                            <button class="grid-btn fundamental" data-key="G" style="grid-column: span 3;">G</button>
-                        </div>
+                <!-- Notas (A–G) en una sola fila horizontal -->
+                <div class="kb-section kb-notes">
+                    <div class="section-label">Notas</div>
+                    <div class="notes-grid">
+                        <button class="grid-btn fundamental" data-key="A">A</button>
+                        <button class="grid-btn fundamental" data-key="B">B</button>
+                        <button class="grid-btn fundamental" data-key="C">C</button>
+                        <button class="grid-btn fundamental" data-key="D">D</button>
+                        <button class="grid-btn fundamental" data-key="E">E</button>
+                        <button class="grid-btn fundamental" data-key="F">F</button>
+                        <button class="grid-btn fundamental" data-key="G">G</button>
                     </div>
+                </div>
 
-                    <!-- Alteraciones en 2 columnas -->
-                    <div class="kb-section kb-modifiers">
-                        <div class="section-label">Alteraciones</div>
-                        <div class="modifiers-grid">
-                            <button class="grid-btn modifier" data-key="m">m</button>
-                            <button class="grid-btn modifier" data-key="#">#</button>
-                            <button class="grid-btn modifier" data-key="b">b</button>
-                            <button class="grid-btn modifier" data-key="7">7</button>
-                            <button class="grid-btn modifier" data-key="sus4">sus4</button>
-                            <button class="grid-btn modifier" data-key="add9">add9</button>
-                        </div>
+                <!-- Alteraciones a ancho completo en 4 columnas -->
+                <div class="kb-section kb-modifiers">
+                    <div class="section-label">Alteraciones</div>
+                    <div class="modifiers-grid">
+                        <button class="grid-btn modifier" data-key="m">m</button>
+                        <button class="grid-btn modifier" data-key="#">#</button>
+                        <button class="grid-btn modifier" data-key="b">b</button>
+                        <button class="grid-btn modifier" data-key="7">7</button>
+                        <button class="grid-btn modifier" data-key="sus2">sus2</button>
+                        <button class="grid-btn modifier" data-key="sus4">sus4</button>
+                        <button class="grid-btn modifier" data-key="dim">dim</button>
+                        <button class="grid-btn modifier" data-key="aug">aug</button>
+                        <button class="grid-btn modifier" data-key="maj7">maj7</button>
+                        <button class="grid-btn modifier" data-key="add9">add9</button>
+                        <button class="grid-btn modifier" data-key="9">9</button>
+                        <button class="grid-btn modifier" data-key="6">6</button>
                     </div>
                 </div>
 
@@ -1807,21 +2015,50 @@
         </div>
 
         <!-- 2. TEXTOS Y LETRAS: Entrada de Texto Ampliada -->
-        <div class="sheet-body-text" id="sheetBodyText" style="display: none;">
-            <div class="sheet-section-title">Tipo de Sección</div>
-            <div class="section-type-grid" id="sectionTypeSelector">
-                <button class="type-btn" data-type="estrofa">Estrofa</button>
-                <button class="type-btn" data-type="coro">Coro</button>
-                <button class="type-btn" data-type="pre-coro">Pre-Coro</button>
-                <button class="type-btn" data-type="puente">Puente</button>
-                <button class="type-btn" data-type="intro">Intro</button>
-                <button class="type-btn" data-type="outro">Outro</button>
-                <button class="type-btn" data-type="solo">Solo</button>
-                <button class="type-btn" data-type="general">Ninguno</button>
+        <div class="sheet-body-text" id="sheetBodyText" style="display: none; flex-direction: row; gap: 16px; width: 100%;">
+            <!-- Columna Izquierda: Etiquetas y Colores -->
+            <div id="textColLeft" style="flex: 1.2; display: flex; flex-direction: column; gap: 8px;">
+                <div class="sheet-section-title" style="text-align: left; margin-bottom: 2px;">Etiqueta</div>
+                <div class="section-type-grid" id="sectionTypeSelector" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 100%;">
+                    <button class="type-btn" data-type="estrofa">Estrofa</button>
+                    <button class="type-btn" data-type="coro">Coro</button>
+                    <button class="type-btn" data-type="pre-coro">Pre-Coro</button>
+                    <button class="type-btn" data-type="puente">Puente</button>
+                    <button class="type-btn" data-type="intro">Intro</button>
+                    <button class="type-btn" data-type="outro">Outro</button>
+                    <button class="type-btn" data-type="solo">Solo</button>
+                    <button class="type-btn" data-type="titulo">Título</button>
+                    <button class="type-btn" data-type="general">Ninguno</button>
+                </div>
+                
+                <div class="sheet-section-title" style="text-align: left; margin-top: 4px; margin-bottom: 2px;">Color</div>
+                <div class="section-color-row" id="sectionColorSelector" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 100%;">
+                    <button class="color-dot-btn" data-color="estrofa" title="Verde" style="width: 20px; height: 20px; border-radius: 50%; background-color: #10b981; cursor: pointer;"></button>
+                    <button class="color-dot-btn" data-color="coro" title="Celeste" style="width: 20px; height: 20px; border-radius: 50%; background-color: #06b6d4; cursor: pointer;"></button>
+                    <button class="color-dot-btn" data-color="pre-coro" title="Amarillo" style="width: 20px; height: 20px; border-radius: 50%; background-color: #eab308; cursor: pointer;"></button>
+                    <button class="color-dot-btn" data-color="puente" title="Fucsia" style="width: 20px; height: 20px; border-radius: 50%; background-color: #d946ef; cursor: pointer;"></button>
+                    <button class="color-dot-btn" data-color="intro" title="Rosa/Rojo" style="width: 20px; height: 20px; border-radius: 50%; background-color: #f43f5e; cursor: pointer;"></button>
+                    <button class="color-dot-btn" data-color="general" title="Gris" style="width: 20px; height: 20px; border-radius: 50%; background-color: #6b7280; cursor: pointer;"></button>
+                </div>
             </div>
 
-            <div class="sheet-section-title">Editar Letra</div>
-            <textarea class="sheet-textarea" id="sheetInputText" placeholder="Escribe aquí..."></textarea>
+            <!-- Columna Derecha: Letra y Separación -->
+            <div id="textColRight" style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                <div class="sheet-section-title" id="lyricsInputTitle" style="text-align: left; margin-bottom: 2px;">Editar Letra</div>
+                <textarea class="sheet-textarea" id="sheetInputText" placeholder="Escribe aquí..." style="flex: 1; min-height: 60px; height: 60px;"></textarea>
+                
+                <div class="song-group-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 32px;">
+                    <span style="font-size: 0.72rem; font-weight: 750; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Separación</span>
+                    <button class="separator-toggle-btn" id="separationToggleBtn" title="Separación superior" style="width: 32px; height: 32px; border-radius: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="9" x2="19" y2="9"></line>
+                            <line x1="5" y1="15" x2="19" y2="15"></line>
+                            <path d="M12 3v6"></path>
+                            <path d="M12 15v6"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- 3. TONALIDAD: Selector de Tono Táctil (Sin Teclado) -->
@@ -1844,18 +2081,18 @@
             </div>
             <!-- Rejilla de Notas -->
             <div class="key-grid">
-                <button class="key-select-btn" data-note="C">C</button>
-                <button class="key-select-btn" data-note="C#">C#</button>
-                <button class="key-select-btn" data-note="D">D</button>
-                <button class="key-select-btn" data-note="Eb">Eb</button>
-                <button class="key-select-btn" data-note="E">E</button>
-                <button class="key-select-btn" data-note="F">F</button>
-                <button class="key-select-btn" data-note="F#">F#</button>
-                <button class="key-select-btn" data-note="G">G</button>
-                <button class="key-select-btn" data-note="Ab">Ab</button>
-                <button class="key-select-btn" data-note="A">A</button>
-                <button class="key-select-btn" data-note="Bb">Bb</button>
-                <button class="key-select-btn" data-note="B">B</button>
+                <button class="key-select-btn key-color-C" data-note="C">C</button>
+                <button class="key-select-btn key-color-Cs" data-note="C#">C#</button>
+                <button class="key-select-btn key-color-D" data-note="D">D</button>
+                <button class="key-select-btn key-color-Eb" data-note="Eb">Eb</button>
+                <button class="key-select-btn key-color-E" data-note="E">E</button>
+                <button class="key-select-btn key-color-F" data-note="F">F</button>
+                <button class="key-select-btn key-color-Fs" data-note="F#">F#</button>
+                <button class="key-select-btn key-color-G" data-note="G">G</button>
+                <button class="key-select-btn key-color-Ab" data-note="Ab">Ab</button>
+                <button class="key-select-btn key-color-A" data-note="A">A</button>
+                <button class="key-select-btn key-color-Bb" data-note="Bb">Bb</button>
+                <button class="key-select-btn key-color-B" data-note="B">B</button>
             </div>
         </div>
 
@@ -1979,6 +2216,16 @@
             closeSheet();
         });
 
+        document.getElementById('btnPrevCell').addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateChords('prev');
+        });
+
+        document.getElementById('btnNextCell').addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateChords('next');
+        });
+
         document.getElementById('btnTimeAction').addEventListener('click', (e) => {
             e.stopPropagation();
             handleTimeAction();
@@ -2003,6 +2250,50 @@
                 songData.sections[activeSelection.blockIdx].lyrics = val;
             }
             render();
+        });
+
+        document.getElementById('separationToggleBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!activeSelection || activeSelection.type !== 'lyrics') return;
+            
+            const btn = e.currentTarget;
+            const blockIdx = activeSelection.blockIdx;
+            
+            const isCurrentlyActive = btn.classList.contains('active');
+            if (isCurrentlyActive) {
+                btn.classList.remove('active');
+                delete songData.sections[blockIdx].hasSeparation;
+            } else {
+                btn.classList.add('active');
+                songData.sections[blockIdx].hasSeparation = true;
+            }
+            render();
+        });
+
+        // Registrar clicks en los botones circulares de color
+        document.querySelectorAll('#sectionColorSelector .color-dot-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!activeSelection) return;
+                
+                const selectedColor = btn.getAttribute('data-color');
+                
+                if (activeSelection.type === 'title') {
+                    songData.color = selectedColor;
+                } else if (activeSelection.type === 'lyrics') {
+                    const blockIdx = activeSelection.blockIdx;
+                    songData.sections[blockIdx].color = selectedColor;
+                } else {
+                    return; // No aplica para otros tipos
+                }
+                
+                // Actualizar clases activas en los botones de color
+                document.querySelectorAll('#sectionColorSelector .color-dot-btn').forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-color') === selectedColor);
+                });
+                
+                render();
+            });
         });
 
         // Header title and key events are bound dynamically in render()
@@ -2032,6 +2323,20 @@
                 
                 if (activeSelection && activeSelection.type === 'lyrics') {
                     songData.sections[activeSelection.blockIdx].type = activeSectionType;
+                    
+                    // Modificar dinámicamente placeholders y títulos
+                    const isTitulo = (activeSectionType === 'titulo');
+                    sheetTitle.textContent = isTitulo ? "Editar Título de la Canción" : "Editar Letra / Tipo de Sección";
+                    const inputTitle = document.getElementById('lyricsInputTitle');
+                    if (inputTitle) inputTitle.textContent = isTitulo ? "Título de Canción" : "Editar Letra";
+                    sheetInputText.placeholder = isTitulo ? "Escribe el título de la canción aquí..." : "Escribe aquí...";
+                    
+                    // Actualizar dots de color al cambiar el tipo (por si no hay color personalizado)
+                    const activeColor = songData.sections[activeSelection.blockIdx].color || activeSectionType || 'general';
+                    document.querySelectorAll('#sectionColorSelector .color-dot-btn').forEach(b => {
+                        b.classList.toggle('active', b.getAttribute('data-color') === activeColor);
+                    });
+                    
                     render();
                 }
             });
@@ -2086,6 +2391,30 @@
 
         // --- SISTEMA DE SELECCIÓN Y APERTURA DE BOTTOM SHEET ---
 
+        function navigateChords(direction) {
+            if (!activeSelection || activeSelection.type !== 'chord') return;
+            const cells = Array.from(document.querySelectorAll('.chord-cell'));
+            const activeEl = document.querySelector(`.cell-${activeSelection.blockIdx}-${activeSelection.rowIdx}-${activeSelection.colIdx}`);
+            if (!activeEl) return;
+            
+            const idx = cells.indexOf(activeEl);
+            let targetEl = null;
+            
+            if (direction === 'prev' && idx > 0) {
+                targetEl = cells[idx - 1];
+            } else if (direction === 'next' && idx < cells.length - 1) {
+                targetEl = cells[idx + 1];
+            }
+            
+            if (targetEl) {
+                const blockIdx = parseInt(targetEl.getAttribute('data-block-idx'));
+                const rowIdx = parseInt(targetEl.getAttribute('data-row-idx'));
+                const colIdx = parseInt(targetEl.getAttribute('data-col-idx'));
+                
+                openChordEdit(blockIdx, rowIdx, colIdx);
+            }
+        }
+
         function openChordEdit(blockIdx, rowIdx, colIdx) {
             deselectAll();
             activeSelection = { type: 'chord', blockIdx, rowIdx, colIdx };
@@ -2132,19 +2461,22 @@
                     const workspaceRect = workspace.getBoundingClientRect();
                     const cellRect = cell.getBoundingClientRect();
 
-                    // The visible area is workspace height minus the sheet covering it
+                    // 1. Desplazamiento Vertical
                     const visibleHeight = workspaceRect.height - sheetHeight;
-
-                    // Where the cell currently is relative to workspace top
                     const cellRelativeTop = cellRect.top - workspaceRect.top;
-                    const cellCenter = cellRelativeTop + (cellRect.height / 2);
-                    const visibleCenter = visibleHeight / 2;
+                    const cellCenterY = cellRelativeTop + (cellRect.height / 2);
+                    const visibleCenterY = visibleHeight / 2;
+                    const scrollDeltaY = cellCenterY - visibleCenterY;
 
-                    // How much to scroll to bring the cell to center of visible area
-                    const scrollDelta = cellCenter - visibleCenter;
+                    // 2. Desplazamiento Horizontal (Centrar celda a lo ancho)
+                    const cellRelativeLeft = cellRect.left - workspaceRect.left;
+                    const cellCenterX = cellRelativeLeft + (cellRect.width / 2);
+                    const visibleCenterX = workspaceRect.width / 2;
+                    const scrollDeltaX = cellCenterX - visibleCenterX;
 
                     workspace.scrollBy({
-                        top: scrollDelta,
+                        top: scrollDeltaY,
+                        left: scrollDeltaX,
                         behavior: 'smooth'
                     });
                 });
@@ -2159,16 +2491,76 @@
             sheetBodyText.style.display = 'flex';
             sheetBodyKey.style.display = 'none';
 
+            // Determinar si es modo título para usar layout de 1 columna (con la caja arriba y color abajo)
+            const isTitleMode = (type === 'title');
+            const colLeft = document.getElementById('textColLeft');
+            const colRight = document.getElementById('textColRight');
+            if (isTitleMode) {
+                sheetBodyText.style.flexDirection = 'column';
+                sheetBodyText.style.gap = '8px';
+                if (colLeft) colLeft.style.order = '2';
+                if (colRight) colRight.style.order = '1';
+            } else {
+                sheetBodyText.style.flexDirection = 'row';
+                sheetBodyText.style.gap = '16px';
+                if (colLeft) colLeft.style.order = '';
+                if (colRight) colRight.style.order = '';
+            }
+
+            const groupContainer = document.querySelector('.song-group-container');
+            const colorContainer = document.getElementById('sectionColorSelector');
+            const colorTitle = colorContainer ? colorContainer.previousElementSibling : null;
+            const typeSelectorGrid = document.getElementById('sectionTypeSelector');
+            const typeSelectorTitle = typeSelectorGrid ? typeSelectorGrid.previousElementSibling : null;
+
             if (type === 'title') {
                 sheetTitle.textContent = "Editar Título de la Canción";
                 sheetInputText.value = songData.title;
-                document.getElementById('deleteSectionDirectBtn').style.display = 'none';
+                const inputTitle = document.getElementById('lyricsInputTitle');
+                if (inputTitle) inputTitle.textContent = "Título de Canción";
+                sheetInputText.placeholder = "Escribe el título de la canción aquí...";
+
+                if (typeSelectorGrid) typeSelectorGrid.style.display = 'none';
+                if (typeSelectorTitle) typeSelectorTitle.style.display = 'none';
+                if (colorContainer) colorContainer.style.display = 'flex';
+                if (colorTitle) colorTitle.style.display = 'block';
+                if (groupContainer) groupContainer.style.display = 'none';
+                
+                // Configurar controles de color del título principal
+                const activeColor = songData.color || 'general';
+                document.querySelectorAll('#sectionColorSelector .color-dot-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-color') === activeColor);
+                });
                 
                 const titleCell = document.getElementById('headerTitleBox');
                 if (titleCell) scrollCellIntoView(titleCell);
             } else if (type === 'lyrics') {
-                sheetTitle.textContent = "Editar Letra / Tipo de Sección";
+                const isTitulo = (songData.sections[blockIdx].type === 'titulo');
+                sheetTitle.textContent = isTitulo ? "Editar Título de la Canción" : "Editar Letra / Tipo de Sección";
+                const inputTitle = document.getElementById('lyricsInputTitle');
+                if (inputTitle) inputTitle.textContent = isTitulo ? "Título de Canción" : "Editar Letra";
+                sheetInputText.placeholder = isTitulo ? "Escribe el título de la canción aquí..." : "Escribe aquí...";
                 sheetInputText.value = songData.sections[blockIdx].lyrics || '';
+                
+                if (typeSelectorGrid) typeSelectorGrid.style.display = 'grid';
+                if (typeSelectorTitle) typeSelectorTitle.style.display = 'block';
+                if (groupContainer) groupContainer.style.display = 'flex';
+                if (colorContainer) colorContainer.style.display = 'flex';
+                if (colorTitle) colorTitle.style.display = 'block';
+                
+                // Configurar control de separación superior
+                const sepBtn = document.getElementById('separationToggleBtn');
+                if (songData.sections[blockIdx].hasSeparation) {
+                    sepBtn.classList.add('active');
+                } else {
+                    sepBtn.classList.remove('active');
+                }
+
+                // Configurar controles de color
+                const activeColor = songData.sections[blockIdx].color || songData.sections[blockIdx].type || 'general';
+                document.querySelectorAll('#sectionColorSelector .color-dot-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-color') === activeColor);
+                });
                 
                 activeSectionType = songData.sections[blockIdx].type || getSectionType(songData.sections[blockIdx]);
                 document.querySelectorAll('#sectionTypeSelector .type-btn').forEach(btn => {
@@ -3200,10 +3592,28 @@
             const headerTitleColspan = maxCols; // lyrics col + (maxCols-1) chord cols
             html += `<tr class="header-row" onclick="event.stopPropagation()">`;
             html += `<td class="td-transparent"></td>`;
-            html += `<td class="header-title-td" id="headerTitleBox" colspan="${headerTitleColspan}" title="Editar Título">
+            const titleColor = songData.color || 'general';
+            const titleBgClass = `sect-bg-${titleColor}`;
+            
+            let titleTextClass = 'sect-general';
+            if (titleColor === 'estrofa') titleTextClass = 'sect-estrofa';
+            else if (titleColor === 'coro') titleTextClass = 'sect-coro';
+            else if (titleColor === 'pre-coro') titleTextClass = 'sect-pre-coro';
+            else if (titleColor === 'puente') titleTextClass = 'sect-puente';
+            else if (titleColor === 'intro') titleTextClass = 'sect-intro';
+            else if (titleColor === 'outro') titleTextClass = 'sect-outro';
+            else if (titleColor === 'solo') titleTextClass = 'sect-solo';
+            else if (titleColor === 'titulo') titleTextClass = 'sect-titulo';
+
+            html += `<td class="header-title-td ${titleBgClass} ${titleTextClass}" id="headerTitleBox" colspan="${headerTitleColspan}" title="Editar Título">
                         <div class="header-title" id="outTitle">${songData.title}</div>
                      </td>`;
-            html += `<td class="header-key-td" id="keyWrapper" title="Editar Tono">
+            
+            let rootNote = songData.key;
+            if (rootNote.endsWith('m')) rootNote = rootNote.slice(0, -1);
+            const keyClass = `key-color-${rootNote.replace('#', 's')}`;
+
+            html += `<td class="header-key-td ${keyClass}" id="keyWrapper" title="Editar Tono">
                         <div class="key-text" id="outKey">${songData.key}</div>
                      </td>`;
             html += `<td class="td-transparent"></td>`;
@@ -3230,18 +3640,30 @@
             songData.sections.forEach((sect, blockIdx) => {
                 if (sect.rows.length === 0) return;
                 
+                if (sect.hasSeparation) {
+                    const colspanVal = maxCols + 3;
+                    html += `
+                        <tr class="section-spacer-row" onclick="event.stopPropagation()">
+                            <td colspan="${colspanVal}" style="border: none !important; background: transparent !important; height: 12px !important; padding: 0 !important;"></td>
+                        </tr>
+                    `;
+                }
+                
                 const secType = getSectionType(sect);
+                const secColor = sect.color || secType;
+                
                 let sectionClass = 'sect-general';
-                if (secType === 'estrofa') sectionClass = 'sect-estrofa';
-                else if (secType === 'coro') sectionClass = 'sect-coro';
-                else if (secType === 'puente') sectionClass = 'sect-puente';
-                else if (secType === 'pre-coro') sectionClass = 'sect-pre-coro';
-                else if (secType === 'intro') sectionClass = 'sect-intro';
-                else if (secType === 'outro') sectionClass = 'sect-outro';
-                else if (secType === 'solo') sectionClass = 'sect-solo';
+                if (secColor === 'estrofa') sectionClass = 'sect-estrofa';
+                else if (secColor === 'coro') sectionClass = 'sect-coro';
+                else if (secColor === 'puente') sectionClass = 'sect-puente';
+                else if (secColor === 'pre-coro') sectionClass = 'sect-pre-coro';
+                else if (secColor === 'intro') sectionClass = 'sect-intro';
+                else if (secColor === 'outro') sectionClass = 'sect-outro';
+                else if (secColor === 'solo') sectionClass = 'sect-solo';
+                else if (secColor === 'titulo') sectionClass = 'sect-titulo';
 
-                // Usar fondo específico del tipo de sección
-                const sectionBgClass = `sect-bg-${secType}`;
+                // Usar fondo específico del color de sección
+                const sectionBgClass = `sect-bg-${secColor}`;
 
                 const rowSpan = sect.rows.length;
 
@@ -3274,11 +3696,11 @@
                         if (secType !== 'general') {
                             if (!lyricsDisplay) {
                                 // Mostrar la etiqueta en grande y centrada
-                                cellContentHtml = `<div class="lyrics-badge large" data-type="${secType}">${typeNames[secType]}</div>`;
+                                cellContentHtml = `<div class="lyrics-badge large" data-type="${secColor}">${typeNames[secType]}</div>`;
                             } else {
                                 // Mostrar la etiqueta arriba y la letra abajo con separación
                                 cellContentHtml = `
-                                    <div class="lyrics-badge-header" data-type="${secType}">${typeNames[secType]}</div>
+                                    <div class="lyrics-badge-header" data-type="${secColor}">${typeNames[secType]}</div>
                                     <div class="lyrics-text">${lyricsDisplay}</div>
                                 `;
                             }
@@ -3291,8 +3713,9 @@
                         }
                         
                         if (reorderingBlockIdx === blockIdx) {
+                            const colspanAttr = secType === 'titulo' ? `colspan="${maxCols + 1}"` : '';
                             html += `
-                                <td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx} reordering" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
+                                <td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx} reordering" ${colspanAttr} rowspan="${rowSpan}" data-block-idx="${blockIdx}">
                                     <div class="lyrics-reorder-container">
                                         <!-- Columna Izquierda: Eliminar -->
                                         <div class="reorder-col-left">
@@ -3309,83 +3732,91 @@
                                 </td>
                             `;
                         } else {
-                            const isEmptyClass = !lyricsDisplay && secType === 'general' ? 'empty' : '';
-                            html += `<td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx}" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
-                                        <div class="lyrics-inner ${isEmptyClass}">
-                                            ${cellContentHtml}
-                                        </div>
-                                     </td>`;
+                            if (secType === 'titulo') {
+                                html += `<td colspan="${maxCols + 1}" class="lyrics-cell section-title-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx}" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
+                                            <div class="section-title-inner-text">${sect.lyrics || 'Título de la Canción'}</div>
+                                         </td>`;
+                            } else {
+                                const isEmptyClass = !lyricsDisplay && secType === 'general' ? 'empty' : '';
+                                html += `<td class="lyrics-cell ${sectionClass} ${sectionBgClass} lyrics-${blockIdx}" rowspan="${rowSpan}" data-block-idx="${blockIdx}">
+                                            <div class="lyrics-inner ${isEmptyClass}">
+                                                ${cellContentHtml}
+                                            </div>
+                                         </td>`;
+                            }
                         }
                     }
 
                     // 3. COMPASES DE ACORDES — tamaño de fuente fijo por nivel de subdivisión
-                    rowArr.forEach((cell, colIdx) => {
-                        cell = cell.trim(); 
-                        const isSelected = activeSelection && activeSelection.type === 'chord' && activeSelection.blockIdx === blockIdx && activeSelection.rowIdx === rowIdx && activeSelection.colIdx === colIdx ? 'selected' : '';
-                        
-                        if (cell === 'VACÍO' || !cell) {
-                            const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
-                            html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}">
-                                        <div class="chord-inner" style="color: rgba(255,255,255,0.1); font-size: 11px;">+</div>
-                                     </td>`;
-                        } else {
-                            // Nivel de subdivisión de la celda → tamaño de fuente fijo
-                            const level = getCellLevel(cell);
-                            const fontSize = getCellFontSize(level);
+                    if (secType !== 'titulo') {
+                        rowArr.forEach((cell, colIdx) => {
+                            cell = cell.trim(); 
+                            const isSelected = activeSelection && activeSelection.type === 'chord' && activeSelection.blockIdx === blockIdx && activeSelection.rowIdx === rowIdx && activeSelection.colIdx === colIdx ? 'selected' : '';
+                            
+                            if (cell === 'VACÍO' || !cell) {
+                                const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
+                                html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}">
+                                            <div class="chord-inner empty-chord-plus">+</div>
+                                         </td>`;
+                            } else {
+                                // Nivel de subdivisión de la celda → tamaño de fuente fijo
+                                const level = getCellLevel(cell);
+                                const fontSize = getCellFontSize(level);
 
-                            const renderHorizontal = (text) => {
-                                if (text.includes('│')) {
-                                    const parts = text.split('│');
-                                    let leftText = parts[0].trim();
-                                    let rightText = parts[1] ? parts[1].trim() : '';
+                                const renderHorizontal = (text) => {
+                                    if (text.includes('│')) {
+                                        const parts = text.split('│');
+                                        let leftText = parts[0].trim();
+                                        let rightText = parts[1] ? parts[1].trim() : '';
 
-                                    if (leftText === 'VACÍO') leftText = '';
-                                    if (rightText === 'VACÍO') rightText = '';
+                                        if (leftText === 'VACÍO') leftText = '';
+                                        if (rightText === 'VACÍO') rightText = '';
 
-                                    return `
-                                        <div class="split-horizontal-box">
-                                            <div class="split-left">${leftText}</div>
-                                            <div class="split-right">${rightText}</div>
+                                        return `
+                                            <div class="split-horizontal-box">
+                                                <div class="split-left">${leftText}</div>
+                                                <div class="split-right">${rightText}</div>
+                                            </div>
+                                        `;
+                                    } else {
+                                        const displayVal = text === 'VACÍO' ? '' : text;
+                                        return `<div class="chord-inner">${displayVal}</div>`;
+                                    }
+                                };
+
+                                let cellHTML = '';
+                                
+                                if (cell.includes(',')) {
+                                    const parts = cell.split(',');
+                                    const topText = parts[0].trim();
+                                    const bottomText = parts[1] ? parts[1].trim() : '';
+
+                                    const topHTML = renderHorizontal(topText);
+                                    const bottomHTML = renderHorizontal(bottomText);
+
+                                    cellHTML = `
+                                        <div class="split-box">
+                                            <div class="split-top">${topHTML}</div>
+                                            <div class="split-bottom">${bottomHTML}</div>
                                         </div>
                                     `;
                                 } else {
-                                    const displayVal = text === 'VACÍO' ? '' : text;
-                                    return `<div class="chord-inner">${displayVal}</div>`;
+                                    cellHTML = renderHorizontal(cell);
                                 }
-                            };
 
-                            let cellHTML = '';
-                            
-                            if (cell.includes(',')) {
-                                const parts = cell.split(',');
-                                const topText = parts[0].trim();
-                                const bottomText = parts[1] ? parts[1].trim() : '';
-
-                                const topHTML = renderHorizontal(topText);
-                                const bottomHTML = renderHorizontal(bottomText);
-
-                                cellHTML = `
-                                    <div class="split-box">
-                                        <div class="split-top">${topHTML}</div>
-                                        <div class="split-bottom">${bottomHTML}</div>
-                                    </div>
-                                `;
-                            } else {
-                                cellHTML = renderHorizontal(cell);
+                                const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
+                                html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}" style="font-size: ${fontSize};">
+                                            ${cellHTML}
+                                         </td>`;
                             }
+                        });
 
-                            const colDarkClass = colIdx % 2 === 1 ? 'col-dark' : '';
-                            html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${colIdx} ${isSelected} ${sectionClass} ${sectionBgClass} ${colDarkClass}" data-block-idx="${blockIdx}" data-row-idx="${rowIdx}" data-col-idx="${colIdx}" style="font-size: ${fontSize};">
-                                        ${cellHTML}
-                                     </td>`;
+                        const missing = maxCols - rowArr.length;
+                        for (let i = 0; i < missing; i++) {
+                            const padColIdx = maxCols - missing + i;
+                            const colDarkClass = padColIdx % 2 === 1 ? 'col-dark' : '';
+                            html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${padColIdx} ${sectionClass} ${sectionBgClass} ${colDarkClass}">&nbsp;</td>`;
                         }
-                    });
-
-                    const missing = maxCols - rowArr.length;
-                    for (let i = 0; i < missing; i++) {
-                        const padColIdx = maxCols - missing + i;
-                        const colDarkClass = padColIdx % 2 === 1 ? 'col-dark' : '';
-                        html += `<td class="chord-cell cell-${blockIdx}-${rowIdx}-${padColIdx} ${sectionClass} ${sectionBgClass} ${colDarkClass}">&nbsp;</td>`;
                     }
 
                     // 4. AGREGAR COMPÁS (＋ ZINZ/AZUL DASHED CUADRADO CON ROWSPAN)
